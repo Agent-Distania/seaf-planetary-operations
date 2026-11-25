@@ -56,6 +56,29 @@
 - Revisit battlefield structure, friendly and enemy visual designs as a coordinated art pass; preserve clear SEAF/enemy faction distinction
 - Test structure readability, squad movement, combat flow and mobile performance on desktop and mobile (playtest pending)
 
+## Operations Expanded — development series
+
+### Part I — Enemy Overhaul (implemented in v0.8.2)
+- Replace the generic shared enemy token with clearly differentiated top-down silhouettes for Scout, standard Trooper and Devastator
+- Give enemy roles distinct armor mass, equipment, hostile red/oxide identity and readable optics
+- Establish separate durability, movement and engagement profiles so each visual type communicates its combat role
+- Make ranged enemies prioritize SEAF targets they can see, with a fallback target for movement when cover blocks every friendly
+- Preserve the existing arena, missions, campaign saves, base systems and controls
+
+### Part II — Battlefield Overhaul (planned)
+- Expand the battlefield substantially; do not simply squeeze more objects into the existing 1,000 × 1,000 arena
+- Rebuild terrain composition, road networks, routes, cover placement and objective spacing for larger engagements
+- Improve how buildings and installations are selected, placed and spawned; keep their silhouettes and details purpose-readable without hiding units or objectives
+- Add infantry barbed wire that damages units crossing it
+- Defer dragon's teeth and Czech hedgehogs until vehicle movement exists; then make them block vehicles
+- Rework navigation, obstacle handling, line of sight and combat positioning to work across the larger battlefield
+- Preserve mobile readability and performance while giving squads and enemies more room to maneuver
+
+### Follow-on — Patrols & Encounter Systems (planned after Part II)
+- Add patrol routes, stationary guards, installation defenders, reinforcements and investigation behavior
+- Build patrol and encounter placement around the expanded terrain and revised navigation/line-of-sight systems
+- Add more varied battlefield encounters and mission approaches
+
 ## v0.9 — Base Operations & Services (planned)
 - Add useful functions to the Medical Station, Radar Station and Engineering Depot
 - Introduce vehicle readiness and maintenance
