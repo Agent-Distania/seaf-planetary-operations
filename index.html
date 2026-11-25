@@ -180,6 +180,7 @@ footer{margin-top:10px;color:#8fa5b2;font-size:11px;text-align:center}
       <button id="touchFire">FIRE</button>
       <button class="small" id="touchReload">RELOAD</button>
       <button class="small" id="touchInteract">INTERACT</button>
+      <button class="small" id="touchSquadOrder">HOLD</button>
       <button class="small" id="touchExit">RETREAT</button>
     </div>
   </div>
@@ -1052,7 +1053,7 @@ function startMission(id){
  $("mobileControls").style.display="";switchView("battleView");canvas.focus();updateSquadOrderButton();updateHud();log(`Deployed: ${m.name} with ${squad.length} squadmates.`);
 }
 function spawnEnemy(index=0){
- const type=index%7===0?"heavy":index%3===1?"scout":"raider";
+ const type=index%8===7?"heavy":index%3===1?"scout":"raider";
  const stats={
   scout:{name:"Scout",hp:34,speed:96,radius:9,style:"scout",range:25,damage:12,rate:.9},
   raider:{name:"Raider",hp:52,speed:53,radius:11,style:"raider",range:275,damage:8,rate:1.45},
