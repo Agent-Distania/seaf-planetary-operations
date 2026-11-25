@@ -1382,63 +1382,67 @@ function drawBattle(){
  }
  // Enemy silhouettes are purpose-built for overhead readability: each role has a different footprint.
  function drawEnemy(enemy){
-  const p=worldToScreen(enemy),type=enemy.type;
-  c.save();c.translate(p.x,p.y);c.rotate(enemy.angle||0);
-  const panel=(x,y,w,h,fill,edge,r=2)=>{
-   c.fillStyle=fill;c.beginPath();c.roundRect(x,y,w,h,r);c.fill();
-   c.strokeStyle=edge;c.lineWidth=1;c.stroke();
-  };
-  c.fillStyle="rgba(12,17,20,.42)";c.beginPath();
-  c.ellipse(0,4,type==="devastator"?27:type==="trooper"?20:14,type==="devastator"?17:type==="trooper"?13:9,0,0,Math.PI*2);c.fill();
-  if(type==="scout"){
-   // Light chassis, long sensor mast and twin forward prongs make the fast scout narrow and unmistakable.
-   panel(-13,-5,9,10,"#342d2d","#171d21",2);
-   panel(-5,-7,14,14,"#875947","#412f2b",3);
-   panel(-3,-10,8,5,"#9f7057","#422f2b",2);panel(-3,5,8,5,"#9f7057","#422f2b",2);
-   panel(6,-5,9,10,"#493638","#20262a",3);
-   panel(12,-3,5,6,"#b46a56","#542f30",2);
-   c.fillStyle="#ff5149";c.beginPath();c.arc(16,0,2.1,0,Math.PI*2);c.fill();
-   panel(7,6,15,2,"#3b4142","#1e2528",1);panel(18,5,5,4,"#c0a28c","#5c4540",1);
-   c.strokeStyle="#d0a17f";c.lineWidth=1.5;c.beginPath();c.moveTo(-8,-5);c.lineTo(-14,-13);c.stroke();
-   c.fillStyle="#ff6254";c.beginPath();c.arc(-14,-13,1.7,0,Math.PI*2);c.fill();
-   panel(-12,7,5,3,"#252d30","#11191e",1);
-  }else if(type==="devastator"){
-   // Broad shoulder armor, reinforced rear pack, forward optic and heavy gun identify the devastator.
-   panel(-19,-11,14,22,"#332d30","#171d22",3);
-   for(let v=-7;v<=7;v+=5){c.strokeStyle="#8f6257";c.lineWidth=1;c.beginPath();c.moveTo(-16,v);c.lineTo(-8,v);c.stroke();}
-   panel(-12,-18,17,14,"#633b3b","#281f24",3);panel(-12,4,17,14,"#633b3b","#281f24",3);
-   panel(-8,-12,25,24,"#7b4b49","#30252a",4);
-   panel(-3,-8,16,16,"#a35c52","#4b3031",3);
-   panel(10,-9,13,18,"#402c30","#191e22",3);
-   c.fillStyle="#e0b19b";c.fillRect(13,-7,3,14);
-   c.fillStyle="#ff4e43";c.fillRect(18,-4,3,8);
-   panel(1,10,27,8,"#30383b","#151d22",2);
-   panel(23,9,8,10,"#59646a","#20292d",2);
-   c.fillStyle="#bfc5c4";c.fillRect(27,11,4,6);
-   panel(-16,-4,7,8,"#a56a58","#412c2e",2);
-   c.fillStyle="#d7a27c";c.fillRect(-14,-2,3,4);
-   panel(-4,-4,8,8,"#5c3939","#2a2428",2);
-  }else{
-   // Standard trooper: compact armored torso, paired leg units, backpack and carbine.
-   panel(-16,-8,10,7,"#30383a","#171f23",2);panel(-16,1,10,7,"#30383a","#171f23",2);
-   panel(-13,-6,9,12,"#493536","#211f23",2);
-   for(let v=-4;v<=4;v+=4){c.strokeStyle="#a46c5e";c.lineWidth=1;c.beginPath();c.moveTo(-11,v);c.lineTo(-6,v);c.stroke();}
-   panel(-6,-12,13,7,"#713f3d","#302326",2);panel(-6,5,13,7,"#713f3d","#302326",2);
-   panel(-7,-9,19,18,"#87504a","#38292b",3);
-   panel(-3,-6,11,12,"#b06a59","#553234",2);
-   panel(9,-6,10,12,"#4a3436","#201f23",3);
-   c.fillStyle="#ff5148";c.fillRect(14,-3,4,6);
-   panel(5,8,18,4,"#333b3d","#151d22",1);panel(21,7,5,6,"#697276","#242b2e",1);
-   panel(-11,-11,5,4,"#a66d59","#44302e",1);
-   c.fillStyle="#e0ad83";c.fillRect(-10,-10,2,2);
-  }
-  c.restore();
-  const barW=type==="devastator"?40:type==="scout"?24:32;
-  const barY=p.y-(enemy.radius+13);
-  c.fillStyle="#1a2024";c.fillRect(p.x-barW/2,barY,barW,4);
-  c.fillStyle=type==="devastator"?"#e18b73":type==="scout"?"#d6aa78":"#d66e60";
-  c.fillRect(p.x-barW/2,barY,barW*clamp(enemy.hp/enemy.maxHp,0,1),4);
+ const p=worldToScreen(enemy),type=enemy.type;
+ const palettes={
+  scout:{dark:"#20282b",mid:"#665044",light:"#b78b65",edge:"#171e21",optic:"#ff5148"},
+  trooper:{dark:"#242b2e",mid:"#76504a",light:"#a86b59",edge:"#161d21",optic:"#ff4e45"},
+  devastator:{dark:"#1d2529",mid:"#663d3d",light:"#a65b50",edge:"#151b20",optic:"#ff443d"}
+ };
+ const col=palettes[type]||palettes.trooper;
+ c.save();c.translate(p.x,p.y);c.rotate(enemy.angle||0);
+ const plate=(x,y,w,h,color,edge=col.edge,r=2)=>{
+  c.fillStyle=color;c.beginPath();c.roundRect(x,y,w,h,r);c.fill();
+  c.strokeStyle=edge;c.lineWidth=1;c.stroke();
+ };
+ // Soft grounding shadow keeps silhouettes readable over terrain.
+ c.fillStyle="rgba(8,12,15,.4)";c.beginPath();
+ c.ellipse(-1,4,type==="devastator"?28:type==="trooper"?20:14,type==="devastator"?17:type==="trooper"?12:8,0,0,Math.PI*2);c.fill();
+ if(type==="scout"){
+  // Narrow reconnaissance chassis: forward sensor, segmented body and two rear stabilizers.
+  plate(-15,-6,8,12,col.dark);plate(-9,-8,15,16,col.mid);
+  plate(-5,-11,9,6,col.light);plate(-5,5,9,6,col.light);
+  plate(5,-5,10,10,col.dark);plate(12,-3,6,6,col.light);
+  c.fillStyle=col.optic;c.fillRect(15,-2,3,4);
+  plate(-17,-10,4,5,col.dark);plate(-17,5,4,5,col.dark);
+  c.strokeStyle=col.light;c.lineWidth=1.5;c.beginPath();c.moveTo(-8,-7);c.lineTo(-14,-13);c.stroke();
+  c.fillStyle=col.optic;c.beginPath();c.arc(-14,-13,1.6,0,Math.PI*2);c.fill();
+  plate(3,8,17,3,col.dark);plate(19,6,4,6,col.light);
+ }else if(type==="devastator"){
+  // Heavy unit: oversized shoulder armor, reinforced torso, broad legs and a prominent weapon.
+  plate(-23,-15,15,30,col.dark);plate(-19,-19,17,14,col.mid);plate(-19,5,17,14,col.mid);
+  plate(-12,-16,25,32,col.mid);plate(-8,-11,17,22,col.light);
+  plate(-3,-7,12,14,col.dark);plate(4,-5,10,10,col.light);
+  c.fillStyle=col.optic;c.fillRect(12,-3,5,6);
+  plate(-13,-21,13,7,col.dark);plate(-13,14,13,7,col.dark);
+  // Forward heavy cannon, offset from the centerline to make the role immediately recognizable.
+  plate(8,8,22,9,col.dark);plate(25,9,8,7,col.light);c.fillStyle="#c6c7c2";c.fillRect(30,11,4,3);
+  plate(-22,-4,9,8,col.light);c.fillStyle=col.optic;c.fillRect(-19,-2,3,4);
+ }else{
+  // Standard Trooper: humanoid proportions, helmet, armored chest, backpack, rifle and separated legs.
+  plate(-18,-10,10,8,col.dark);plate(-18,2,10,8,col.dark);
+  plate(-13,-8,9,16,col.mid);plate(-10,-11,17,22,col.light);
+  plate(-8,-7,12,14,col.mid);plate(-5,-4,7,8,col.dark);
+  plate(-7,-15,13,6,col.dark);plate(-7,9,13,6,col.dark);
+  // Helmet visor and unmistakable forward red optic.
+  plate(5,-6,11,12,col.dark);plate(8,-4,6,8,col.light);
+  c.fillStyle=col.optic;c.fillRect(14,-2,3,4);
+  // Compact shoulder plates, rear pack, and carbine.
+  plate(-12,-13,7,8,col.mid);plate(-12,5,7,8,col.mid);
+  plate(-16,-5,7,10,col.dark);plate(-20,-4,5,8,col.light);
+  plate(4,9,18,4,col.dark);plate(21,8,5,6,col.light);
  }
+ c.restore();
+ // Small type label plus health bar: helps identify roles without large HUD clutter.
+ const label=type==="devastator"?"DEV":type==="scout"?"SCOUT":"TROOPER";
+ const barW=type==="devastator"?42:type==="scout"?26:34;
+ const barY=p.y-(enemy.radius+16);
+ c.font="bold 8px system-ui,sans-serif";c.textAlign="center";c.textBaseline="bottom";
+ c.fillStyle="rgba(12,17,20,.78)";c.fillRect(p.x-barW/2-2,barY-10,barW+4,13);
+ c.fillStyle="#e4e9e9";c.fillText(label,p.x,barY-1);
+ c.fillStyle="#171d21";c.fillRect(p.x-barW/2,barY,barW,4);
+ c.fillStyle=type==="devastator"?"#e18b73":type==="scout"?"#d6aa78":"#d66e60";
+ c.fillRect(p.x-barW/2,barY,barW*clamp(enemy.hp/enemy.maxHp,0,1),4);
+}
  squad.forEach((member,i)=>{if(!member.dead)drawUnit(member,"#80a9c2","#27465a",member.angle,"squad",i);});
  enemies.forEach(enemy=>{if(enemy.alive)drawEnemy(enemy);});
  drawUnit(player,"#c7d3b1","#405344",player.angle,"player");
