@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.8 — Pelican VTOL & Battlefield Installations
+
+### Added
+- Five distinct hostile installations: communications array with overhead dish and antennae, generator, command post, defense post and supply compound.
+- Enemy structures use red/oxide industrial colors and recognizable overhead silhouettes.
+- Facility footprints participate in the existing collision and cover system.
+
+### Changed
+- Pelican VTOL nacelles relocated to outer wing tips and wings widened.
+- Landing apron expanded to accommodate the updated transport silhouette.
+
+### Testing
+- Static source checks completed during update.
+- Desktop/mobile browser playtesting remains pending.
+
 ## v0.7 — Combat Foundation & Squad AI
 
 ### Added
