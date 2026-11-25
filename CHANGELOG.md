@@ -1,5 +1,30 @@
 # Changelog
 
+## v0.6 — Transport & Logistics
+
+### Added
+- New overhead Pelican-inspired transport artwork on the SEAF landing apron, with a tapered central fuselage, cockpit glazing, broad lifting surfaces, twin engine nacelles, paired rear exhausts and parked landing gear.
+- Logistics and Storage panel showing current supplies/components against their capacity.
+- Derived storage limits: starting capacity is 150 supplies and 90 components; each Supply Depot adds 100 supplies and 50 components.
+- Mission reward overflow handling: supplies and components are credited only up to available storage, and any overflow is reported in the operations log and mission status.
+- Functional Barracks personnel capacity: base capacity is 4; each Barracks adds 2, up to 8 total.
+
+### Changed
+- Shortened the Bastion tank destroyer's fixed-casemate cannon barrel by approximately 25%, retaining the rear-integrated mount and removing any separate light muzzle cap.
+- Updated Barracks and Supply Depot descriptions to communicate their actual gameplay effects.
+- Resource bar now displays supplies and components as current amount / storage capacity.
+
+### Preserved
+- Existing save format and three campaign slots; capacities are calculated from built facilities, so older saves require no schema migration.
+- Existing stored resources are not deleted when a legacy save is already above the new base capacity; new mission rewards are simply not credited until space is available.
+- Existing building costs, limits, footprints, placement, map camera, missions and combat controls.
+
+### Verification
+- Embedded JavaScript syntax was checked after the changes.
+- Static checks cover the storage-capacity rules, reward overflow path, squad-capacity progression, vehicle drawing functions and preserved save/placement hooks.
+- A full visual playtest in mobile Safari has not been performed by the assistant and remains necessary.
+
+
 ### v0.5.1 — Motor Pool Silhouette Refinement
 
 ### Changed
