@@ -3,7 +3,7 @@
 A single-player, top-down 2D sci-fi military game about ordinary SEAF soldiers fighting to reclaim hostile worlds. Built as a browser game with PC and mobile controls.
 
 ## Current status
-- **Latest build:** v0.6 — Transport & Logistics
+- **Latest build:** v0.7 — Combat Foundation & Squad AI
 - **Development status:** Early prototype; browser gameplay testing remains incomplete
 - **Platform:** Browser (HTML/CSS/JavaScript)
 - **Perspective:** Top-down, fully 2D
@@ -28,8 +28,8 @@ Manage a forward base, select an operation, deploy with squadmates, complete obj
 The v0.7 combat update adds visible squad spacing, HOLD/FOLLOW commands, battlefield cover and three enemy archetypes. The v0.6 transport artwork is an original top-down Pelican-inspired fan-game silhouette; vehicle artwork is stylized canvas illustration, not imported game models.
 
 ## Controls
-**Desktop:** WASD/arrows move, mouse aim, left click fire, R reload, E interact.
-**Mobile base:** pinch to zoom, drag to pan, and tap an open building plot to place a selected structure. **Mobile deployment:** joystick movement, FIRE auto-aim, RELOAD, INTERACT, RETREAT.
+**Desktop:** WASD/arrows move, mouse aim, left click fire, R reload, E interact, Q toggle squad HOLD/FOLLOW.
+**Mobile base:** pinch to zoom, drag to pan, and tap an open building plot to place a selected structure. **Mobile deployment:** joystick movement, FIRE auto-aim, RELOAD, INTERACT, HOLD/FOLLOW squad order, RETREAT.
 
 ## Development notes
 The v0.7 release expands combat and squad AI while preserving campaign saves, logistics, base construction and resource rules. Test squad spacing, cover, HOLD/FOLLOW controls and combat readability on desktop and mobile.
