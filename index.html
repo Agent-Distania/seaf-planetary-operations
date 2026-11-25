@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>SEAF: Planetary Operations — v0.2.1</title>
+<title>SEAF: Planetary Operations — v0.3</title>
 <style>
 :root{--bg:#101713;--panel:#1b2620;--panel2:#233229;--line:#3c5144;--text:#e4ece4;--muted:#a5b7a8;--accent:#c7d6a1;--danger:#e26b5e;--gold:#d8b46a}
 *{box-sizing:border-box}
@@ -29,7 +29,14 @@ header{display:flex;gap:12px;align-items:center;justify-content:space-between;fl
 .panel h2,.panel h3{margin:0 0 8px;font-size:16px}
 .panel p{color:var(--muted);margin:6px 0;font-size:13px;line-height:1.45}
 #baseCanvas,#battleCanvas{width:100%;display:block;border:1px solid #506653;border-radius:10px;background:#19251d;touch-action:none}
-#baseCanvas{height:390px}
+#baseCanvas{height:390px;touch-action:none;cursor:grab}
+#baseCanvas:active{cursor:grabbing}
+.baseToolbar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:8px}
+.baseToolbar button{min-width:42px}
+.baseZoomLabel{font-size:12px;color:var(--muted);min-width:42px;text-align:center}
+.placementStatus{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:7px 9px;margin-top:7px;border:1px solid #405744;border-radius:8px;background:#202e24;color:var(--muted);font-size:12px;min-height:34px}
+.placementStatus.active{border-color:#829466;color:#e0e9cc}
+.baseToolbar button{touch-action:manipulation}
 #battleCanvas{height:min(66vh,600px);min-height:380px}
 .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 .buildCard,.missionCard{border:1px solid var(--line);background:var(--panel2);border-radius:9px;padding:10px}
@@ -57,7 +64,7 @@ footer{margin-top:10px;color:#819387;font-size:11px;text-align:center}
 <body>
 <div id="app">
 <header>
-  <div class="brand">SEAF <span>PLANETARY OPERATIONS · PROTOTYPE 0.2.1</span></div>
+  <div class="brand">SEAF <span>PLANETARY OPERATIONS · PROTOTYPE 0.3</span></div>
   <div class="resourcebar" id="resources"></div>
 </header>
 <div class="tabs">
@@ -71,7 +78,17 @@ footer{margin-top:10px;color:#819387;font-size:11px;text-align:center}
   <div class="panel">
     <h2>Forward Operating Base — Landing Zone Cedar</h2>
     <p>Place structures around your foothold. Buildings cost resources and provide useful services.</p>
-    <canvas id="baseCanvas" width="900" height="500"></canvas>
+    <canvas id="baseCanvas" width="900" height="500" aria-label="Interactive forward base map"></canvas>
+    <div class="baseToolbar" aria-label="Base map camera controls">
+      <button class="small" id="baseZoomOut" aria-label="Zoom out">−</button>
+      <button class="small" id="baseZoomReset">Reset view</button>
+      <button class="small" id="baseZoomIn" aria-label="Zoom in">+</button>
+      <span class="baseZoomLabel" id="baseZoomLabel">72%</span>
+    </div>
+    <div class="placementStatus" id="placementStatus" role="status">
+      <span id="placementMessage">Drag to move around the base. Use + / − or pinch to zoom.</span>
+      <button class="small" id="cancelPlacementBtn" hidden>Cancel placement</button>
+    </div>
     <div class="statusline" id="baseStatus"></div>
   </div>
   <div class="panel">
@@ -150,62 +167,169 @@ const missions=[
 ];
 let state={
  supplies:100,components:55,requisition:65,intel:0,
- buildings:[{type:"command",x:450,y:250}],
+ buildings:[{type:"command",x:600,y:400}],
  squad:2,missionWins:0,selectedBuilding:null,baseLog:[],
- mission:null,saveVersion:1
+ mission:null,saveVersion:1,layoutVersion:2
 };
 let player=null,squad=[],enemies=[],crates=[],relay=null,bullets=[],enemyBullets=[],particles=[];
 let battle={active:false,completed:false,failed:false,elapsed:0,ammo:24,maxAmmo:24,reloadTimer:0,shootCooldown:0,spawned:0,kills:0,objectiveDone:false,keys:{},mouse:{x:0,y:0,down:false},touch:{x:0,y:0,fire:false},camera:{x:0,y:0},mission:null,extraction:{x:500,y:500}};
 let baseCanvas=$("baseCanvas"),baseCtx=baseCanvas.getContext("2d"),canvas=$("battleCanvas"),ctx=canvas.getContext("2d");
+const BASE_WORLD_W=1200,BASE_WORLD_H=800,BASE_MIN_ZOOM=.5,BASE_MAX_ZOOM=1.8,BASE_DEFAULT_ZOOM=.72;
+let baseCamera={x:0,y:0,zoom:BASE_DEFAULT_ZOOM},pendingBuilding=null,basePointerWorld=null;
+let basePointers=new Map(),baseGesture=null;
+function clampBaseCamera(){
+ const visibleW=baseCanvas.width/baseCamera.zoom,visibleH=baseCanvas.height/baseCamera.zoom;
+ baseCamera.x=clamp(baseCamera.x,0,Math.max(0,BASE_WORLD_W-visibleW));
+ baseCamera.y=clamp(baseCamera.y,0,Math.max(0,BASE_WORLD_H-visibleH));
+}
+function resetBaseCamera(){
+ baseCamera.zoom=BASE_DEFAULT_ZOOM;
+ baseCamera.x=Math.max(0,(BASE_WORLD_W-baseCanvas.width/baseCamera.zoom)/2);
+ baseCamera.y=Math.max(0,(BASE_WORLD_H-baseCanvas.height/baseCamera.zoom)/2);
+ clampBaseCamera();updateBaseZoomLabel();drawBase();
+}
+function updateBaseZoomLabel(){
+ const label=$("baseZoomLabel");if(label)label.textContent=Math.round(baseCamera.zoom*100)+"%";
+}
+function zoomBaseAt(screenX,screenY,factor){
+ const anchorX=baseCamera.x+screenX/baseCamera.zoom,anchorY=baseCamera.y+screenY/baseCamera.zoom;
+ baseCamera.zoom=clamp(baseCamera.zoom*factor,BASE_MIN_ZOOM,BASE_MAX_ZOOM);
+ baseCamera.x=anchorX-screenX/baseCamera.zoom;baseCamera.y=anchorY-screenY/baseCamera.zoom;
+ clampBaseCamera();updateBaseZoomLabel();drawBase();
+}
+function baseScreenPoint(e){
+ const r=baseCanvas.getBoundingClientRect();
+ return{x:(e.clientX-r.left)*baseCanvas.width/r.width,y:(e.clientY-r.top)*baseCanvas.height/r.height};
+}
+function baseScreenToWorld(p){return{x:baseCamera.x+p.x/baseCamera.zoom,y:baseCamera.y+p.y/baseCamera.zoom};}
+function getBasePlots(){
+ const plots=[];
+ for(let y=110;y<=710;y+=100)for(let x=120;x<=1080;x+=120){
+  // Keep the main north-south and east-west access lanes clear.
+  if((x>=535&&x<=665)||(y>=350&&y<=450))continue;
+  plots.push({x,y});
+ }
+ return plots;
+}
+function basePlotOpen(plot){
+ return state.buildings.every(b=>Math.abs(b.x-plot.x)>=86||Math.abs(b.y-plot.y)>=66);
+}
+function nearestOpenBasePlot(point,maxDistance=78){
+ let best=null,bestDistance=maxDistance;
+ for(const plot of getBasePlots()){
+  if(!basePlotOpen(plot))continue;
+  const d=Math.hypot(point.x-plot.x,point.y-plot.y);
+  if(d<bestDistance){best=plot;bestDistance=d;}
+ }
+ return best;
+}
+function updatePlacementUI(){
+ const active=!!pendingBuilding,box=$("placementStatus"),message=$("placementMessage"),cancel=$("cancelPlacementBtn");
+ if(!box||!message||!cancel)return;
+ box.classList.toggle("active",active);cancel.hidden=!active;
+ message.textContent=active
+  ? "Placing "+buildings[pendingBuilding].name+": tap or click an open highlighted plot. Drag to pan; pinch or use the zoom buttons."
+  : "Drag to move around the base. Use + / − or pinch to zoom. Select a building, then choose its highlighted plot.";
+}
 function log(msg){state.baseLog.unshift(`[${now()}] ${msg}`);state.baseLog=state.baseLog.slice(0,30);$("baseLog").innerHTML=state.baseLog.map(x=>`<div>${escapeHTML(x)}</div>`).join("");}
 function escapeHTML(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function save(){try{localStorage.setItem(saveKey,JSON.stringify(state));}catch(e){log("Save unavailable on this browser.");}}
-function load(){try{let raw=localStorage.getItem(saveKey);if(raw){let s=JSON.parse(raw);if(s&&Array.isArray(s.buildings)&&Number.isFinite(s.supplies)){state={...state,...s};state.mission=null;}}}catch(e){console.warn("Save load failed",e);}}
+function load(){try{
+ let raw=localStorage.getItem(saveKey);
+ if(raw){
+  let s=JSON.parse(raw);
+  if(s&&Array.isArray(s.buildings)&&Number.isFinite(s.supplies)){
+   const needsLayoutMigration=!Number.isFinite(s.layoutVersion)||s.layoutVersion<2;
+   state={...state,...s};state.mission=null;
+   if(needsLayoutMigration){
+    state.buildings=state.buildings.map(b=>({...b,x:(Number.isFinite(b.x)?b.x:450)+150,y:(Number.isFinite(b.y)?b.y:250)+150}));
+    state.layoutVersion=2;
+   }
+  }
+ }
+ }catch(e){console.warn("Save load failed",e);}}
 function counts(type){return state.buildings.filter(b=>b.type===type).length;}
 function renderResources(){$("resources").innerHTML=[["Supplies",state.supplies],["Components",state.components],["Requisition",state.requisition],["Intel",state.intel]].map(([n,v])=>`<div class="resource">${n}: <b>${v}</b></div>`).join("");}
 function renderBuildings(){
  $("buildCards").innerHTML=Object.entries(buildings).filter(([k])=>k!=="command").map(([k,b])=>{
- let count=counts(k),cost=`${b.cost.supplies} supplies · ${b.cost.components} components`;
- return `<div class="buildCard"><h4>${b.name} ${count}/${b.limit}</h4><p>${b.desc}</p><p><small>${cost}</small></p><button class="small" data-build="${k}" ${count>=b.limit||state.supplies<b.cost.supplies||state.components<b.cost.components?"disabled":""}>Build</button></div>`;
+  let count=counts(k),cost=`${b.cost.supplies} supplies · ${b.cost.components} components`;
+  const selected=pendingBuilding===k,disabled=count>=b.limit||state.supplies<b.cost.supplies||state.components<b.cost.components;
+  return `<div class="buildCard"><h4>${b.name} ${count}/${b.limit}</h4><p>${b.desc}</p><p><small>${cost}</small></p><button class="small" data-build="${k}" ${disabled&&!selected?"disabled":""}>${selected?"Cancel":"Place"}</button></div>`;
  }).join("");
- $("buildCards").querySelectorAll("[data-build]").forEach(btn=>btn.addEventListener("click",()=>build(btn.dataset.build)));
+ $("buildCards").querySelectorAll("[data-build]").forEach(btn=>btn.addEventListener("click",()=>{
+  const type=btn.dataset.build;
+  if(pendingBuilding===type)cancelBuildingPlacement();else build(type);
+ }));
  $("personnel").textContent=`${state.squad} squadmates available for deployment. Your squad can accompany you on missions.`;
  $("recruitBtn").disabled=state.requisition<30||state.squad>=8;
  $("recruitBtn").textContent=state.squad>=8?"Squad capacity reached":"Recruit squadmate — 30 requisition";
 }
 function build(type){
- let b=buildings[type];if(!b||counts(type)>=b.limit||state.supplies<b.cost.supplies||state.components<b.cost.components)return;
- state.supplies-=b.cost.supplies;state.components-=b.cost.components;
- // Put buildings on the nearest open grid point, avoiding overlaps.
- let spot=findBuildingSpot();state.buildings.push({type,x:spot.x,y:spot.y});
- log(`${b.name} constructed.`);refresh();save();
+ const b=buildings[type];
+ if(!b||counts(type)>=b.limit||state.supplies<b.cost.supplies||state.components<b.cost.components)return;
+ pendingBuilding=type;basePointerWorld=null;updatePlacementUI();renderBuildings();drawBase();
+ log(`Select an open plot to place the ${b.name.toLowerCase()}.`);
 }
-function findBuildingSpot(){
- let spots=[];for(let y=100;y<420;y+=95)for(let x=100;x<820;x+=120)spots.push({x,y});
- spots.sort((a,b)=>Math.min(...state.buildings.map(q=>dist(a,q)))-Math.min(...state.buildings.map(q=>dist(b,q))));
- return spots.find(s=>state.buildings.every(b=>dist(s,b)>75))||{x:rand(80,820),y:rand(70,430)};
+function cancelBuildingPlacement(){
+ if(!pendingBuilding)return;
+ pendingBuilding=null;updatePlacementUI();renderBuildings();drawBase();
+}
+function placeBuildingAt(worldPoint){
+ const type=pendingBuilding,b=buildings[type];if(!b)return;
+ if(counts(type)>=b.limit||state.supplies<b.cost.supplies||state.components<b.cost.components){
+  cancelBuildingPlacement();refresh();return;
+ }
+ const spot=nearestOpenBasePlot(worldPoint,82);
+ if(!spot){log("No open plot selected. Tap one of the highlighted plots.");return;}
+ state.supplies-=b.cost.supplies;state.components-=b.cost.components;
+ state.buildings.push({type,x:spot.x,y:spot.y});
+ pendingBuilding=null;updatePlacementUI();
+ log(`${b.name} constructed at the selected plot.`);refresh();save();
 }
 function drawBase(){
- const w=baseCanvas.width,h=baseCanvas.height;let c=baseCtx;
- c.clearRect(0,0,w,h);
- c.fillStyle="#283b2c";c.fillRect(0,0,w,h);
- // grass texture
- for(let i=0;i<170;i++){let x=(i*83)%w,y=(i*137)%h;c.strokeStyle=i%2?"#354b36":"#314532";c.beginPath();c.moveTo(x,y);c.lineTo(x+rand(-6,6),y+rand(-6,6));c.stroke();}
- c.strokeStyle="#78866d";c.lineWidth=5;c.strokeRect(35,35,w-70,h-70);
- // path
- c.fillStyle="#675f4a";c.fillRect(400,35,100,h-70);c.fillRect(35,225,w-70,50);
- c.fillStyle="#81765b";c.fillRect(420,35,60,h-70);c.fillRect(35,235,w-70,30);
- // building objects
- state.buildings.forEach((b,i)=>{
-  let d=buildings[b.type],x=b.x,y=b.y;
+ const w=baseCanvas.width,h=baseCanvas.height,c=baseCtx;
+ c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,w,h);
+ c.fillStyle="#17231a";c.fillRect(0,0,w,h);
+ c.setTransform(baseCamera.zoom,0,0,baseCamera.zoom,-baseCamera.x*baseCamera.zoom,-baseCamera.y*baseCamera.zoom);
+ c.fillStyle="#283b2c";c.fillRect(0,0,BASE_WORLD_W,BASE_WORLD_H);
+ // Stable ground marks prevent the old grass texture from flickering on every redraw.
+ for(let i=0;i<430;i++){
+  const x=(i*83+19)%BASE_WORLD_W,y=(i*137+31)%BASE_WORLD_H;
+  c.strokeStyle=i%2?"#354b36":"#314532";c.beginPath();c.moveTo(x,y);c.lineTo(x+((i%5)-2)*2,y+((i%7)-3)*2);c.stroke();
+ }
+ c.strokeStyle="#78866d";c.lineWidth=5;c.strokeRect(28,28,BASE_WORLD_W-56,BASE_WORLD_H-56);
+ // Existing access lanes are retained and extended into the expanded map.
+ c.fillStyle="#675f4a";c.fillRect(550,28,100,BASE_WORLD_H-56);c.fillRect(28,375,BASE_WORLD_W-56,50);
+ c.fillStyle="#81765b";c.fillRect(570,28,60,BASE_WORLD_H-56);c.fillRect(28,385,BASE_WORLD_W-56,30);
+ // Placement plots are only shown while the player is choosing a building site.
+ if(pendingBuilding){
+  for(const plot of getBasePlots()){
+   const open=basePlotOpen(plot);
+   c.save();c.setLineDash([7,5]);c.lineWidth=2;c.strokeStyle=open?"#b9d99a":"#b66d5e";
+   c.fillStyle=open?"#a8cc7920":"#b66d5e18";
+   c.fillRect(plot.x-38,plot.y-29,76,58);c.strokeRect(plot.x-38,plot.y-29,76,58);c.restore();
+  }
+ }
+ // Building footprints remain readable at normal zoom and scale with the camera.
+ state.buildings.forEach(b=>{
+  const d=buildings[b.type];if(!d)return;const x=b.x,y=b.y;
   c.fillStyle="#162219";c.fillRect(x-36,y-27,72,54);
-  c.fillStyle=d.color;c.fillRect(x-31,y-23,62,46);
-  c.strokeStyle="#d4d7b2";c.lineWidth=2;c.strokeRect(x-31,y-23,62,46);
-  c.fillStyle="#1d2b22";c.fillRect(x-8,y-8,16,16);
-  c.fillStyle="#e5e7d2";c.font="bold 11px system-ui";c.textAlign="center";c.fillText(d.name,x,y+39);
+  c.fillStyle=d.color;c.fillRect(x-28,y-21,56,42);
+  c.strokeStyle="#d4d7b2";c.lineWidth=2;c.strokeRect(x-28,y-21,56,42);
+  c.fillStyle="#1d2b22";c.fillRect(x-7,y-7,14,14);
+  c.fillStyle="#e5e7d2";c.font="bold 11px system-ui";c.textAlign="center";c.fillText(d.name,x,y+36);
  });
- // entrance markers
- c.fillStyle="#c4d39c";c.beginPath();c.arc(450,250,8,0,Math.PI*2);c.fill();
+ // Show the selected structure as a translucent preview at the nearest available plot.
+ if(pendingBuilding){
+  const hint=basePointerWorld||{x:600,y:400};
+  const ghost=nearestOpenBasePlot(hint,BASE_WORLD_W);
+  if(ghost){
+   const d=buildings[pendingBuilding];c.save();c.globalAlpha=.62;c.fillStyle=d.color;c.fillRect(ghost.x-28,ghost.y-21,56,42);
+   c.strokeStyle="#dff0bc";c.lineWidth=3;c.strokeRect(ghost.x-28,ghost.y-21,56,42);c.restore();
+  }
+ }
+ c.fillStyle="#c4d39c";c.beginPath();c.arc(600,400,8,0,Math.PI*2);c.fill();
+ c.setTransform(1,0,0,1,0,0);updateBaseZoomLabel();
 }
 function renderMissions(){
  $("missionCards").innerHTML=missions.map(m=>`<div class="missionCard"><h4>${m.name}</h4><p><small>${m.type}</small></p><p>${m.desc}</p><p><small>Reward: ${m.reward.supplies} supplies · ${m.reward.components} components · ${m.reward.requisition} requisition</small></p><button class="primary" data-mission="${m.id}">Deploy</button></div>`).join("");
@@ -216,6 +340,53 @@ function recruit(){if(state.requisition<30||state.squad>=8)return;state.requisit
 function switchView(id){document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===id));document.querySelectorAll(".tabs button[data-view]").forEach(b=>b.classList.toggle("active",b.dataset.view===id));}
 document.querySelectorAll(".tabs button[data-view]").forEach(b=>b.addEventListener("click",()=>switchView(b.dataset.view)));
 $("recruitBtn").addEventListener("click",recruit);
+
+// Base map controls: one pointer pans, two pointers pinch-zoom, a tap selects a plot.
+baseCanvas.addEventListener("pointerdown",e=>{
+ e.preventDefault();
+ try{baseCanvas.setPointerCapture(e.pointerId);}catch(_){}
+ const point=baseScreenPoint(e);basePointers.set(e.pointerId,point);basePointerWorld=baseScreenToWorld(point);
+ if(basePointers.size>=2){
+  const pts=[...basePointers.values()],mid={x:(pts[0].x+pts[1].x)/2,y:(pts[0].y+pts[1].y)/2};
+  baseGesture={kind:"pinch",distance:Math.max(1,Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y)),zoom:baseCamera.zoom,anchor:baseScreenToWorld(mid)};
+ }else{
+  baseGesture={kind:"pan",pointerId:e.pointerId,start:point,last:point,cameraX:baseCamera.x,cameraY:baseCamera.y,moved:false};
+ }
+});
+baseCanvas.addEventListener("pointermove",e=>{
+ const point=baseScreenPoint(e);basePointerWorld=baseScreenToWorld(point);
+ if(basePointers.has(e.pointerId))basePointers.set(e.pointerId,point);
+ if(basePointers.size>=2&&baseGesture?.kind==="pinch"){
+  const pts=[...basePointers.values()],mid={x:(pts[0].x+pts[1].x)/2,y:(pts[0].y+pts[1].y)/2};
+  const distance=Math.max(1,Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y));
+  baseCamera.zoom=clamp(baseGesture.zoom*(distance/baseGesture.distance),BASE_MIN_ZOOM,BASE_MAX_ZOOM);
+  baseCamera.x=baseGesture.anchor.x-mid.x/baseCamera.zoom;baseCamera.y=baseGesture.anchor.y-mid.y/baseCamera.zoom;
+  clampBaseCamera();updateBaseZoomLabel();drawBase();
+ }else if(baseGesture?.kind==="pan"&&baseGesture.pointerId===e.pointerId&&basePointers.size===1){
+  const dx=point.x-baseGesture.start.x,dy=point.y-baseGesture.start.y;
+  if(Math.hypot(dx,dy)>5)baseGesture.moved=true;
+  if(baseGesture.moved){
+   baseCamera.x=baseGesture.cameraX-dx/baseCamera.zoom;baseCamera.y=baseGesture.cameraY-dy/baseCamera.zoom;
+   clampBaseCamera();drawBase();
+  }else if(pendingBuilding)drawBase();
+ }else if(pendingBuilding)drawBase();
+});
+function endBasePointer(e,allowPlacement){
+ const point=basePointers.get(e.pointerId),gesture=baseGesture;
+ const shouldPlace=allowPlacement&&point&&gesture?.kind==="pan"&&gesture.pointerId===e.pointerId&&!gesture.moved&&basePointers.size===1&&!!pendingBuilding;
+ if(point&&shouldPlace)placeBuildingAt(baseScreenToWorld(point));
+ basePointers.delete(e.pointerId);
+ if(basePointers.size===1){
+  const [id,p]=[...basePointers.entries()][0];
+  baseGesture={kind:"pan",pointerId:id,start:p,last:p,cameraX:baseCamera.x,cameraY:baseCamera.y,moved:true};
+ }else if(basePointers.size===0)baseGesture=null;
+}
+baseCanvas.addEventListener("pointerup",e=>endBasePointer(e,true));
+baseCanvas.addEventListener("pointercancel",e=>endBasePointer(e,false));
+$("baseZoomIn").addEventListener("click",()=>zoomBaseAt(baseCanvas.width/2,baseCanvas.height/2,1.18));
+$("baseZoomOut").addEventListener("click",()=>zoomBaseAt(baseCanvas.width/2,baseCanvas.height/2,1/1.18));
+$("baseZoomReset").addEventListener("click",resetBaseCamera);
+$("cancelPlacementBtn").addEventListener("click",cancelBuildingPlacement);
 
 // Combat entities in world coordinates; canvas camera follows player.
 function startMission(id){
@@ -383,7 +554,9 @@ joy.addEventListener("pointerup",joyEnd);joy.addEventListener("pointercancel",jo
 let last=performance.now();
 function loop(t){let dt=Math.min((t-last)/1000,.05);last=t;if(battle.active){update(dt);drawBattle();}requestAnimationFrame(loop);}
 function init(){
- load();if(!state.buildings.some(b=>b.type==="command"))state.buildings.unshift({type:"command",x:450,y:250});
+ load();
+ if(!state.buildings.some(b=>b.type==="command"))state.buildings.unshift({type:"command",x:600,y:400});
+ state.layoutVersion=2;resetBaseCamera();updatePlacementUI();
  refresh();log("Landing zone operational. Awaiting deployment orders.");save();
 }
 init();requestAnimationFrame(loop);
