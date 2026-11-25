@@ -1,22 +1,27 @@
 # Development Roadmap
 
 ## v0.3 — Base Technical Update (implemented)
-- v0.3.1 follow-up: main menu and three local campaign save slots
-- Zoom in/out and reset camera controls
-- Touch pinch-to-zoom and drag-to-pan
-- Expanded base map with camera bounds
-- Highlighted building plots and placement preview
+- Main menu and three local campaign save slots
+- Zoom in/out, reset camera, touch pinch-to-zoom and drag-to-pan
+- Expanded base map, highlighted building plots and placement preview
 - Tap/click-to-place construction with grid snapping
 - Save migration for existing building coordinates
 
 ## v0.4 — Base Visual Overhaul (implemented)
-- Terrain, fortified perimeter, access gate, roads and landing apron
-- Add roads, pathways, landing zone, perimeter and infrastructure details
+- Detailed terrain, fortified perimeter, access gate and connected roads
+- Central SEAF command compound and transport landing apron
 - Original top-down artwork for all seven existing building types
-- Central command compound and marked vehicle staging area
-- Preserve building functions, costs, upgrades, recruitment and save compatibility
+- Dedicated motor pool with a heavy-vehicle silhouette and exosuit service stand
+- Reserved construction plots around the motor-pool yard
+- Footprint-aware construction placement and save-compatible existing buildings
 
-## v0.5 — Base Visual Polish & Vehicle Facilities (next)\n- Test and refine the new base artwork and building footprints\n- Expand vehicle/exosuit staging and transport support areas\n- Add additional small infrastructure props while preserving buildable space\n\n## v0.6 — Combat Expansion (planned)
+## v0.5 — Base Visual Polish & Vehicle Facilities (next)
+- Test and refine the new base artwork and building footprints
+- Expand transport support and dedicated aerospace staging
+- Improve motor-pool presentation and add further original support vehicles
+- Add small infrastructure props while preserving buildable space
+
+## v0.6 — Combat Expansion (planned)
 - Improve combat feedback and balance
 - Expand enemy behaviors and encounter variety
 - Refine weapon/reload interactions
