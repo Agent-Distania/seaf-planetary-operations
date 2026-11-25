@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>SEAF: Planetary Operations — v0.4.1</title>
 <style>
-:root{--bg:#101713;--panel:#1b2620;--panel2:#233229;--line:#3c5144;--text:#e4ece4;--muted:#a5b7a8;--accent:#c7d6a1;--danger:#e26b5e;--gold:#d8b46a}
+:root{--bg:#111a22;--panel:#1d2a35;--panel2:#273846;--line:#455c6b;--text:#e6edf0;--muted:#a9bbc5;--accent:#83b0ce;--danger:#e26b5e;--gold:#d8b64f}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-button{background:#34493a;color:var(--text);border:1px solid #58705d;border-radius:8px;padding:10px 12px;font-weight:650;cursor:pointer}
-button:hover{background:#405a46}
+button{background:#30495a;color:var(--text);border:1px solid #58788d;border-radius:8px;padding:10px 12px;font-weight:650;cursor:pointer}
+button:hover{background:#3e5d72}
 button:disabled{opacity:.45;cursor:not-allowed}
-button.primary{background:#566a43;border-color:#829466}
+button.primary{background:#416c8a;border-color:#79a5c1}
 button.danger{background:#60342f;border-color:#88524a}
 button.small{padding:6px 9px;font-size:12px}
 #app{max-width:1200px;margin:0 auto;padding:12px}
@@ -21,25 +21,25 @@ header{display:flex;gap:12px;align-items:center;justify-content:space-between;fl
 .resourcebar{display:flex;gap:8px;flex-wrap:wrap}
 .resource{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:7px 11px;font-size:13px}
 .tabs{display:flex;gap:7px;margin:8px 0 12px;flex-wrap:wrap}
-.tabs button.active{background:#68794e;border-color:#9baa76}
+.tabs button.active{background:#426f90;border-color:#8eb7d0}
 .tabs.menu-hidden{display:none}
 .menuShell{max-width:850px;margin:clamp(12px,5vh,54px) auto 24px}
-.menuHero{padding:clamp(22px,5vw,46px);border:1px solid #506653;border-radius:16px;background:linear-gradient(135deg,#26382b,#17231b 70%);position:relative;overflow:hidden}
-.menuHero:after{content:"";position:absolute;right:-58px;top:-88px;width:260px;height:260px;border:1px solid #80916a55;border-radius:50%;box-shadow:0 0 0 22px #80916a11,0 0 0 46px #80916a0b;pointer-events:none}
-.menuKicker{font-size:11px;letter-spacing:.2em;color:#bdce9c;font-weight:800}
+.menuHero{padding:clamp(22px,5vw,46px);border:1px solid #59788b;border-radius:16px;background:linear-gradient(135deg,#304c60,#172631 70%);position:relative;overflow:hidden}
+.menuHero:after{content:"";position:absolute;right:-58px;top:-88px;width:260px;height:260px;border:1px solid #8cb5ce55;border-radius:50%;box-shadow:0 0 0 22px #8cb5ce11,0 0 0 46px #8cb5ce0b;pointer-events:none}
+.menuKicker{font-size:11px;letter-spacing:.2em;color:#9dc7df;font-weight:800}
 .menuHero h1{font-size:clamp(28px,6vw,48px);line-height:1.05;letter-spacing:.04em;margin:12px 0 8px}
-.menuHero p{max-width:570px;color:#b6c5b5;line-height:1.5;margin:0;font-size:14px}
+.menuHero p{max-width:570px;color:#b8c8d1;line-height:1.5;margin:0;font-size:14px}
 .menuPanel{margin-top:14px;padding:clamp(14px,3vw,22px);border:1px solid var(--line);border-radius:14px;background:var(--panel)}
 .menuPanelHead{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}
 .menuPanelHead h2{font-size:17px;margin:0}
 .saveSlots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-.saveSlot{border:1px solid #435747;background:#202e24;border-radius:10px;padding:12px;min-width:0}
-.saveSlot.empty{border-style:dashed;background:#1b2720}
+.saveSlot{border:1px solid #496276;background:#243441;border-radius:10px;padding:12px;min-width:0}
+.saveSlot.empty{border-style:dashed;background:#1b2933}
 .saveSlot h3{font-size:14px;margin:0 0 6px}
 .saveSlot p{font-size:12px;color:var(--muted);line-height:1.45;min-height:35px;margin:0 0 10px}
 .saveSlotActions{display:flex;gap:6px;flex-wrap:wrap}
 .saveSlotActions button{flex:1;min-width:90px}
-.menuNote{font-size:11px;color:#8fa292;margin:12px 0 0;line-height:1.45}
+.menuNote{font-size:11px;color:#9eb2be;margin:12px 0 0;line-height:1.45}
 #menuMessage{font-size:12px;color:#e0c28d;min-height:18px;margin-top:8px}
 @media(max-width:650px){.saveSlots{grid-template-columns:1fr}.saveSlot p{min-height:0}.menuHero{padding:24px 18px}.menuShell{margin-top:12px}}
 .view{display:none}.view.active{display:block}
@@ -47,14 +47,14 @@ header{display:flex;gap:12px;align-items:center;justify-content:space-between;fl
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px}
 .panel h2,.panel h3{margin:0 0 8px;font-size:16px}
 .panel p{color:var(--muted);margin:6px 0;font-size:13px;line-height:1.45}
-#baseCanvas,#battleCanvas{width:100%;display:block;border:1px solid #506653;border-radius:10px;background:#19251d;touch-action:none}
+#baseCanvas,#battleCanvas{width:100%;display:block;border:1px solid #58788d;border-radius:10px;background:#1a2a36;touch-action:none}
 #baseCanvas{height:390px;touch-action:none;cursor:grab}
 #baseCanvas:active{cursor:grabbing}
 .baseToolbar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:8px}
 .baseToolbar button{min-width:42px}
 .baseZoomLabel{font-size:12px;color:var(--muted);min-width:42px;text-align:center}
-.placementStatus{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:7px 9px;margin-top:7px;border:1px solid #405744;border-radius:8px;background:#202e24;color:var(--muted);font-size:12px;min-height:34px}
-.placementStatus.active{border-color:#829466;color:#e0e9cc}
+.placementStatus{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:7px 9px;margin-top:7px;border:1px solid #496477;border-radius:8px;background:#243441;color:var(--muted);font-size:12px;min-height:34px}
+.placementStatus.active{border-color:#82b3d1;color:#d9e9f1}
 .baseToolbar button{touch-action:manipulation}
 #battleCanvas{height:min(66vh,600px);min-height:380px}
 .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
@@ -63,27 +63,27 @@ header{display:flex;gap:12px;align-items:center;justify-content:space-between;fl
 .buildCard p,.missionCard p{margin:0 0 8px}
 .statusline{display:flex;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin:8px 0}
 .log{max-height:230px;overflow:auto;font-size:12px;color:var(--muted);line-height:1.5;padding-right:4px}
-.log div{border-bottom:1px solid #304034;padding:4px 0}
+.log div{border-bottom:1px solid #344a59;padding:4px 0}
 #battleHud{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
-.huditem{background:#243329;border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:12px}
+.huditem{background:#293d4c;border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:12px}
 .battleActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
 .mobileControls{display:none;position:absolute;inset:0;pointer-events:none}
 @media(max-width:760px) and (pointer:coarse){.mobileControls{display:block}}
 #battleWrap{position:relative}
-#joystick{position:absolute;bottom:18px;left:18px;width:112px;height:112px;border-radius:50%;background:#23362b99;border:2px solid #8b9b82;pointer-events:auto;touch-action:none}
-#joyKnob{position:absolute;left:34px;top:34px;width:42px;height:42px;border-radius:50%;background:#b4c39a;opacity:.8}
+#joystick{position:absolute;bottom:18px;left:18px;width:112px;height:112px;border-radius:50%;background:#26465cbb;border:2px solid #86abc3;pointer-events:auto;touch-action:none}
+#joyKnob{position:absolute;left:34px;top:34px;width:42px;height:42px;border-radius:50%;background:#a9c6d8;opacity:.85}
 #touchFire{position:absolute;bottom:32px;right:28px;width:86px;height:86px;border-radius:50%;background:#753c35cc;border-color:#b9796e;pointer-events:auto}
 #touchReload{position:absolute;bottom:132px;right:30px;pointer-events:auto}
 #touchInteract{position:absolute;top:14px;right:14px;pointer-events:auto}
 #touchExit{position:absolute;top:14px;left:14px;pointer-events:auto}
-footer{margin-top:10px;color:#819387;font-size:11px;text-align:center}
+footer{margin-top:10px;color:#8fa5b2;font-size:11px;text-align:center}
 @media(max-width:760px){#app{padding:8px}.layout{grid-template-columns:1fr}.cards{grid-template-columns:1fr 1fr}.panel{padding:9px}#baseCanvas{height:320px}.brand{font-size:18px}#battleCanvas{height:58vh;min-height:360px}}
 </style>
 </head>
 <body>
 <div id="app">
 <header>
-  <div class="brand">SEAF <span>PLANETARY OPERATIONS · PROTOTYPE 0.4.1</span></div>
+  <div class="brand">SEAF <span>PLANETARY OPERATIONS · PROTOTYPE 0.5.1</span></div>
   <div class="resourcebar" id="resources"></div>
 </header>
 <div class="tabs menu-hidden">
@@ -413,145 +413,190 @@ function fillRound(c,x,y,w,h,r,fill,stroke,lineWidth=1){
  roundRectPath(c,x,y,w,h,r);c.fillStyle=fill;c.fill();if(stroke){c.strokeStyle=stroke;c.lineWidth=lineWidth;c.stroke();}
 }
 function drawRoad(c,points,width){
- c.save();c.lineCap="round";c.lineJoin="round";c.beginPath();
+ c.save();c.lineCap="butt";c.lineJoin="round";c.beginPath();
  points.forEach((p,i)=>i?c.lineTo(p.x,p.y):c.moveTo(p.x,p.y));
- c.strokeStyle="#34392f";c.lineWidth=width+12;c.stroke();
- c.strokeStyle="#666657";c.lineWidth=width;c.stroke();
- c.strokeStyle="#a49b79";c.lineWidth=2;c.setLineDash([18,20]);c.stroke();c.setLineDash([]);c.restore();
+ // Raised concrete shoulders, blue route bands and a darker sealed roadway.
+ c.strokeStyle="#34434e";c.lineWidth=width+16;c.stroke();
+ c.strokeStyle="#aeb9bf";c.lineWidth=width+7;c.stroke();
+ c.strokeStyle="#657681";c.lineWidth=width;c.stroke();
+ c.strokeStyle="#8ea4b3";c.lineWidth=2.2;c.setLineDash([22,18]);c.stroke();
+ c.strokeStyle="#d8dedf";c.lineWidth=1.2;c.setLineDash([8,24]);c.stroke();c.setLineDash([]);
+ // Yellow edge ticks at measured intervals.
+ c.strokeStyle="#d8b64f";c.lineWidth=2;c.setLineDash([7,31]);c.stroke();c.setLineDash([]);
+ c.restore();
 }
 function drawGround(c){
- c.fillStyle="#4b503d";c.fillRect(0,0,BASE_WORLD_W,BASE_WORLD_H);
- for(let i=0;i<92;i++){
+ // Cool blue-grey compacted ground with subtle concrete and gravel variation.
+ c.fillStyle="#596a75";c.fillRect(0,0,BASE_WORLD_W,BASE_WORLD_H);
+ for(let i=0;i<110;i++){
   const x=(i*173+61)%BASE_WORLD_W,y=(i*257+37)%BASE_WORLD_H;
-  c.globalAlpha=.10+(i%4)*.025;c.fillStyle=i%3?"#7a7958":"#292f27";
-  c.beginPath();c.ellipse(x,y,24+(i%6)*7,13+(i%5)*5,(i%7)*.22,0,Math.PI*2);c.fill();
+  c.globalAlpha=.055+(i%4)*.018;c.fillStyle=i%3?"#c0cbd0":"#273b49";
+  c.beginPath();c.ellipse(x,y,27+(i%6)*8,15+(i%5)*5,(i%7)*.22,0,Math.PI*2);c.fill();
  }
  c.globalAlpha=1;
- for(let i=0;i<540;i++){
+ // Fine deterministic aggregate texture.
+ for(let i=0;i<570;i++){
   const x=(i*83+19)%BASE_WORLD_W,y=(i*137+31)%BASE_WORLD_H;
-  c.strokeStyle=i%3?"#63674b":"#353c30";c.lineWidth=i%5===0?2:1;
+  c.strokeStyle=i%3?"#81919a":"#3c4d58";c.lineWidth=i%5===0?2:1;
   c.beginPath();c.moveTo(x,y);c.lineTo(x+((i%5)-2)*2,y+((i%7)-3)*2);c.stroke();
  }
- for(let i=0;i<160;i++){
+ // Regular expansion-joint seams make the interior feel engineered.
+ c.save();c.globalAlpha=.18;c.strokeStyle="#d4dcdf";c.lineWidth=1;
+ for(let x=100;x<BASE_WORLD_W;x+=100){c.beginPath();c.moveTo(x,58);c.lineTo(x,742);c.stroke();}
+ for(let y=100;y<BASE_WORLD_H;y+=100){c.beginPath();c.moveTo(58,y);c.lineTo(1142,y);c.stroke();}
+ c.restore();
+ for(let i=0;i<180;i++){
   const x=(i*97+43)%BASE_WORLD_W,y=(i*181+73)%BASE_WORLD_H;
-  c.fillStyle=i%2?"#77775a":"#31382d";c.globalAlpha=.55;
+  c.fillStyle=i%2?"#9aa8ad":"#354752";c.globalAlpha=.38;
   c.beginPath();c.arc(x,y,1+(i%3),0,Math.PI*2);c.fill();
  }
  c.globalAlpha=1;
 }
 function drawWatchPost(c,x,y){
- c.save();fillRound(c,x-22,y-19,44,38,5,"#464b3c","#252d27",3);
- fillRound(c,x-15,y-13,30,26,3,"#777b64","#c0b88f",1.5);
- c.fillStyle="#343a31";c.fillRect(x-8,y-8,16,16);
- c.fillStyle="#bdc49c";c.fillRect(x-2,y-15,4,30);c.fillRect(x-15,y-2,30,4);
- c.fillStyle="#d2aa62";c.beginPath();c.arc(x,y,3,0,Math.PI*2);c.fill();c.restore();
+ c.save();
+ // Compact elevated security post: pale armoured shell, navy glazing and blue roof panel.
+ fillRound(c,x-24,y-21,48,42,5,"#3b4d59","#202f39",2.5);
+ fillRound(c,x-18,y-16,36,32,3,"#aebbc1","#e0e6e7",1.3);
+ fillRound(c,x-11,y-10,22,20,2,"#263c4c","#6f8da0",1);
+ c.fillStyle="#557f9e";c.fillRect(x-3,y-17,6,34);c.fillRect(x-17,y-3,34,6);
+ c.fillStyle="#d8b64f";c.beginPath();c.arc(x,y,3.5,0,Math.PI*2);c.fill();
+ c.fillStyle="#e7ecee";c.fillRect(x-17,y-20,34,3);
+ c.restore();
 }
 function drawPerimeter(c){
  c.save();
- c.strokeStyle="#29322a";c.lineWidth=18;c.strokeRect(28,28,BASE_WORLD_W-56,BASE_WORLD_H-56);
- c.strokeStyle="#89866e";c.lineWidth=8;c.strokeRect(28,28,BASE_WORLD_W-56,BASE_WORLD_H-56);
- c.strokeStyle="#b7b092";c.lineWidth=1.5;c.strokeRect(34,34,BASE_WORLD_W-68,BASE_WORLD_H-68);
- // Southern gate opening and reinforced posts.
- c.fillStyle="#4b503d";c.fillRect(540,748,120,24);
- fillRound(c,528,730,20,42,4,"#515747","#b0a98c",2);fillRound(c,652,730,20,42,4,"#515747","#b0a98c",2);
- c.strokeStyle="#c1b991";c.lineWidth=4;c.beginPath();c.moveTo(548,749);c.lineTo(600,765);c.lineTo(652,749);c.stroke();
- for(let x=90;x<510;x+=42){c.fillStyle="#a6a084";c.fillRect(x,42,3,12);c.fillRect(x,746,3,12);}
- for(let x=690;x<1120;x+=42){c.fillStyle="#a6a084";c.fillRect(x,42,3,12);c.fillRect(x,746,3,12);}
- for(let y=90;y<730;y+=42){c.fillStyle="#a6a084";c.fillRect(42,y,12,3);c.fillRect(1146,y,12,3);}
+ // Continuous reinforced wall with pale cap, blue inner identity stripe and yellow corner markers.
+ c.strokeStyle="#263844";c.lineWidth=22;c.strokeRect(28,28,BASE_WORLD_W-56,BASE_WORLD_H-56);
+ c.strokeStyle="#9ba8ae";c.lineWidth=13;c.strokeRect(28,28,BASE_WORLD_W-56,BASE_WORLD_H-56);
+ c.strokeStyle="#d2dadd";c.lineWidth=3;c.strokeRect(35,35,BASE_WORLD_W-70,BASE_WORLD_H-70);
+ c.strokeStyle="#416f91";c.lineWidth=3;c.strokeRect(43,43,BASE_WORLD_W-86,BASE_WORLD_H-86);
+ // Southern vehicle and personnel gate, with reinforced flanking piers.
+ c.fillStyle="#596a75";c.fillRect(535,741,130,32);
+ fillRound(c,523,727,24,48,4,"#526d80","#c8d2d6",2);
+ fillRound(c,653,727,24,48,4,"#526d80","#c8d2d6",2);
+ c.fillStyle="#d8b64f";c.fillRect(529,735,12,4);c.fillRect(659,735,12,4);
+ c.fillStyle="#315f82";c.fillRect(547,748,106,8);
+ c.strokeStyle="#dfe5e6";c.lineWidth=3;c.beginPath();c.moveTo(548,750);c.lineTo(600,766);c.lineTo(652,750);c.stroke();
+ // Repeated wall lights and blue identification plates.
+ for(let x=90;x<510;x+=42){c.fillStyle="#d4dde0";c.fillRect(x,37,4,15);c.fillRect(x,748,4,15);}
+ for(let x=690;x<1120;x+=42){c.fillStyle="#d4dde0";c.fillRect(x,37,4,15);c.fillRect(x,748,4,15);}
+ for(let y=90;y<730;y+=42){c.fillStyle="#d4dde0";c.fillRect(37,y,15,4);c.fillRect(1148,y,15,4);}
+ for(let x of [280,600,920]){fillRound(c,x-20,42,40,8,2,"#315f82","#b9c7ce",1);}
  drawWatchPost(c,76,76);drawWatchPost(c,1124,76);drawWatchPost(c,76,724);drawWatchPost(c,1124,724);
  c.restore();
 }
 function drawConstructionPad(c,plot){
- fillRound(c,plot.x-53,plot.y-41,106,82,5,"#747461","#aaa58a",1.2);
- c.strokeStyle="#575c4b";c.lineWidth=1;c.setLineDash([5,5]);c.strokeRect(plot.x-48,plot.y-36,96,72);c.setLineDash([]);
- c.fillStyle="#b0a88a";c.fillRect(plot.x-44,plot.y-34,10,3);c.fillRect(plot.x+34,plot.y+31,10,3);
+ fillRound(c,plot.x-53,plot.y-41,106,82,5,"#778791","#c4cfd4",1.3);
+ fillRound(c,plot.x-48,plot.y-36,96,72,3,"#8797a0","#536b7b",1);
+ c.strokeStyle="#b9c6cc";c.lineWidth=1;c.setLineDash([5,5]);c.strokeRect(plot.x-43,plot.y-31,86,62);c.setLineDash([]);
+ c.fillStyle="#416f91";c.fillRect(plot.x-44,plot.y-34,12,3);c.fillRect(plot.x+32,plot.y+31,12,3);
+ c.fillStyle="#d8b64f";c.fillRect(plot.x-50,plot.y-38,6,2);c.fillRect(plot.x+44,plot.y+36,6,2);
 }
 function drawRoofVent(c,x,y,w=12,h=8){
- fillRound(c,x-w/2,y-h/2,w,h,2,"#333b34","#8d927b",1);
- c.strokeStyle="#a6a58a";c.lineWidth=1;for(let i=-2;i<=2;i++){c.beginPath();c.moveTo(x+i*2,y-h/2+2);c.lineTo(x+i*2,y+h/2-2);c.stroke();}
+ fillRound(c,x-w/2,y-h/2,w,h,2,"#314553","#bdc9ce",1);
+ c.strokeStyle="#d4dde0";c.lineWidth=1;for(let i=-2;i<=2;i++){c.beginPath();c.moveTo(x+i*2,y-h/2+2);c.lineTo(x+i*2,y+h/2-2);c.stroke();}
 }
 function drawBuildingLabel(c,name,x,y){
- c.save();c.font="bold 10px system-ui";c.textAlign="center";c.textBaseline="middle";
- c.lineWidth=3;c.strokeStyle="#1f2921";c.strokeText(name,x,y);c.fillStyle="#e1dfc4";c.fillText(name,x,y);c.restore();
+ c.save();c.font="bold 9px system-ui";c.textAlign="center";c.textBaseline="middle";
+ c.lineWidth=3;c.strokeStyle="#233744";c.strokeText(name,x,y);c.fillStyle="#eef2f3";c.fillText(name,x,y);c.restore();
 }
 function drawBuildingBase(c,x,y,w,h){
- fillRound(c,x-w/2+3,y-h/2+6,w,h,5,"#252c25",null);
- fillRound(c,x-w/2,y-h/2,w,h,5,"#85816b","#d0c6a0",1.4);
- c.strokeStyle="#555b4b";c.lineWidth=1;c.setLineDash([6,4]);c.strokeRect(x-w/2+5,y-h/2+5,w-10,h-10);c.setLineDash([]);
+ // Standard Super Earth-style modular foundation and cool-grey rooftop shell.
+ fillRound(c,x-w/2+4,y-h/2+7,w,h,6,"#34434d",null);
+ fillRound(c,x-w/2,y-h/2,w,h,6,"#b4c0c6","#e2e7e8",1.5);
+ fillRound(c,x-w/2+5,y-h/2+5,w-10,h-10,4,"#7e909b","#536e80",1);
+ c.strokeStyle="#47799a";c.lineWidth=1.5;c.setLineDash([7,4]);c.strokeRect(x-w/2+8,y-h/2+8,w-16,h-16);c.setLineDash([]);
+ c.fillStyle="#d8b64f";c.fillRect(x-w/2+7,y-h/2+7,10,3);c.fillRect(x+w/2-17,y+h/2-10,10,3);
 }
 function drawCommandPost(c,x,y){
  drawBuildingBase(c,x,y,108,82);
- fillRound(c,x-39,y-29,78,58,5,"#66715d","#252f29",3);
- fillRound(c,x-51,y-20,18,40,3,"#727966","#30382f",2);fillRound(c,x+33,y-20,18,40,3,"#727966","#30382f",2);
- fillRound(c,x-31,y-22,62,44,3,"#89907a","#c2bea0",1.4);
- c.fillStyle="#4c5b50";c.fillRect(x-25,y-17,50,7);c.fillStyle="#b5b99a";c.fillRect(x-22,y-7,44,2);
- c.fillStyle="#465448";c.fillRect(x-21,y+1,42,15);
- fillRound(c,x-16,y-26,32,9,2,"#3b4c46","#9da58d",1);
- c.fillStyle="#d7d4ae";c.font="bold 7px system-ui";c.textAlign="center";c.fillText("SEAF HQ",x,y-20);
- fillRound(c,x+28,y-29,12,13,2,"#444d43","#a8ad91",1);
- c.strokeStyle="#c4c7a7";c.lineWidth=2;c.beginPath();c.moveTo(x+34,y-28);c.lineTo(x+42,y-42);c.stroke();
- c.fillStyle="#b7b99d";c.beginPath();c.arc(x+42,y-43,4,0,Math.PI*2);c.fill();
- c.fillStyle="#3f4940";c.beginPath();c.arc(x-39,y+27,7,0,Math.PI*2);c.fill();
- c.strokeStyle="#b5b394";c.lineWidth=1.5;c.beginPath();c.arc(x-39,y+27,5,Math.PI,Math.PI*2);c.stroke();
- fillRound(c,x-13,y+28,26,10,2,"#343d35","#b8b293",1);c.fillStyle="#d3ad64";c.fillRect(x-4,y+31,8,3);
- drawBuildingLabel(c,"COMMAND",x,y+33);
+ fillRound(c,x-42,y-30,84,60,5,"#607989","#dce3e5",2);
+ fillRound(c,x-51,y-20,18,40,3,"#8597a1","#344956",1.5);fillRound(c,x+33,y-20,18,40,3,"#8597a1","#344956",1.5);
+ fillRound(c,x-31,y-23,62,46,3,"#c4ced2","#eef1f1",1.3);
+ // Roof glazing and a strong blue command stripe.
+ c.fillStyle="#263d4d";c.fillRect(x-25,y-17,50,9);c.fillStyle="#6f9ab6";c.fillRect(x-22,y-15,44,3);
+ c.fillStyle="#8798a0";c.fillRect(x-22,y-4,44,3);c.fillStyle="#30495a";c.fillRect(x-21,y+3,42,13);
+ fillRound(c,x-16,y-27,32,9,2,"#315f82","#d2dadd",1);
+ c.fillStyle="#eef2f3";c.font="bold 7px system-ui";c.textAlign="center";c.fillText("SEAF HQ",x,y-21);
+ fillRound(c,x+28,y-29,12,13,2,"#496d85","#c4d0d4",1);
+ c.strokeStyle="#d5dfe2";c.lineWidth=2;c.beginPath();c.moveTo(x+34,y-28);c.lineTo(x+42,y-42);c.stroke();
+ c.fillStyle="#d8b64f";c.beginPath();c.arc(x+42,y-43,4,0,Math.PI*2);c.fill();
+ fillRound(c,x-13,y+28,26,10,2,"#2e4656","#b5c3ca",1);c.fillStyle="#d8b64f";c.fillRect(x-4,y+31,8,3);
+ drawBuildingLabel(c,"COMMAND",x,y+35);
 }
 function drawBarracks(c,x,y){
- drawBuildingBase(c,x,y,94,66);fillRound(c,x-39,y-24,78,48,4,"#77816a","#30392f",2.5);
+ drawBuildingBase(c,x,y,94,66);
+ fillRound(c,x-39,y-24,78,48,4,"#82939c","#3d5666",2);
  for(let i=0;i<3;i++){
-  fillRound(c,x-32+i*25,y-18,20,36,2,i===1?"#92957c":"#858b72","#c4c1a0",1);
-  c.fillStyle="#414a3e";c.fillRect(x-29+i*25,y-12,14,4);c.fillStyle="#596456";c.fillRect(x-29+i*25,y-3,14,13);
-  drawRoofVent(c,x-22+i*25,y+13,10,6);
+  const bx=x-32+i*25;
+  fillRound(c,bx,y-18,20,36,2,i===1?"#d0d8db":"#aab8bf","#e0e6e7",1);
+  c.fillStyle="#31536b";c.fillRect(bx+3,y-12,14,5);
+  c.fillStyle="#4a6678";c.fillRect(bx+3,y-3,14,13);
+  drawRoofVent(c,bx+10,y+13,10,6);
+  c.fillStyle="#d8b64f";c.fillRect(bx+2,y-17,4,2);
  }
- fillRound(c,x-11,y+24,22,7,2,"#4b5548","#c4c1a0",1);c.fillStyle="#d6b56e";c.fillRect(x-5,y+26,10,2);
- drawBuildingLabel(c,"BARRACKS",x,y+25);
+ fillRound(c,x-11,y+24,22,7,2,"#315f82","#dbe2e4",1);c.fillStyle="#d8b64f";c.fillRect(x-5,y+26,10,2);
+ drawBuildingLabel(c,"BARRACKS",x,y+29);
 }
 function drawSupplyDepot(c,x,y){
- drawBuildingBase(c,x,y,104,76);fillRound(c,x-43,y-28,86,56,4,"#927d5c","#393d31",3);
- fillRound(c,x-36,y-22,72,44,2,"#9a8a68","#d0bd91",1.2);
- c.strokeStyle="#655a47";c.lineWidth=2;for(let i=-28;i<=28;i+=12){c.beginPath();c.moveTo(x+i,y-19);c.lineTo(x+i,y+17);c.stroke();}
- c.fillStyle="#4a5144";c.fillRect(x-31,y-8,62,16);c.strokeStyle="#b9ad8a";c.lineWidth=1;c.strokeRect(x-31,y-8,62,16);
- for(let i=0;i<3;i++){fillRound(c,x-33+i*23,y+19,18,8,1,"#343d35","#d0bd91",1);c.fillStyle="#c8ae76";c.fillRect(x-29+i*23,y+21,10,2);}
- fillRound(c,x-48,y-22,9,15,1,"#6b775e","#c6bb94",1);fillRound(c,x+39,y-21,9,14,1,"#a16e4c","#d2ae79",1);
- drawBuildingLabel(c,"SUPPLY DEPOT",x,y+30);
+ drawBuildingBase(c,x,y,104,76);
+ fillRound(c,x-43,y-28,86,56,4,"#657c8a","#344a58",3);
+ fillRound(c,x-36,y-22,72,44,2,"#a9b7be","#dce3e5",1.2);
+ c.fillStyle="#426a86";c.fillRect(x-35,y-20,70,8);
+ c.strokeStyle="#667d89";c.lineWidth=2;for(let i=-28;i<=28;i+=12){c.beginPath();c.moveTo(x+i,y-8);c.lineTo(x+i,y+17);c.stroke();}
+ c.fillStyle="#30495a";c.fillRect(x-31,y-5,62,17);c.strokeStyle="#d3dde0";c.lineWidth=1;c.strokeRect(x-31,y-5,62,17);
+ for(let i=0;i<3;i++){fillRound(c,x-33+i*23,y+19,18,8,1,"#435b6c","#d0dadd",1);c.fillStyle="#d8b64f";c.fillRect(x-29+i*23,y+21,10,2);}
+ fillRound(c,x-48,y-22,9,15,1,"#527b96","#d5dfe1",1);fillRound(c,x+39,y-21,9,14,1,"#527b96","#d5dfe1",1);
+ drawBuildingLabel(c,"SUPPLY DEPOT",x,y+32);
 }
 function drawMedicalStation(c,x,y){
- drawBuildingBase(c,x,y,88,68);fillRound(c,x-35,y-25,70,50,4,"#8b9180","#374138",2.5);
- fillRound(c,x-28,y-18,56,36,2,"#adb09a","#e2dcc0",1);fillRound(c,x-43,y-7,12,25,2,"#7c8d7b","#d6d7b9",1);
- c.fillStyle="#c2c3a9";c.fillRect(x-22,y-13,44,5);c.fillStyle="#52645a";c.fillRect(x-20,y-3,40,13);
- fillRound(c,x-9,y-28,18,13,2,"#f0ead7","#5c6255",1);c.fillStyle="#b8493f";c.fillRect(x-2,y-25,4,8);c.fillRect(x-6,y-22,12,3);
- fillRound(c,x-12,y+23,24,8,2,"#454f44","#d4d0b4",1);c.fillStyle="#d9b36c";c.fillRect(x-4,y+25,8,3);
- drawBuildingLabel(c,"MEDICAL",x,y+30);
+ drawBuildingBase(c,x,y,88,68);
+ fillRound(c,x-35,y-25,70,50,4,"#b9c5ca","#445b6a",2.5);
+ fillRound(c,x-28,y-18,56,36,2,"#e4e9e9","#f4f6f5",1);
+ fillRound(c,x-43,y-7,12,25,2,"#6e8fa5","#d7e0e3",1);
+ c.fillStyle="#436d89";c.fillRect(x-22,y-13,44,5);c.fillStyle="#6c8da1";c.fillRect(x-20,y-3,40,13);
+ fillRound(c,x-9,y-28,18,13,2,"#315f82","#e3e9e9",1);
+ c.fillStyle="#edf2f2";c.fillRect(x-2,y-25,4,8);c.fillRect(x-6,y-22,12,3);
+ fillRound(c,x-12,y+23,24,8,2,"#30495a","#d1dade",1);c.fillStyle="#d8b64f";c.fillRect(x-4,y+25,8,3);
+ drawBuildingLabel(c,"MEDICAL",x,y+31);
 }
 function drawRadarStation(c,x,y){
- drawBuildingBase(c,x,y,82,82);fillRound(c,x-35,y+7,40,23,3,"#687665","#343e34",2);
- fillRound(c,x-28,y+12,26,12,2,"#374a45","#aeb59b",1);c.fillStyle="#c6d2b2";c.fillRect(x-24,y+15,5,4);c.fillRect(x-15,y+15,5,4);
- c.fillStyle="#414a40";c.beginPath();c.arc(x+12,y-10,29,0,Math.PI*2);c.fill();
- c.strokeStyle="#b5baa0";c.lineWidth=2;c.beginPath();c.arc(x+12,y-10,25,0,Math.PI*2);c.stroke();
+ drawBuildingBase(c,x,y,82,82);
+ fillRound(c,x-35,y+7,40,23,3,"#7c909b","#344d5d",2);
+ fillRound(c,x-28,y+12,26,12,2,"#263f51","#aebfc7",1);
+ c.fillStyle="#8fb1c5";c.fillRect(x-24,y+15,5,4);c.fillRect(x-15,y+15,5,4);
+ c.fillStyle="#31495a";c.beginPath();c.arc(x+12,y-10,29,0,Math.PI*2);c.fill();
+ c.strokeStyle="#c4d0d5";c.lineWidth=2;c.beginPath();c.arc(x+12,y-10,25,0,Math.PI*2);c.stroke();
+ c.strokeStyle="#5e91b2";c.lineWidth=2;
  c.beginPath();c.moveTo(x-10,y-10);c.lineTo(x+34,y-10);c.moveTo(x+12,y-32);c.lineTo(x+12,y+12);c.stroke();
  c.beginPath();c.moveTo(x-7,y-29);c.lineTo(x+31,y+9);c.moveTo(x+31,y-29);c.lineTo(x-7,y+9);c.stroke();
- c.fillStyle="#c8c3a1";c.beginPath();c.arc(x+12,y-10,5,0,Math.PI*2);c.fill();
- c.strokeStyle="#d0c79e";c.lineWidth=2;c.beginPath();c.moveTo(x-4,y+16);c.lineTo(x-14,y+32);c.stroke();
- drawBuildingLabel(c,"RADAR",x,y+31);
+ c.fillStyle="#d8b64f";c.beginPath();c.arc(x+12,y-10,5,0,Math.PI*2);c.fill();
+ c.strokeStyle="#d0dadd";c.lineWidth=2;c.beginPath();c.moveTo(x-4,y+16);c.lineTo(x-14,y+32);c.stroke();
+ drawBuildingLabel(c,"RADAR",x,y+33);
 }
 function drawDefenseTurret(c,x,y){
- drawBuildingBase(c,x,y,66,66);c.fillStyle="#555b4c";c.beginPath();c.arc(x,y,25,0,Math.PI*2);c.fill();
- c.strokeStyle="#c0b895";c.lineWidth=3;c.stroke();c.fillStyle="#79816c";c.beginPath();c.arc(x,y,18,0,Math.PI*2);c.fill();
- c.strokeStyle="#343d33";c.lineWidth=4;c.beginPath();c.arc(x,y,11,0,Math.PI*2);c.stroke();
- fillRound(c,x-12,y-12,24,27,5,"#666f5e","#c3bd98",2);fillRound(c,x-5,y-31,10,24,3,"#343f37","#a8aa8d",1.5);
- c.fillStyle="#aeb49b";c.fillRect(x-2,y-35,4,8);c.fillStyle="#d1ad68";c.beginPath();c.arc(x,y+21,3,0,Math.PI*2);c.fill();
- drawBuildingLabel(c,"TURRET",x,y+27);
+ drawBuildingBase(c,x,y,66,66);
+ c.fillStyle="#3d5361";c.beginPath();c.arc(x,y,25,0,Math.PI*2);c.fill();
+ c.strokeStyle="#cbd5d9";c.lineWidth=3;c.stroke();
+ c.fillStyle="#8296a1";c.beginPath();c.arc(x,y,18,0,Math.PI*2);c.fill();
+ c.strokeStyle="#344a58";c.lineWidth=4;c.beginPath();c.arc(x,y,11,0,Math.PI*2);c.stroke();
+ fillRound(c,x-12,y-12,24,27,5,"#58758a","#c8d3d7",2);
+ fillRound(c,x-5,y-31,10,24,3,"#2f4b60","#aebdc4",1.5);
+ c.fillStyle="#e2e8e8";c.fillRect(x-2,y-35,4,8);
+ c.fillStyle="#d8b64f";c.beginPath();c.arc(x,y+21,3,0,Math.PI*2);c.fill();
+ drawBuildingLabel(c,"DEFENSE",x,y+28);
 }
 function drawEngineeringDepot(c,x,y){
- drawBuildingBase(c,x,y,104,76);fillRound(c,x-43,y-27,86,54,4,"#747c66","#343d33",2.5);
+ drawBuildingBase(c,x,y,104,76);
+ fillRound(c,x-43,y-27,86,54,4,"#6d8290","#334c5c",2.5);
  for(let i=0;i<2;i++){
-  const bx=x-34+i*37;fillRound(c,bx,y-15,31,31,2,"#3d4940","#c2bd98",1.3);
-  c.fillStyle="#8b9279";c.fillRect(bx+3,y-11,25,4);
-  for(let k=0;k<4;k++){c.strokeStyle="#b5aa7e";c.lineWidth=1;c.beginPath();c.moveTo(bx+4,y-5+k*5);c.lineTo(bx+27,y-5+k*5);c.stroke();}
+  const bx=x-34+i*37;fillRound(c,bx,y-15,31,31,2,"#304a5b","#d1dade",1.3);
+  c.fillStyle="#87a0ad";c.fillRect(bx+3,y-11,25,4);
+  for(let k=0;k<4;k++){c.strokeStyle="#aebdc4";c.lineWidth=1;c.beginPath();c.moveTo(bx+4,y-5+k*5);c.lineTo(bx+27,y-5+k*5);c.stroke();}
  }
- fillRound(c,x-12,y-25,24,8,2,"#3d4840","#b4ad8c",1);drawRoofVent(c,x-31,y+21,10,8);drawRoofVent(c,x+31,y+21,10,8);
- c.fillStyle="#d7b45f";c.beginPath();c.moveTo(x+34,y-26);c.lineTo(x+43,y-26);c.lineTo(x+43,y-17);c.closePath();c.fill();
- drawBuildingLabel(c,"ENGINEERING",x,y+30);
+ fillRound(c,x-12,y-25,24,8,2,"#30495a","#c5d0d4",1);drawRoofVent(c,x-31,y+21,10,8);drawRoofVent(c,x+31,y+21,10,8);
+ c.fillStyle="#d8b64f";c.fillRect(x+32,y-26,11,4);c.fillRect(x+40,y-26,3,10);
+ drawBuildingLabel(c,"ENGINEERING",x,y+32);
 }
 function drawBaseBuilding(c,b){
  c.save();switch(b.type){
@@ -565,63 +610,73 @@ function drawBaseBuilding(c,b){
  }c.restore();
 }
 function drawPelicanStyleTransport(c,x,y){
- // Original fan-game transport silhouette; not a port of the game's model or texture.
+ // Original fan-game transport silhouette, using SEAF blue-grey service colors.
  c.save();c.translate(x,y);
- c.fillStyle="#252e28";c.beginPath();c.ellipse(0,5,59,23,0,0,Math.PI*2);c.fill();
+ c.fillStyle="#273c4b";c.beginPath();c.ellipse(0,5,59,23,0,0,Math.PI*2);c.fill();
  c.beginPath();c.moveTo(-42,-5);c.lineTo(-64,12);c.lineTo(-57,25);c.lineTo(-20,14);c.lineTo(20,14);c.lineTo(57,25);c.lineTo(64,12);c.lineTo(42,-5);c.closePath();
- c.fillStyle="#727b68";c.fill();c.strokeStyle="#c0b99a";c.lineWidth=1.5;c.stroke();
- fillRound(c,-12,-33,24,62,8,"#858b73","#d3c7a4",2);fillRound(c,-9,-26,18,14,5,"#253b3d","#b6c2ae",1);
- fillRound(c,-61,9,18,14,4,"#384239","#b5b397",1.5);fillRound(c,43,9,18,14,4,"#384239","#b5b397",1.5);
- c.fillStyle="#d7b56e";c.fillRect(-6,7,12,8);c.fillStyle="#343d34";c.fillRect(-4,19,8,12);
+ c.fillStyle="#718896";c.fill();c.strokeStyle="#d0dadd";c.lineWidth=1.5;c.stroke();
+ fillRound(c,-12,-33,24,62,8,"#9caeb7","#e3e9e9",2);fillRound(c,-9,-26,18,14,5,"#315f82","#c4d0d5",1);
+ fillRound(c,-61,9,18,14,4,"#3c596b","#cad5d9",1.5);fillRound(c,43,9,18,14,4,"#3c596b","#cad5d9",1.5);
+ c.fillStyle="#d8b64f";c.fillRect(-6,7,12,8);c.fillStyle="#30495a";c.fillRect(-4,19,8,12);
  c.restore();
 }
 function drawLandingZone(c){
- fillRound(c,525,612,150,124,8,"#777866","#b5b092",2);
- c.strokeStyle="#d5cfaa";c.lineWidth=2.5;c.setLineDash([10,7]);c.strokeRect(534,621,132,106);c.setLineDash([]);
- c.strokeStyle="#ded8b7";c.lineWidth=2.5;c.beginPath();c.arc(600,674,37,0,Math.PI*2);c.stroke();
- c.font="bold 24px system-ui";c.fillStyle="#e0dcc0";c.textAlign="center";c.textBaseline="middle";
- drawPelicanStyleTransport(c,600,642);
- c.font="bold 23px system-ui";c.fillText("H",600,695);
- c.font="bold 8px system-ui";c.fillText("TRANSPORT APRON",600,728);
- for(let i=0;i<4;i++){c.fillStyle="#d7b66e";c.beginPath();c.arc(540+i*40,615,2.5,0,Math.PI*2);c.fill();c.beginPath();c.arc(540+i*40,733,2.5,0,Math.PI*2);c.fill();}
+ // Reinforced transport apron with readable blue/white identification and yellow safety limits.
+ fillRound(c,510,596,180,150,8,"#7a8992","#dce2e4",2.2);
+ fillRound(c,518,604,164,134,5,"#aeb9bf","#edf0ef",1.3);
+ c.strokeStyle="#315f82";c.lineWidth=4;c.strokeRect(526,612,148,118);
+ c.strokeStyle="#d8b64f";c.lineWidth=3;c.setLineDash([10,7]);c.strokeRect(533,619,134,104);c.setLineDash([]);
+ // Painted touchdown circle and alignment bars.
+ c.strokeStyle="#edf1f2";c.lineWidth=3;c.beginPath();c.arc(600,675,40,0,Math.PI*2);c.stroke();
+ c.strokeStyle="#527f9e";c.lineWidth=3;c.beginPath();c.arc(600,675,31,0,Math.PI*2);c.stroke();
+ c.fillStyle="#315f82";c.font="bold 23px system-ui";c.textAlign="center";c.textBaseline="middle";c.fillText("H",600,700);
+ c.save();c.translate(600,644);drawPelicanStyleTransport(c,0,0);c.restore();
+ c.fillStyle="#294b65";c.font="bold 8px system-ui";c.fillText("SEAF TRANSPORT APRON",600,737);
+ for(let i=0;i<5;i++){c.fillStyle="#d8b64f";c.fillRect(536+i*32,607,13,3);c.fillRect(536+i*32,733,13,3);}
 }
 function drawCentralPlaza(c){
- fillRound(c,448,306,304,188,14,"#777663","#b9b292",2);
- c.strokeStyle="#aaa58a";c.lineWidth=2;c.setLineDash([8,7]);c.strokeRect(460,318,280,164);c.setLineDash([]);
- c.fillStyle="#d2c7a0";for(let i=0;i<4;i++){c.fillRect(466+i*18,314,10,3);c.fillRect(466+i*18,483,10,3);}
- c.fillStyle="#52594a";c.font="bold 9px system-ui";c.textAlign="center";c.fillText("SEAF COMMAND COMPOUND",600,330);
+ // A formal, modular concrete forecourt around the command building.
+ fillRound(c,448,306,304,188,14,"#9aa8af","#d9e0e2",2.2);
+ fillRound(c,458,316,284,168,10,"#7f909a","#e0e5e6",1.2);
+ c.strokeStyle="#527f9e";c.lineWidth=3;c.setLineDash([12,8]);c.strokeRect(468,326,264,148);c.setLineDash([]);
+ c.fillStyle="#d8b64f";for(let i=0;i<5;i++){c.fillRect(474+i*18,313,9,3);c.fillRect(474+i*18,484,9,3);}
+ // Blue institutional wayfinding panel.
+ fillRound(c,510,320,180,16,3,"#315a78","#aec1cc",1);
+ c.fillStyle="#edf1f2";c.font="bold 9px system-ui";c.textAlign="center";c.fillText("SEAF COMMAND COMPOUND",600,331);
+ // Recessed service covers and bollards.
+ for(let x of [476,724]){fillRound(c,x-9,387,18,34,3,"#596d79","#c2ccd0",1);c.fillStyle="#d8b64f";c.fillRect(x-2,390,4,4);}
 }
 function drawHeavyVehicleSilhouette(c,x,y){
  // Bastion tank destroyer: compact tracked hull, fixed central gun, top-down north-facing silhouette.
  c.save();c.translate(x,y);
  // Track runs and tread blocks.
  for(const side of [-1,1]){
-  fillRound(c,side*30-8,-48,16,96,4,"#303633","#9c9b86",1.5);
+  fillRound(c,side*30-8,-48,16,96,4,"#263b4a","#bac6cc",1.5);
   for(let j=0;j<10;j++){
-   fillRound(c,side*30-7,-43+j*9,14,5,1,"#74796d","#252c29",.7);
+   fillRound(c,side*30-7,-43+j*9,14,5,1,"#718999","#233644",.7);
   }
   // Track rollers visible inside the track run.
   for(let j=0;j<5;j++){
-   c.fillStyle="#a5a58e";c.beginPath();c.arc(side*30,-34+j*17,4.3,0,Math.PI*2);c.fill();
-   c.fillStyle="#4b514a";c.beginPath();c.arc(side*30,-34+j*17,2,0,Math.PI*2);c.fill();
+   c.fillStyle="#c0ccd1";c.beginPath();c.arc(side*30,-34+j*17,4.3,0,Math.PI*2);c.fill();
+   c.fillStyle="#3b5362";c.beginPath();c.arc(side*30,-34+j*17,2,0,Math.PI*2);c.fill();
   }
  }
  // Main armored hull with angled forward glacis and broad rear engine deck.
- fillRound(c,-24,-47,48,94,6,"#424841","#b3ad92",1.7);
- fillRound(c,-19,-43,38,82,4,"#686e64","#c1b99c",1.3);
- c.fillStyle="#777c70";c.beginPath();c.moveTo(-18,-40);c.lineTo(18,-40);c.lineTo(16,-23);c.lineTo(0,-15);c.lineTo(-16,-23);c.closePath();c.fill();
- c.strokeStyle="#c3b99a";c.lineWidth=1.2;c.stroke();
+ fillRound(c,-24,-47,48,94,6,"#516b7c","#d0d9dd",1.7);
+ fillRound(c,-19,-43,38,82,4,"#8497a2","#dbe2e4",1.3);
+ c.fillStyle="#a6b4bc";c.beginPath();c.moveTo(-18,-40);c.lineTo(18,-40);c.lineTo(16,-23);c.lineTo(0,-15);c.lineTo(-16,-23);c.closePath();c.fill();
+ c.strokeStyle="#dce3e5";c.lineWidth=1.2;c.stroke();
  // Fixed gun mount and long centerline cannon, pointing toward the top of the bay.
- fillRound(c,-13,-22,26,27,4,"#555e55","#bcb597",1.4);
- fillRound(c,-5,-57,10,43,3,"#353c37","#aaa68a",1.4);
- fillRound(c,-3,-63,6,12,2,"#8c9284","#d0c7a5",1);
- fillRound(c,-9,-25,18,18,3,"#7d8376","#d0c7a5",1.3);
+ fillRound(c,-13,-22,26,27,4,"#3f5a6d","#c6d1d5",1.4);
+ fillRound(c,-5,-57,10,43,3,"#2c4252","#c2cdd1",1.4);
+ fillRound(c,-3,-63,6,12,2,"#aebbc2","#e0e6e7",1);
+ fillRound(c,-9,-25,18,18,3,"#8397a3","#e0e6e7",1.3);
  // Rear deck vents, access panels, and yellow service stripe.
  for(let side of [-1,1]){
-  fillRound(c,side*10-5,25,10,20,2,"#454c45","#aaa68a",1);
+  fillRound(c,side*10-5,25,10,20,2,"#516a79","#c2cdd1",1);
   for(let k=0;k<4;k++){c.strokeStyle="#353c36";c.lineWidth=1;c.beginPath();c.moveTo(side*10-3,28+k*4);c.lineTo(side*10+3,28+k*4);c.stroke();}
  }
- fillRound(c,-9,39,18,7,2,"#333a34","#a7a187",1);
+ fillRound(c,-9,39,18,7,2,"#333a34","#b9c7cc",1);
  c.fillStyle="#c8b46f";c.fillRect(-3,11,6,3);c.fillRect(-16,46,32,2);
  c.restore();
 }
@@ -630,55 +685,60 @@ function drawExosuitSilhouette(c,x,y){
  // left shield assembly, right under-arm weapon and separated lower legs/feet.
  c.save();c.translate(x,y);
  // Legs and broad boot pads, visible below the torso.
- fillRound(c,-16,24,13,27,3,"#485047","#b1ac91",1.4);
- fillRound(c,3,24,13,27,3,"#485047","#b1ac91",1.4);
- fillRound(c,-18,45,17,9,2,"#343b35","#a6a18a",1);
- fillRound(c,2,45,17,9,2,"#343b35","#a6a18a",1);
+ fillRound(c,-16,24,13,27,3,"#5a7180","#c6d1d5",1.4);
+ fillRound(c,3,24,13,27,3,"#5a7180","#c6d1d5",1.4);
+ fillRound(c,-18,45,17,9,2,"#304756","#bbc8ce",1);
+ fillRound(c,2,45,17,9,2,"#304756","#bbc8ce",1);
  // Torso: squared environmental armor with central chest plate.
- fillRound(c,-23,-28,46,55,5,"#464d47","#b6b091",1.8);
- fillRound(c,-18,-23,36,43,3,"#697167","#c6bd9d",1.3);
- fillRound(c,-13,-18,26,29,3,"#343d38","#8e9886",1.1);
- fillRound(c,-9,-12,18,17,2,"#858d7c","#bdb697",1);
- c.fillStyle="#c7b56c";c.fillRect(-4,4,8,4);
+ fillRound(c,-23,-28,46,55,5,"#526c7b","#d0dadd",1.8);
+ fillRound(c,-18,-23,36,43,3,"#8296a1","#dce3e5",1.3);
+ fillRound(c,-13,-18,26,29,3,"#30495a","#b0bec5",1.1);
+ fillRound(c,-9,-12,18,17,2,"#9fadb5","#d5dfe2",1);
+ c.fillStyle="#d8b64f";c.fillRect(-4,4,8,4);
  // Helmet/collar at the forward end.
- fillRound(c,-10,-39,20,15,4,"#303832","#b9b394",1.3);
- fillRound(c,-6,-35,12,5,2,"#a8b0a0","#414a43",1);
+ fillRound(c,-10,-39,20,15,4,"#2e4656","#d5dfe2",1.3);
+ fillRound(c,-6,-35,12,5,2,"#c4d0d5","#414a43",1);
  // Left arm and broad defensive shield module.
- fillRound(c,-40,-25,15,49,4,"#444b44","#b7b091",1.5);
- fillRound(c,-47,-30,25,21,4,"#626b61","#c8bea0",1.4);
- fillRound(c,-49,-8,29,34,4,"#353d37","#a9a58c",1.4);
+ fillRound(c,-40,-25,15,49,4,"#516b7b","#cbd6da",1.5);
+ fillRound(c,-47,-30,25,21,4,"#7d929d","#dce3e5",1.4);
+ fillRound(c,-49,-8,29,34,4,"#30495a","#c8d3d7",1.4);
  c.strokeStyle="#c8bd9a";c.lineWidth=1.4;c.beginPath();c.moveTo(-44,-5);c.lineTo(-25,-5);c.lineTo(-25,18);c.lineTo(-44,18);c.closePath();c.stroke();
  // Right arm, exposed upper-arm joint, and under-arm rotary cannon extending forward.
- fillRound(c,25,-25,15,39,4,"#495149","#b7b092",1.5);
- fillRound(c,29,-20,10,19,3,"#747d71","#c8bea0",1.2);
- fillRound(c,25,2,21,20,4,"#363e38","#b2ad90",1.3);
- fillRound(c,31,-48,12,48,3,"#3a423c","#b5b092",1.3);
- fillRound(c,34,-55,6,13,2,"#8d9587","#d1c7a5",1);
- for(let k=0;k<3;k++){c.fillStyle="#262e29";c.beginPath();c.arc(37,7+k*5,2,0,Math.PI*2);c.fill();}
+ fillRound(c,25,-25,15,39,4,"#536c7b","#cbd6da",1.5);
+ fillRound(c,29,-20,10,19,3,"#93a4ad","#dce3e5",1.2);
+ fillRound(c,25,2,21,20,4,"#30495a","#cad5d9",1.3);
+ fillRound(c,31,-48,12,48,3,"#2d4555","#d0dadd",1.3);
+ fillRound(c,34,-55,6,13,2,"#aebdc4","#e1e7e7",1);
+ for(let k=0;k<3;k++){c.fillStyle="#243a49";c.beginPath();c.arc(37,7+k*5,2,0,Math.PI*2);c.fill();}
  c.restore();
 }
 function drawMotorPool(c){
- // Reserved service yard, with separate parking bays for a heavy vehicle and a powered frame.
- fillRound(c,790,500,220,226,8,"#777866","#b5b092",2);
- c.strokeStyle="#d2c8a5";c.lineWidth=2;c.setLineDash([10,7]);c.strokeRect(800,510,200,206);c.setLineDash([]);
- fillRound(c,806,522,88,178,5,"#5b6051","#b7ad8b",1.5);
- fillRound(c,906,522,88,178,5,"#5b6051","#b7ad8b",1.5);
- c.strokeStyle="#c5bb98";c.lineWidth=1.5;c.setLineDash([6,6]);c.strokeRect(814,530,72,162);c.strokeRect(914,530,72,162);c.setLineDash([]);
- c.fillStyle="#dfd6b4";c.font="bold 8px system-ui";c.textAlign="center";c.fillText("HEAVY VEHICLE",850,542);c.fillText("EXOSUIT SERVICE",950,542);
- drawHeavyVehicleSilhouette(c,850,610);
- drawExosuitSilhouette(c,950,612);
- // Tool lockers, wheel chocks and inspection lamps.
- for(let i=0;i<3;i++){
-  fillRound(c,812+i*28,675,18,10,2,"#444d40","#b3aa89",1);
+ // Dedicated vehicle service compound: concrete apron, painted bays and a blue service spine.
+ fillRound(c,786,496,228,232,9,"#7e8d95","#d4dcdf",2);
+ fillRound(c,794,504,212,216,6,"#5c6e79","#2f4655",1.5);
+ c.strokeStyle="#d4dde0";c.lineWidth=2;c.setLineDash([10,7]);c.strokeRect(800,510,200,206);c.setLineDash([]);
+ fillRound(c,806,522,88,178,5,"#aeb9be","#e0e6e7",1.5);
+ fillRound(c,906,522,88,178,5,"#aeb9be","#e0e6e7",1.5);
+ // Each bay has a navy-blue header, blue ID stripe and yellow safety boundaries.
+ for(const x of [806,906]){
+  fillRound(c,x+5,528,78,20,3,"#315f82","#d4dde0",1);
+  c.fillStyle="#eef2f3";c.font="bold 7px system-ui";c.textAlign="center";c.fillText(x===806?"BASTION BAY":"EXOSUIT BAY",x+44,541);
+  c.strokeStyle="#d8b64f";c.lineWidth=2;c.setLineDash([7,6]);c.strokeRect(x+8,552,72,137);c.setLineDash([]);
+  c.fillStyle="#527f9e";c.fillRect(x+8,554,3,132);c.fillRect(x+77,554,3,132);
  }
- for(let i=0;i<4;i++){c.fillStyle="#d7b66e";c.beginPath();c.arc(812+i*58,706,2.5,0,Math.PI*2);c.fill();}
- c.fillStyle="#e0d5ae";c.font="bold 9px system-ui";c.fillText("SEAF MOTOR POOL",900,718);
+ drawHeavyVehicleSilhouette(c,850,615);
+ drawExosuitSilhouette(c,950,614);
+ // Tool cabinets, inspection lights and a central service lane.
+ for(let i=0;i<3;i++){fillRound(c,810+i*28,690,18,10,2,"#304959","#c2ced2",1);c.fillStyle="#d8b64f";c.fillRect(814+i*28,693,9,2);}
+ for(let i=0;i<4;i++){c.fillStyle="#d8b64f";c.beginPath();c.arc(812+i*58,708,2.5,0,Math.PI*2);c.fill();}
+ c.fillStyle="#edf1f2";c.font="bold 8px system-ui";c.fillText("SEAF MOTOR POOL",900,716);
 }
 function drawUtilityProps(c){
- fillRound(c,390,332,27,22,3,"#515b4c","#b0ab8d",1.5);c.fillStyle="#c7b984";c.fillRect(395,336,17,4);c.fillStyle="#333d34";c.fillRect(395,343,17,7);
- c.strokeStyle="#a8a486";c.lineWidth=1.5;c.beginPath();c.moveTo(403,332);c.lineTo(403,323);c.stroke();
- fillRound(c,783,453,29,22,3,"#786849","#c8b88d",1.5);c.fillStyle="#3d4839";c.fillRect(788,458,19,11);c.fillStyle="#d2b36c";c.fillRect(786,453,23,3);
- for(let i=0;i<5;i++){fillRound(c,548+i*26,718,8,18,2,"#4a5044","#b9b192",1);}
+ // Electrical cabinets, cable junctions and access grates in the same blue-grey material family.
+ fillRound(c,390,332,27,22,3,"#7f929c","#d2dce0",1.5);c.fillStyle="#527f9e";c.fillRect(395,336,17,4);c.fillStyle="#314b5c";c.fillRect(395,343,17,7);
+ c.strokeStyle="#d0dadd";c.lineWidth=1.5;c.beginPath();c.moveTo(403,332);c.lineTo(403,323);c.stroke();
+ fillRound(c,783,453,29,22,3,"#8b9ba2","#d6dfe1",1.5);c.fillStyle="#3b6079";c.fillRect(788,458,19,11);c.fillStyle="#d8b64f";c.fillRect(786,453,23,3);
+ for(let i=0;i<5;i++){fillRound(c,548+i*26,718,8,18,2,"#405969","#c3cfd3",1);}
 }
 function drawBase(){
  const w=baseCanvas.width,h=baseCanvas.height,c=baseCtx;
@@ -713,7 +773,7 @@ function drawBase(){
    c.strokeRect(plot.x-45,plot.y-34,90,68);c.restore();
   }
  }
- c.fillStyle="#e0d5ae";c.font="bold 10px system-ui";c.textAlign="center";c.fillText("SEAF ACCESS GATE",600,786);
+ c.fillStyle="#e8eef0";c.font="bold 10px system-ui";c.textAlign="center";c.fillText("SEAF ACCESS GATE",600,786);
  c.setTransform(1,0,0,1,0,0);updateBaseZoomLabel();
 }
 function renderMissions(){
