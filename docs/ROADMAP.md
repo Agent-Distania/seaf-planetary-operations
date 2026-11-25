@@ -1,6 +1,7 @@
 # Development Roadmap
 
 ## v0.3 — Base Technical Update (implemented)
+- v0.3.1 follow-up: main menu and three local campaign save slots
 - Zoom in/out and reset camera controls
 - Touch pinch-to-zoom and drag-to-pan
 - Expanded base map with camera bounds
