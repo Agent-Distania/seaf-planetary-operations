@@ -814,7 +814,7 @@ function renderMissions(){
  $("missionCards").querySelectorAll("[data-mission]").forEach(b=>b.addEventListener("click",()=>startMission(b.dataset.mission)));
 }
 function refresh(){
- renderResources();renderBuildings();renderLogistics();drawBase();renderMissions();
+ renderResources();renderBuildings();drawBase();renderMissions();
  $("baseStatus").textContent=`Buildings: ${state.buildings.length} · Missions completed: ${state.missionWins} · Squad strength: ${state.squad}/${getSquadCapacity()}`;
 }
 function recruit(){
