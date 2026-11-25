@@ -9,7 +9,8 @@ All notable changes to SEAF: Planetary Operations will be recorded here.
 - Fortified perimeter walls, watch posts, reinforced access gate and road network.
 - Central SEAF Command Compound and dedicated transport landing apron.
 - Original top-down vector-style artwork for Command Post, Barracks, Supply Depot, Medical Station, Radar Station, Defense Turret and Engineering Depot.
-- A dedicated motor-pool yard with original top-down heavy-vehicle and exosuit silhouettes, plus reserved construction space.\n- Reserved construction space around the transport apron to keep the landing approach clear.
+- A dedicated motor-pool yard with original top-down heavy-vehicle and exosuit silhouettes, plus reserved construction space.
+- Reserved construction space around the transport apron to keep the landing approach clear.
 - Concrete construction pads and facility-specific silhouettes.
 
 ### Changed
