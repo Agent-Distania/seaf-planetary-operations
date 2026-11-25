@@ -43,7 +43,7 @@
 - Updated the service rifle to a 30-round magazine and improved the combat HUD
 - Added explicit supply-cache interaction and moved extraction to the far side of the battlefield
 
-## v0.8 — Pelican VTOL & Battlefield Installations (next)
+## v0.8 — Pelican VTOL & Battlefield Installations (implemented)
 - Move the Pelican's VTOL engine nacelles to the outer ends of its wings, with the engines visibly mounted at the wing tips
 - Expand and reshape the landing apron to fit the corrected Pelican footprint, keeping clear approach and parking space
 - Redesign enemy installations around the enemy faction's own armor, structure and lighting colors rather than neutral SEAF-looking grey props
@@ -54,7 +54,7 @@
 - Expand the combat arena as needed for larger installations, roads, perimeter space and more than one approach route; do not force new facilities into the current 1,000 × 1,000 map
 - Add varied battlefield layouts and objective placement around these installations
 - Revisit battlefield structure, friendly and enemy visual designs as a coordinated art pass; preserve clear SEAF/enemy faction distinction
-- Test structure readability, squad movement, combat flow and mobile performance on desktop and mobile
+- Test structure readability, squad movement, combat flow and mobile performance on desktop and mobile (playtest pending)
 
 ## v0.9 — Base Operations & Services (planned)
 - Add useful functions to the Medical Station, Radar Station and Engineering Depot
