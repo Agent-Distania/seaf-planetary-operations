@@ -1,3 +1,30 @@
+## v0.8.2 — Operations Expanded, Part I: Enemy Overhaul
+*Released November 25, 2026*
+
+### Added
+- Replaced the shared generic enemy token with three purpose-built top-down silhouettes: a narrow, sensor-equipped Scout; an armored standard Trooper; and a substantially broader, reinforced Devastator.
+- Added clearer hostile visual identity through dark mechanical frames, red/oxide armor plates, visible red optics, role-specific equipment, and health-bar sizing.
+- Gave each archetype distinct durability, movement speed and preferred engagement distance so the visual roles also communicate different battlefield behavior.
+
+### Changed
+- Replaced the former Raider role with the standard Trooper and renamed the former Heavy role to Devastator; the fast Scout remains the close-range archetype.
+- Ranged enemies now prefer the nearest SEAF unit with a clear line of sight. When every friendly is obscured, they retain a nearest target as a movement destination rather than stopping without a target.
+- Troopers maintain a closer firing distance, while Devastators keep farther back and have a larger, slower, more durable profile.
+
+### Preserved
+- Campaign saves, save-slot migration, base construction, logistics, recruitment, missions, battlefield dimensions, squad orders, mobile controls and existing objective flows.
+- The existing arena and cover layout. Map expansion, patrols, barbed wire and anti-vehicle obstacles are not part of Part I.
+
+### Verification
+- Embedded JavaScript syntax compilation passed against the published GitHub file.
+- Simulated startup and Clear the Area mission test passed: eight enemies spawned as five Troopers, two Scouts and one Devastator; one combat update and one render call completed.
+- Relay mission test passed: ten enemies spawned as seven Troopers, two Scouts and one Devastator.
+- A targeted line-of-sight test confirmed a ranged enemy selected an unobstructed squadmate rather than a closer player obscured by cover.
+- These are simulated DOM/canvas checks, not a live visual playtest in mobile Safari. The new silhouettes still need an on-device visual review for scale and readability.
+
+### Not included
+- No battlefield expansion, new building-spawn rules, patrols, new mission types or vehicle obstacles. These remain in Operations Expanded, Part II: Battlefield Overhaul and later encounter work.
+
 # Changelog
 
 ## v0.8.1 — Save Menu Startup Fix
