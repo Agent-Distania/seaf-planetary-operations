@@ -1195,7 +1195,7 @@ function update(dt){
    }
    enemy.shootCooldown-=dt;
    if(d<520&&enemy.shootCooldown<=0&&hasLineOfSight(enemy,target)){
-    shootFrom(enemy,target,enemy.type==="heavy"?"enemyHeavy":"enemy",enemy.damage);
+    shootFrom(enemy,target,enemy.type==="devastator"?"enemyHeavy":"enemy",enemy.damage);
     enemy.shootCooldown=enemy.rate+rand(-.18,.25);
    }
   }
