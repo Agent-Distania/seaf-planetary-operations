@@ -1346,7 +1346,7 @@ function drawBattle(){
   c.strokeStyle=relay.disabled?"#85888a":"#e2b5a6";c.lineWidth=2;c.stroke();
   c.strokeStyle="#272629";c.lineWidth=2;c.beginPath();c.moveTo(-17,-49);c.lineTo(17,-29);c.moveTo(-19,-29);c.lineTo(19,-49);c.stroke();
   // Antenna cluster, equipment boxes and hostile stripe.
-  for(const sx of [-1,1){fillRound(c,sx*23-5,-12,10,22,2,"#302a2c","#bb796d",1);c.strokeStyle="#d4a18c";c.lineWidth=2;c.beginPath();c.moveTo(sx*23,-12);c.lineTo(sx*23,-26);c.stroke();}
+  for(const sx of [-1,1]){fillRound(c,sx*23-5,-12,10,22,2,"#302a2c","#bb796d",1);c.strokeStyle="#d4a18c";c.lineWidth=2;c.beginPath();c.moveTo(sx*23,-12);c.lineTo(sx*23,-26);c.stroke();}
   c.fillStyle="#d4a04e";c.fillRect(-25,19,50,5);c.fillStyle="#292728";c.fillRect(-21,26,42,4);
   c.fillStyle="#eee4dd";c.font="bold 9px system-ui";c.textAlign="center";c.fillText("SEAF OBJECTIVE",0,42);
   c.restore();
