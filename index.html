@@ -197,13 +197,13 @@ const LAST_SAVE_SLOT_KEY="seaf_planetary_ops_last_slot";
 let activeSaveSlot=null;
 const saveSlotKey=slot=>SAVE_SLOT_PREFIX+slot+"_save";
 const buildings={
- command:{name:"Command Post",cost:{supplies:0,components:0},desc:"Your operational hub.",limit:1,color:"#b6bd85"},
- barracks:{name:"Barracks",cost:{supplies:45,components:10},desc:"+1 recruit capacity and squad recovery.",limit:2,color:"#829a78"},
- depot:{name:"Supply Depot",cost:{supplies:35,components:8},desc:"Increases supply storage.",limit:2,color:"#b38d63"},
- medical:{name:"Medical Station",cost:{supplies:40,components:15},desc:"Recover from injuries between deployments.",limit:1,color:"#8fa9a0"},
- radar:{name:"Radar Station",cost:{supplies:55,components:20},desc:"Reveals additional mission opportunities.",limit:1,color:"#77a2a7"},
- turret:{name:"Defense Turret",cost:{supplies:25,components:12},desc:"Base defense infrastructure (prototype decorative).",limit:4,color:"#9c8872"},
- engineering:{name:"Engineering Depot",cost:{supplies:70,components:30},desc:"Unlocks advanced construction later.",limit:1,color:"#b0a26d"}
+ command:{name:"Command Post",cost:{supplies:0,components:0},desc:"Your operational hub.",limit:1,color:"#527f9e"},
+ barracks:{name:"Barracks",cost:{supplies:45,components:10},desc:"+1 recruit capacity and squad recovery.",limit:2,color:"#8299a6"},
+ depot:{name:"Supply Depot",cost:{supplies:35,components:8},desc:"Increases supply storage.",limit:2,color:"#647f91"},
+ medical:{name:"Medical Station",cost:{supplies:40,components:15},desc:"Recover from injuries between deployments.",limit:1,color:"#c2d0d5"},
+ radar:{name:"Radar Station",cost:{supplies:55,components:20},desc:"Reveals additional mission opportunities.",limit:1,color:"#6d9ab8"},
+ turret:{name:"Defense Turret",cost:{supplies:25,components:12},desc:"Base defense infrastructure (prototype decorative).",limit:4,color:"#405b6c"},
+ engineering:{name:"Engineering Depot",cost:{supplies:70,components:30},desc:"Unlocks advanced construction later.",limit:1,color:"#728a99"}
 };
 const missions=[
  {id:"clear",name:"Clear the Area",type:"Elimination",desc:"Eliminate hostiles occupying a nearby clearing.",reward:{supplies:45,components:15,requisition:20},enemyCount:8},
@@ -742,7 +742,7 @@ function drawUtilityProps(c){
 }
 function drawBase(){
  const w=baseCanvas.width,h=baseCanvas.height,c=baseCtx;
- c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,w,h);c.fillStyle="#172019";c.fillRect(0,0,w,h);
+ c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,w,h);c.fillStyle="#1b2a36";c.fillRect(0,0,w,h);
  c.setTransform(baseCamera.zoom,0,0,baseCamera.zoom,-baseCamera.x*baseCamera.zoom,-baseCamera.y*baseCamera.zoom);
  drawGround(c);
  // Main road network connects the command compound, transport apron and secured entrance.
@@ -763,13 +763,13 @@ function drawBase(){
   const hint=basePointerWorld||{x:600,y:400},ghost=nearestOpenBasePlot(hint,BASE_WORLD_W);
   if(ghost){
    const fp=baseFootprint(pendingBuilding);
-   c.save();c.globalAlpha=.72;c.setLineDash([8,5]);c.strokeStyle="#d8e8ad";c.lineWidth=3;
+   c.save();c.globalAlpha=.72;c.setLineDash([8,5]);c.strokeStyle="#b8d8e9";c.lineWidth=3;
    c.strokeRect(ghost.x-fp.w/2-5,ghost.y-fp.h/2-5,fp.w+10,fp.h+10);c.setLineDash([]);
    drawBaseBuilding(c,{type:pendingBuilding,x:ghost.x,y:ghost.y});c.restore();
   }
   for(const plot of getBasePlots()){
    const open=basePlotOpen(plot);
-   c.save();c.globalAlpha=.85;c.setLineDash([6,5]);c.lineWidth=2;c.strokeStyle=open?"#c8e0a1":"#c77b68";
+   c.save();c.globalAlpha=.85;c.setLineDash([6,5]);c.lineWidth=2;c.strokeStyle=open?"#8bb7d0":"#c77b68";
    c.strokeRect(plot.x-45,plot.y-34,90,68);c.restore();
   }
  }
