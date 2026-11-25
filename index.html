@@ -1262,6 +1262,36 @@ function drawBattleTerrain(c){
  c.fillStyle="#68766e";c.fillRect(0-battle.camera.x,485-battle.camera.y,1000,32);
  c.strokeStyle="#87938a";c.lineWidth=2;c.setLineDash([20,26]);c.beginPath();c.moveTo(0-battle.camera.x,501-battle.camera.y);c.lineTo(1000-battle.camera.x,501-battle.camera.y);c.stroke();c.setLineDash([]);
 }
+function drawHostileFacility(c,o,x,y){
+ c.save();
+ fillRound(c,x,y,o.w,o.h,7,"#3b2d30","#8b574f",2);
+ fillRound(c,x+7,y+7,o.w-14,o.h-14,5,"#642f32","#b36d60",1.2);
+ c.fillStyle="#252629";c.fillRect(x+o.w*.18,y+o.h*.18,o.w*.64,o.h*.64);
+ if(o.type==="comms"){
+  fillRound(c,x+o.w*.34,y+o.h*.58,o.w*.32,o.h*.28,3,"#542d30","#ba776b",1);
+  c.strokeStyle="#c7a08e";c.lineWidth=3;c.beginPath();c.moveTo(x+o.w*.5,y+o.h*.58);c.lineTo(x+o.w*.5,y+o.h*.22);c.stroke();
+  c.fillStyle="#a96b60";c.beginPath();c.ellipse(x+o.w*.5,y+o.h*.22,o.w*.36,o.h*.22,-.25,0,Math.PI*2);c.fill();c.strokeStyle="#e0b2a4";c.lineWidth=2;c.stroke();
+  c.strokeStyle="#2a292b";c.lineWidth=2;c.beginPath();c.moveTo(x+o.w*.18,y+o.h*.18);c.lineTo(x+o.w*.82,y+o.h*.28);c.moveTo(x+o.w*.24,y+o.h*.3);c.lineTo(x+o.w*.76,y+o.h*.16);c.stroke();
+  fillRound(c,x+o.w*.08,y+o.h*.68,o.w*.84,o.h*.2,3,"#342d2e","#c38a7b",1);
+ }else if(o.type==="generator"){
+  for(let n=0;n<3;n++){fillRound(c,x+o.w*.12+n*o.w*.25,y+o.h*.25,o.w*.18,o.h*.52,3,"#7b4844","#c18375",1);c.fillStyle="#d1a35a";c.fillRect(x+o.w*.12+n*o.w*.25,y+o.h*.36,o.w*.18,5);}
+  fillRound(c,x+o.w*.12,y+o.h*.08,o.w*.76,o.h*.14,3,"#29292a","#b98072",1);
+ }else if(o.type==="command"){
+  fillRound(c,x+o.w*.15,y+o.h*.15,o.w*.7,o.h*.7,5,"#9a5b50","#d49b8c",1.2);
+  c.fillStyle="#d1a35a";c.fillRect(x+o.w*.2,y+o.h*.2,o.w*.6,5);
+  for(let n=0;n<4;n++)fillRound(c,x+o.w*.12+n*o.w*.2,y+o.h*.08,8,12,2,"#2d292b","#d1a35a",1);
+ }else if(o.type==="defense"){
+  for(let side=0;side<2;side++)fillRound(c,x+o.w*.1+side*o.w*.52,y+o.h*.15,o.w*.38,o.h*.7,5,"#5a3535","#c18475",1.2);
+  c.fillStyle="#27282a";c.fillRect(x+o.w*.45,y+o.h*.42,o.w*.1,o.h*.16);
+  c.strokeStyle="#d1a35a";c.lineWidth=3;c.beginPath();c.moveTo(x+o.w*.5,y+o.h*.5);c.lineTo(x+o.w*.5,y+o.h*.15);c.stroke();
+ }else{
+  for(let n=0;n<3;n++)fillRound(c,x+o.w*.12+n*o.w*.25,y+o.h*.25,o.w*.2,o.h*.5,3,"#956052","#d1a35a",1);
+  c.fillStyle="#d1a35a";c.fillRect(x+o.w*.08,y+o.h*.78,o.w*.84,4);
+ }
+ c.fillStyle="#e0b15d";c.fillRect(x+o.w*.12,y+o.h*.1,o.w*.76,4);
+ c.fillStyle="#1d2022";c.font="bold 8px system-ui";c.textAlign="center";c.fillText(o.type.toUpperCase(),x+o.w*.5,y+o.h*.94);
+ c.restore();
+}
 function drawBattleObstacles(c){
  for(const o of activeObstacles()){
   const x=o.x-battle.camera.x,y=o.y-battle.camera.y;
@@ -1274,6 +1304,8 @@ function drawBattleObstacles(c){
    c.fillStyle="#d3b452";c.fillRect(x+5,y+4,o.w-10,4);
    for(let k=0;k<Math.floor(o.w/18);k++){c.fillStyle="#8196a0";c.fillRect(x+9+k*18,y+o.h*.45,10,5);}
    if(o.destructible&&o.hp<o.maxHp){c.fillStyle="#263744";c.fillRect(x,y-7,o.w,4);c.fillStyle="#d3b452";c.fillRect(x,y-7,o.w*clamp(o.hp/o.maxHp,0,1),4);}
+  }else if(["comms","generator","command","defense","supply"].includes(o.type)){
+   drawHostileFacility(c,o,x,y);
   }else{
    fillRound(c,x,y,o.w,o.h,3,"#405560","#b0bec4",1.8);
    c.fillStyle="#738893";c.fillRect(x+4,y+4,o.w-8,5);
