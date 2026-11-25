@@ -1083,11 +1083,14 @@ function updateHud(){
   battle.mission.relay?"Disable relay: "+(relay.disabled?"Disabled":Math.ceil(relay.hp)+"% integrity"):
   "Hostiles remaining: "+enemies.filter(e=>e.alive).length;
  const squadStatus=squad.length+" deployed · "+state.squad+" available";
+ const target=battle.objectiveDone?battle.extraction:(battle.mission.relay?relay:(battle.mission.crates?crates.find(c=>!c.collected):null));
+ const guidance=target?(()=>{const dx=target.x-player.x,dy=target.y-player.y,dist=Math.round(Math.hypot(dx,dy));const dir=Math.abs(dx)>Math.abs(dy)?(dx>0?"E":"W"):(dy>0?"S":"N");return "Objective: "+dir+" · "+dist+"m";})():"Objective: area clear";
  $("battleHud").innerHTML=
   '<div class="huditem">HP: '+Math.max(0,Math.ceil(player.hp))+'/'+player.maxHp+'</div>'+
   '<div class="huditem">'+(battle.reloadTimer>0?"RELOADING":"Ammo: "+battle.ammo+"/"+battle.maxAmmo)+'</div>'+
   '<div class="huditem">'+squadStatus+'</div>'+
   '<div class="huditem">'+objective+'</div>'+
+  '<div class="huditem">'+guidance+'</div>'+
   '<div class="huditem">'+(battle.squadOrder==="hold"?"Squad holding":"Squad following")+'</div>';
  updateSquadOrderButton();
 }
