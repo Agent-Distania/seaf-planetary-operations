@@ -32,7 +32,7 @@
 - Added visible supply/component storage capacities and a dedicated Logistics & Storage panel
 - Made Supply Depots increase supplies/components capacity
 - Capped mission supply/component rewards at available storage and report overflow
-- Made Barracks increase the recruitable squad capacity from 4 to 6 to 8
+- Preserved the existing base squad capacity of 8; each Barracks adds 2, up to 10 then 12
 - Preserved old campaign saves without a schema migration
 
 ## v0.7 — Base Operations & Services (next)
