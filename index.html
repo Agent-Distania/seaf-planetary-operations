@@ -209,7 +209,7 @@ let activeSaveSlot=null;
 const saveSlotKey=slot=>SAVE_SLOT_PREFIX+slot+"_save";
 const buildings={
  command:{name:"Command Post",cost:{supplies:0,components:0},desc:"Your operational hub.",limit:1,color:"#527f9e"},
- barracks:{name:"Barracks",cost:{supplies:45,components:10},desc:"+2 squad capacity, up to 8 personnel.",limit:2,color:"#8299a6"},
+ barracks:{name:"Barracks",cost:{supplies:45,components:10},desc:"+2 squad capacity, up to 12 personnel.",limit:2,color:"#8299a6"},
  depot:{name:"Supply Depot",cost:{supplies:35,components:8},desc:"+100 supply and +50 component storage.",limit:2,color:"#647f91"},
  medical:{name:"Medical Station",cost:{supplies:40,components:15},desc:"Recover from injuries between deployments.",limit:1,color:"#c2d0d5"},
  radar:{name:"Radar Station",cost:{supplies:55,components:20},desc:"Reveals additional mission opportunities.",limit:1,color:"#6d9ab8"},
@@ -384,7 +384,7 @@ function getStorageCapacity(resource){
  if(resource==="components")return 90+depots*50;
  return Infinity;
 }
-function getSquadCapacity(){return Math.min(8,4+counts("barracks")*2);}
+function getSquadCapacity(){return Math.min(12,8+counts("barracks")*2);}
 function creditStoredResource(resource,amount){
  const capacity=getStorageCapacity(resource);
  const accepted=Math.min(Math.max(0,amount),Math.max(0,capacity-state[resource]));
@@ -401,7 +401,7 @@ function renderLogistics(){
   return '<div class="storageCard"><div class="storageHead"><span>'+row.name+'</span><b>'+row.value+' / '+row.cap+'</b></div><div class="storageTrack"><div class="storageFill" style="width:'+pct+'%;background:'+row.color+'"></div></div><small>'+Math.max(0,row.cap-row.value)+' available capacity</small></div>';
  }).join("")+
  '<p class="storageNote">Each Supply Depot adds 100 supply and 50 component storage. Depots: '+counts("depot")+'/2.</p>'+
- '<p class="storageNote">Each Barracks adds 2 squad capacity. Personnel: '+state.squad+'/'+getSquadCapacity()+'.</p>';
+ '<p class="storageNote">Each Barracks adds 2 squad capacity (base limit 8). Personnel: '+state.squad+'/'+getSquadCapacity()+'.</p>';
 }
 function renderResources(){
  $("resources").innerHTML=[
