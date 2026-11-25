@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>SEAF: Planetary Operations — v0.2</title>
+<style>
+:root{--bg:#101713;--panel:#1b2620;--panel2:#233229;--line:#3c5144;--text:#e4ece4;--muted:#a5b7a8;--accent:#c7d6a1;--danger:#e26b5e;--gold:#d8b46a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+button{background:#34493a;color:var(--text);border:1px solid #58705d;border-radius:8px;padding:10px 12px;font-weight:650;cursor:pointer}
+button:hover{background:#405a46}
+button:disabled{opacity:.45;cursor:not-allowed}
+button.primary{background:#566a43;border-color:#829466}
+button.danger{background:#60342f;border-color:#88524a}
+button.small{padding:6px 9px;font-size:12px}
+#app{max-width:1200px;margin:0 auto;padding:12px}
+header{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:10px}
+.brand{font-weight:900;letter-spacing:.08em;font-size:20px}
+.brand span{color:var(--accent);font-size:12px;display:block;letter-spacing:.18em}
+.resourcebar{display:flex;gap:8px;flex-wrap:wrap}
+.resource{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:7px 11px;font-size:13px}
+.tabs{display:flex;gap:7px;margin:8px 0 12px;flex-wrap:wrap}
+.tabs button.active{background:#68794e;border-color:#9baa76}
+.view{display:none}.view.active{display:block}
+.layout{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(250px,1fr);gap:12px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px}
+.panel h2,.panel h3{margin:0 0 8px;font-size:16px}
+.panel p{color:var(--muted);margin:6px 0;font-size:13px;line-height:1.45}
+#baseCanvas,#battleCanvas{width:100%;display:block;border:1px solid #506653;border-radius:10px;background:#19251d;touch-action:none}
+#baseCanvas{height:390px}
+#battleCanvas{height:min(66vh,600px);min-height:380px}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.buildCard,.missionCard{border:1px solid var(--line);background:var(--panel2);border-radius:9px;padding:10px}
+.buildCard h4,.missionCard h4{margin:0 0 4px;font-size:14px}
+.buildCard p,.missionCard p{margin:0 0 8px}
+.statusline{display:flex;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin:8px 0}
+.log{max-height:230px;overflow:auto;font-size:12px;color:var(--muted);line-height:1.5;padding-right:4px}
+.log div{border-bottom:1px solid #304034;padding:4px 0}
+#battleHud{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.huditem{background:#243329;border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:12px}
+.battleActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.mobileControls{display:none;position:absolute;inset:0;pointer-events:none}
+@media(max-width:760px) and (pointer:coarse){.mobileControls{display:block}}
+#battleWrap{position:relative}
+#joystick{position:absolute;bottom:18px;left:18px;width:112px;height:112px;border-radius:50%;background:#23362b99;border:2px solid #8b9b82;pointer-events:auto;touch-action:none}
+#joyKnob{position:absolute;left:34px;top:34px;width:42px;height:42px;border-radius:50%;background:#b4c39a;opacity:.8}
+#touchFire{position:absolute;bottom:32px;right:28px;width:86px;height:86px;border-radius:50%;background:#753c35cc;border-color:#b9796e;pointer-events:auto}
+#touchReload{position:absolute;bottom:132px;right:30px;pointer-events:auto}
+#touchInteract{position:absolute;top:14px;right:14px;pointer-events:auto}
+#touchExit{position:absolute;top:14px;left:14px;pointer-events:auto}
+footer{margin-top:10px;color:#819387;font-size:11px;text-align:center}
+@media(max-width:760px){#app{padding:8px}.layout{grid-template-columns:1fr}.cards{grid-template-columns:1fr 1fr}.panel{padding:9px}#baseCanvas{height:320px}.brand{font-size:18px}#battleCanvas{height:58vh;min-height:360px}}
+</style>
+</head>
+<body>
+<div id="app">
+<header>
+  <div class="brand">SEAF <span>PLANETARY OPERATIONS · PROTOTYPE 0.2</span></div>
+  <div class="resourcebar" id="resources"></div>
+</header>
+<div class="tabs">
+  <button class="active" data-view="baseView">Forward Base</button>
+  <button data-view="missionsView">Operations</button>
+  <button data-view="battleView" id="battleTab" disabled>Deployment</button>
+</div>
+
+<section class="view active" id="baseView">
+<div class="layout">
+  <div class="panel">
+    <h2>Forward Operating Base — Landing Zone Cedar</h2>
+    <p>Place structures around your foothold. Buildings cost resources and provide useful services.</p>
+    <canvas id="baseCanvas" width="900" height="500"></canvas>
+    <div class="statusline" id="baseStatus"></div>
+  </div>
+  <div class="panel">
+    <h2>Construction</h2>
+    <div class="cards" id="buildCards"></div>
+    <h3 style="margin-top:12px">Base Personnel</h3>
+    <p id="personnel"></p>
+    <button id="recruitBtn" class="primary">Recruit squadmate — 30 requisition</button>
+    <h3 style="margin-top:14px">Operations Log</h3>
+    <div class="log" id="baseLog"></div>
+  </div>
+</div>
+</section>
+
+<section class="view" id="missionsView">
+<div class="layout">
+  <div class="panel">
+    <h2>Planetary Operations</h2>
+    <p>Select a deployment. Missions are short operations in the surrounding region. Complete the objective and return to base.</p>
+    <div class="cards" id="missionCards"></div>
+  </div>
+  <div class="panel">
+    <h2>Current Status</h2>
+    <p id="missionStatus">No active deployment.</p>
+    <h3>Field Notes</h3>
+    <p>SEAF scouts report hostile patrols, abandoned supply caches, and a damaged relay beyond the landing zone. Secure the area and recover what you can.</p>
+  </div>
+</div>
+</section>
+
+<section class="view" id="battleView">
+<div class="panel">
+  <div id="battleHud"></div>
+  <div id="battleWrap">
+    <canvas id="battleCanvas" width="1000" height="650"></canvas>
+    <div class="mobileControls" id="mobileControls">
+      <div id="joystick"><div id="joyKnob"></div></div>
+      <button id="touchFire">FIRE</button>
+      <button class="small" id="touchReload">RELOAD</button>
+      <button class="small" id="touchInteract">INTERACT</button>
+      <button class="small" id="touchExit">RETREAT</button>
+    </div>
+  </div>
+  <div class="battleActions">
+    <button id="reloadBtn">Reload (R)</button>
+    <button id="interactBtn">Interact (E)</button>
+    <button class="danger" id="retreatBtn">Retreat to Base</button>
+  </div>
+  <p>PC: WASD move · Mouse aim · Left click fire · R reload · E interact. Mobile: joystick movement, FIRE auto-aims at nearby hostiles. Complete the objective, then return to the marked extraction zone and interact. Squadmates follow and engage nearby hostiles.</p>
+</div>
+</section>
+<footer>Prototype · Progress saves locally on this device · Fan-made concept, not affiliated with Arrowhead or Sony</footer>
+</div>
+<script>
+(() => {
+"use strict";
+const $=id=>document.getElementById(id);
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+const rand=(a,b)=>a+Math.random()*(b-a);
+const now=()=>new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});
+const saveKey="seaf_planetary_ops_v01_save";
+const buildings={
+ command:{name:"Command Post",cost:{supplies:0,components:0},desc:"Your operational hub.",limit:1,color:"#b6bd85"},
+ barracks:{name:"Barracks",cost:{supplies:45,components:10},desc:"+1 recruit capacity and squad recovery.",limit:2,color:"#829a78"},
+ depot:{name:"Supply Depot",cost:{supplies:35,components:8},desc:"Increases supply storage.",limit:2,color:"#b38d63"},
+ medical:{name:"Medical Station",cost:{supplies:40,components:15},desc:"Recover from injuries between deployments.",limit:1,color:"#8fa9a0"},
+ radar:{name:"Radar Station",cost:{supplies:55,components:20},desc:"Reveals additional mission opportunities.",limit:1,color:"#77a2a7"},
+ turret:{name:"Defense Turret",cost:{supplies:25,components:12},desc:"Base defense infrastructure (prototype decorative).",limit:4,color:"#9c8872"},
+ engineering:{name:"Engineering Depot",cost:{supplies:70,components:30},desc:"Unlocks advanced construction later.",limit:1,color:"#b0a26d"}
+};
+const missions=[
+ {id:"clear",name:"Clear the Area",type:"Elimination",desc:"Eliminate hostiles occupying a nearby clearing.",reward:{supplies:45,components:15,requisition:20},enemyCount:8},
+ {id:"recover",name:"Supply Recovery",type:"Recovery",desc:"Recover marked supply crates and eliminate resistance.",reward:{supplies:70,components:10,requisition:15},enemyCount:6,crates:3},
+ {id:"relay",name:"Relay Sabotage",type:"Sabotage",desc:"Disable a hostile relay site guarded by patrols.",reward:{supplies:35,components:25,requisition:30},enemyCount:10,relay:true}
+];
+let state={
+ supplies:100,components:55,requisition:65,intel:0,
+ buildings:[{type:"command",x:450,y:250}],
+ squad:2,missionWins:0,selectedBuilding:null,baseLog:[],
+ mission:null,saveVersion:1
+};
+let player=null,squad=[],enemies=[],crates=[],relay=null,bullets=[],enemyBullets=[],particles=[];
+let battle={active:false,completed:false,failed:false,elapsed:0,ammo:24,maxAmmo:24,reloadTimer:0,shootCooldown:0,spawned:0,kills:0,objectiveDone:false,keys:{},mouse:{x:0,y:0,down:false},touch:{x:0,y:0,fire:false},camera:{x:0,y:0},mission:null,extraction:{x:500,y:500}};
+let baseCanvas=$("baseCanvas"),baseCtx=baseCanvas.getContext("2d"),canvas=$("battleCanvas"),ctx=canvas.getContext("2d");
+function log(msg){state.baseLog.unshift(`[${now()}] ${msg}`);state.baseLog=state.baseLog.slice(0,30);$("baseLog").innerHTML=state.baseLog.map(x=>`<div>${escapeHTML(x)}</div>`).join("");}
+function escapeHTML(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function save(){try{localStorage.setItem(saveKey,JSON.stringify(state));}catch(e){log("Save unavailable on this browser.");}}
+function load(){try{let raw=localStorage.getItem(saveKey);if(raw){let s=JSON.parse(raw);if(s&&Array.isArray(s.buildings)&&Number.isFinite(s.supplies)){state={...state,...s};state.mission=null;}}}catch(e){console.warn("Save load failed",e);}}
+function counts(type){return state.buildings.filter(b=>b.type===type).length;}
+function renderResources(){$("resources").innerHTML=[["Supplies",state.supplies],["Components",state.components],["Requisition",state.requisition],["Intel",state.intel]].map(([n,v])=>`<div class="resource">${n}: <b>${v}</b></div>`).join("");}
+function renderBuildings(){
+ $("buildCards").innerHTML=Object.entries(buildings).filter(([k])=>k!=="command").map(([k,b])=>{
+ let count=counts(k),cost=`${b.cost.supplies} supplies · ${b.cost.components} components`;
+ return `<div class="buildCard"><h4>${b.name} ${count}/${b.limit}</h4><p>${b.desc}</p><p><small>${cost}</small></p><button class="small" data-build="${k}" ${count>=b.limit||state.supplies<b.cost.supplies||state.components<b.cost.components?"disabled":""}>Build</button></div>`;
+ }).join("");
+ $("buildCards").querySelectorAll("[data-build]").forEach(btn=>btn.addEventListener("click",()=>build(btn.dataset.build)));
+ $("personnel").textContent=`${state.squad} squadmates available for deployment. Your squad can accompany you on missions.`;
+ $("recruitBtn").disabled=state.requisition<30||state.squad>=8;
+ $("recruitBtn").textContent=state.squad>=8?"Squad capacity reached":"Recruit squadmate — 30 requisition";
+}
+function build(type){
+ let b=buildings[type];if(!b||counts(type)>=b.limit||state.supplies<b.cost.supplies||state.components<b.cost.components)return;
+ state.supplies-=b.cost.supplies;state.components-=b.cost.components;
+ // Put buildings on the nearest open grid point, avoiding overlaps.
+ let spot=findBuildingSpot();state.buildings.push({type,x:spot.x,y:spot.y});
+ log(`${b.name} constructed.`);refresh();save();
+}
+function findBuildingSpot(){
+ let spots=[];for(let y=100;y<420;y+=95)for(let x=100;x<820;x+=120)spots.push({x,y});
+ spots.sort((a,b)=>Math.min(...state.buildings.map(q=>dist(a,q)))-Math.min(...state.buildings.map(q=>dist(b,q))));
+ return spots.find(s=>state.buildings.every(b=>dist(s,b)>75))||{x:rand(80,820),y:rand(70,430)};
+}
+function drawBase(){
+ const w=baseCanvas.width,h=baseCanvas.height;let c=baseCtx;
+ c.clearRect(0,0,w,h);
+ c.fillStyle="#283b2c";c.fillRect(0,0,w,h);
+ // grass texture
+ for(let i=0;i<170;i++){let x=(i*83)%w,y=(i*137)%h;c.strokeStyle=i%2?"#354b36":"#314532";c.beginPath();c.moveTo(x,y);c.lineTo(x+rand(-6,6),y+rand(-6,6));c.stroke();}
+ c.strokeStyle="#78866d";c.lineWidth=5;c.strokeRect(35,35,w-70,h-70);
+ // path
+ c.fillStyle="#675f4a";c.fillRect(400,35,100,h-70);c.fillRect(35,225,w-70,50);
+ c.fillStyle="#81765b";c.fillRect(420,35,60,h-70);c.fillRect(35,235,w-70,30);
+ // building objects
+ state.buildings.forEach((b,i)=>{
+  let d=buildings[b.type],x=b.x,y=b.y;
+  c.fillStyle="#162219";c.fillRect(x-36,y-27,72,54);
+  c.fillStyle=d.color;c.fillRect(x-31,y-23,62,46);
+  c.strokeStyle="#d4d7b2";c.lineWidth=2;c.strokeRect(x-31,y-23,62,46);
+  c.fillStyle="#1d2b22";c.fillRect(x-8,y-8,16,16);
+  c.fillStyle="#e5e7d2";c.font="bold 11px system-ui";c.textAlign="center";c.fillText(d.name,x,y+39);
+ });
+ // entrance markers
+ c.fillStyle="#c4d39c";c.beginPath();c.arc(450,250,8,0,Math.PI*2);c.fill();
+}
+function renderMissions(){
+ $("missionCards").innerHTML=missions.map(m=>`<div class="missionCard"><h4>${m.name}</h4><p><small>${m.type}</small></p><p>${m.desc}</p><p><small>Reward: ${m.reward.supplies} supplies · ${m.reward.components} components · ${m.reward.requisition} requisition</small></p><button class="primary" data-mission="${m.id}">Deploy</button></div>`).join("");
+ $("missionCards").querySelectorAll("[data-mission]").forEach(b=>b.addEventListener("click",()=>startMission(b.dataset.mission)));
+}
+function refresh(){renderResources();renderBuildings();drawBase();renderMissions();$("baseStatus").textContent=`Buildings: ${state.buildings.length} · Missions completed: ${state.missionWins} · Squad strength: ${state.squad}`;}
+function recruit(){if(state.requisition<30||state.squad>=8)return;state.requisition-=30;state.squad++;log("New SEAF squadmate recruited.");refresh();save();}
+function switchView(id){document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===id));document.querySelectorAll(".tabs button[data-view]").forEach(b=>b.classList.toggle("active",b.dataset.view===id));}
+document.querySelectorAll(".tabs button[data-view]").forEach(b=>b.addEventListener("click",()=>switchView(b.dataset.view)));
+$("recruitBtn").addEventListener("click",recruit);
+
+// Combat entities in world coordinates; canvas camera follows player.
+function startMission(id){
+ let m=missions.find(x=>x.id===id);if(!m||battle.active)return;
+ battle={active:true,completed:false,failed:false,elapsed:0,ammo:24,maxAmmo:24,reloadTimer:0,shootCooldown:0,spawned:0,kills:0,objectiveDone:false,keys:{},mouse:{x:0,y:0,down:false},camera:{x:0,y:0},touch:{x:0,y:0,fire:false},mission:m,extraction:{x:500,y:500}};
+ player={x:500,y:500,angle:0,hp:100,maxHp:100,speed:190,radius:12};
+ squad=[];for(let i=0;i<Math.min(state.squad,4);i++)squad.push({x:player.x-28-i*14,y:player.y+22+i*8,hp:80,maxHp:80,angle:0,fireCooldown:rand(0,0.4),radius:10});
+ enemies=[];crates=[];relay=null;bullets=[];enemy_bullets=[];particles=[];
+ // mission landmarks
+ if(m.crates)for(let i=0;i<m.crates;i++)crates.push({x:rand(220,780),y:rand(180,750),collected:false});
+ if(m.relay)relay={x:rand(680,880),y:rand(250,600),hp:100,disabled:false};
+ for(let i=0;i<m.enemyCount;i++)spawnEnemy();
+ $("battleTab").disabled=false;$("missionStatus").textContent=`Active: ${m.name} · Complete the objective, then return to the marked extraction zone and interact.`;
+ $("mobileControls").style.display="";switchView("battleView");canvas.focus();updateHud();log(`Deployed: ${m.name}.`);
+}
+function spawnEnemy(){
+ let side=Math.floor(rand(0,4)),x,y;
+ if(side===0){x=rand(80,920);y=80;}else if(side===1){x=rand(80,920);y=850;}else if(side===2){x=80;y=rand(100,820);}else{x=920;y=rand(100,820);}
+ enemies.push({x,y,hp:45,maxHp:45,angle:0,speed:rand(45,70),shootCooldown:rand(0.5,2),radius:11,alive:true});
+}
+function worldToScreen(p){return{x:p.x-battle.camera.x,y:p.y-battle.camera.y};}
+function updateHud(){
+ if(!battle.active)return;
+ let objective=battle.mission.crates?`Supply crates: ${crates.filter(c=>c.collected).length}/${crates.length}`:battle.mission.relay?`Relay: ${relay.disabled?"Disabled":"Active"}`:`Hostiles remaining: ${enemies.filter(e=>e.alive).length}`;if(battle.objectiveDone)objective="Objective complete — return to extraction";
+ $("battleHud").innerHTML=`<div class="huditem">HP: ${Math.ceil(player.hp)}/${player.maxHp}</div><div class="huditem">Ammo: ${battle.ammo}/${battle.maxAmmo}</div><div class="huditem">Squad: ${squad.length}</div><div class="huditem">${objective}</div>`;
+}
+function shootFrom(unit,target,team){
+ let a=Math.atan2(target.y-unit.y,target.x-unit.x);
+ let speed=team==="player"?540:300;
+ (team==="player"?bullets:enemy_bullets).push({x:unit.x+Math.cos(a)*15,y:unit.y+Math.sin(a)*15,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,life:1.3,team,damage:team==="player"?24:9});
+}
+function playerShoot(){
+ if(!battle.active||battle.reloadTimer>0||battle.shootCooldown>0||battle.ammo<=0)return;
+ battle.ammo--;battle.shootCooldown=.17;
+ let target={x:player.x+Math.cos(player.angle)*700,y:player.y+Math.sin(player.angle)*700};shootFrom(player,target,"player");
+}
+function reload(){if(battle.active&&battle.ammo<battle.maxAmmo&&battle.reloadTimer<=0)battle.reloadTimer=1.15;}
+function nearestEnemy(unit,range=500){let best=null,d=range;for(let e of enemies){if(!e.alive)continue;let dd=dist(unit,e);if(dd<d){d=dd;best=e;}}return best;}
+function update(dt){
+ if(!battle.active)return;
+ battle.elapsed+=dt;
+ // movement keyboard and mobile joystick
+ let mx=(battle.keys.d||battle.keys.arrowright?1:0)-(battle.keys.a||battle.keys.arrowleft?1:0);
+ let my=(battle.keys.s||battle.keys.arrowdown?1:0)-(battle.keys.w||battle.keys.arrowup?1:0);
+ if(battle.touch.x||battle.touch.y){mx=battle.touch.x;my=battle.touch.y;}
+ let mag=Math.hypot(mx,my);if(mag>1){mx/=mag;my/=mag;}
+ player.x+=mx*player.speed*dt;player.y+=my*player.speed*dt;
+ player.x=clamp(player.x,35,965);player.y=clamp(player.y,35,965);
+ // aim mouse in world coordinates
+ if(battle.touch.fire){let aimTarget=nearestEnemy(player,650);if(aimTarget)player.angle=Math.atan2(aimTarget.y-player.y,aimTarget.x-player.x);}else if(battle.touch.x||battle.touch.y){player.angle=Math.atan2(battle.touch.y,battle.touch.x);}else{player.angle=Math.atan2(battle.mouse.y+ battle.camera.y-player.y,battle.mouse.x+battle.camera.x-player.x);}
+ if(battle.mouse.down||battle.touch.fire)playerShoot();
+ if(battle.shootCooldown>0)battle.shootCooldown-=dt;
+ if(battle.reloadTimer>0){battle.reloadTimer-=dt;if(battle.reloadTimer<=0)battle.ammo=battle.maxAmmo;}
+ // camera
+ battle.camera.x=clamp(player.x-canvas.width/2,0,1000-canvas.width+1);
+ battle.camera.y=clamp(player.y-canvas.height/2,0,1000-canvas.height+1);
+ // squad follows player and fires
+ squad.forEach((s,i)=>{
+  let target=nearestEnemy(s,420);
+  if(target){s.angle=Math.atan2(target.y-s.y,target.x-s.x);if(s.fireCooldown<=0){shootFrom(s,target,"player");s.fireCooldown=rand(.55,.9);}s.fireCooldown-=dt;}
+  let followX=player.x+Math.cos(i*2.1+1)*34,followY=player.y+Math.sin(i*2.1+1)*34;
+  if(dist(s,{x:followX,y:followY})>18){let a=Math.atan2(followY-s.y,followX-s.x);s.x+=Math.cos(a)*100*dt;s.y+=Math.sin(a)*100*dt;}
+ });
+ // enemies approach player and shoot
+ enemies.forEach(e=>{
+  if(!e.alive)return;
+  let target=player;let a=Math.atan2(target.y-e.y,target.x-e.x),d=dist(e,target);e.angle=a;
+  if(d>190){e.x+=Math.cos(a)*e.speed*dt;e.y+=Math.sin(a)*e.speed*dt;}
+  e.shootCooldown-=dt;if(d<520&&e.shootCooldown<=0){shootFrom(e,target,"enemy");e.shootCooldown=rand(1.2,2.1);}
+ });
+ updateBullets(dt);
+ // mission interactions and objectives
+ crates.forEach(c=>{if(!c.collected&&dist(player,c)<32){c.collected=true;log("Supply crate recovered.");}});
+ 
+ if(battle.mission.crates)battle.objectiveDone=crates.every(c=>c.collected);
+ else if(battle.mission.relay)battle.objectiveDone=relay.disabled;
+ else battle.objectiveDone=enemies.every(e=>!e.alive);
+ // basic fail
+ if(player.hp<=0){finishMission(false);}
+ updateHud();
+}
+function updateBullets(dt){
+ for(let arr of [bullets,enemy_bullets]){
+  for(let b of arr){b.x+=b.vx*dt;b.y+=b.vy*dt;b.life-=dt;
+   if(b.team==="player"){
+    for(let e of enemies){if(e.alive&&dist(b,e)<e.radius+4){e.hp-=b.damage;b.life=0;if(e.hp<=0){e.alive=false;battle.kills++;particles.push({x:e.x,y:e.y,life:.4,color:"#e0b26d"});}break;}}
+   }else{
+    if(dist(b,player)<player.radius+5){player.hp-=b.damage;b.life=0;}
+    else for(let s of squad){if(!s.dead&&dist(b,s)<s.radius+5){s.hp-=b.damage;b.life=0;if(s.hp<=0&&!s.dead){s.dead=true;log("Squadmate lost in action.");}break;}}
+   }
+  }
+  arr.splice(0,arr.length,...arr.filter(b=>b.life>0&&b.x>=0&&b.y>=0&&b.x<=1000&&b.y<=1000));
+ }
+ let losses=squad.filter(s=>s.dead).length;if(losses){squad=squad.filter(s=>!s.dead);state.squad=Math.max(0,state.squad-losses);save();}
+ particles.forEach(p=>p.life-=dt);particles=particles.filter(p=>p.life>0);
+}
+function drawBattle(){
+ if(!battle.active)return;
+ let w=canvas.width,h=canvas.height,c=ctx;
+ c.clearRect(0,0,w,h);
+ c.fillStyle="#344633";c.fillRect(0,0,w,h);
+ // world ground details
+ for(let x=0;x<1000;x+=100)for(let y=0;y<1000;y+=100){let sx=x-battle.camera.x,sy=y-battle.camera.y;c.fillStyle=((x+y)%200===0)?"#3b4b35":"#364833";c.fillRect(sx,sy,100,100);c.strokeStyle="#42553d";c.strokeRect(sx,sy,100,100);}
+ // scattered rocks/trees
+ for(let i=0;i<32;i++){let x=(i*139+77)%1000-battle.camera.x,y=(i*211+90)%1000-battle.camera.y;c.fillStyle=i%3?"#5b6044":"#27352a";c.beginPath();c.ellipse(x,y,rand(10,20),rand(8,16),0,0,Math.PI*2);c.fill();}
+ let ex=worldToScreen(battle.extraction);c.strokeStyle="#d6e0a4";c.lineWidth=3;c.beginPath();c.arc(ex.x,ex.y,28,0,Math.PI*2);c.stroke();c.fillStyle="#d6e0a4";c.font="bold 12px system-ui";c.textAlign="center";c.fillText("EXTRACTION",ex.x,ex.y-36);
+  crates.forEach(q=>{if(q.collected)return;let p=worldToScreen(q);c.fillStyle="#b68b54";c.fillRect(p.x-13,p.y-12,26,24);c.strokeStyle="#e3c18a";c.strokeRect(p.x-13,p.y-12,26,24);c.fillStyle="#543c2a";c.fillRect(p.x-3,p.y-12,6,24);});
+ if(relay&&!relay.disabled){let p=worldToScreen(relay);c.fillStyle="#8d6c3e";c.fillRect(p.x-22,p.y-22,44,44);c.fillStyle="#d95e53";c.fillRect(p.x-4,p.y-35,8,13);c.strokeStyle="#d6b779";c.strokeRect(p.x-22,p.y-22,44,44);}
+ // entities
+ function drawUnit(u,color,outline,angle,isEnemy=false){let p=worldToScreen(u);c.save();c.translate(p.x,p.y);c.rotate(angle||0);c.fillStyle=outline;c.beginPath();c.arc(0,0,u.radius+3,0,Math.PI*2);c.fill();c.fillStyle=color;c.beginPath();c.arc(0,0,u.radius,0,Math.PI*2);c.fill();c.fillStyle="#1c251d";c.fillRect(0,-4,u.radius+8,8);c.fillStyle="#d9e0c2";c.fillRect(u.radius-2,-3,6,6);c.restore();
+ if(isEnemy){c.fillStyle="#301f1b";c.fillRect(p.x-14,p.y-20,28,4);c.fillStyle="#d85c50";c.fillRect(p.x-14,p.y-20,28*(u.hp/u.maxHp),4);}
+ }
+ squad.forEach(s=>drawUnit(s,"#8da6b2","#283d49",s.angle));
+ enemies.forEach(e=>{if(e.alive)drawUnit(e,"#b75e51","#592e2a",e.angle,true);});
+ drawUnit(player,"#d4d6a0","#45513b",player.angle);
+ bullets.forEach(b=>{let p=worldToScreen(b);c.fillStyle="#e8d39b";c.beginPath();c.arc(p.x,p.y,3,0,Math.PI*2);c.fill();});
+ enemy_bullets.forEach(b=>{let p=worldToScreen(b);c.fillStyle="#ec7569";c.beginPath();c.arc(p.x,p.y,3,0,Math.PI*2);c.fill();});
+ particles.forEach(p=>{let s=worldToScreen(p);c.globalAlpha=clamp(p.life/.4,0,1);c.fillStyle=p.color;c.beginPath();c.arc(s.x,s.y,8*(p.life/.4),0,Math.PI*2);c.fill();c.globalAlpha=1;});
+ // crosshair
+ c.strokeStyle="#e8e6c7";c.lineWidth=1;c.beginPath();c.arc(battle.mouse.x,battle.mouse.y,8,0,Math.PI*2);c.moveTo(battle.mouse.x-13,battle.mouse.y);c.lineTo(battle.mouse.x-4,battle.mouse.y);c.moveTo(battle.mouse.x+4,battle.mouse.y);c.lineTo(battle.mouse.x+13,battle.mouse.y);c.moveTo(battle.mouse.x,battle.mouse.y-13);c.lineTo(battle.mouse.x,battle.mouse.y-4);c.moveTo(battle.mouse.x,battle.mouse.y+4);c.lineTo(battle.mouse.x,battle.mouse.y+13);c.stroke();
+}
+function finishMission(success){
+ if(!battle.active)return;
+ battle.active=false;battle.completed=success;$("mobileControls").style.display="none";switchView("baseView");$("battleTab").disabled=true;
+ if(success){
+  state.supplies+=battle.mission.reward.supplies;state.components+=battle.mission.reward.components;state.requisition+=battle.mission.reward.requisition;state.intel+=1;state.missionWins++;
+  log(`Mission completed: ${battle.mission.name}. Rewards received.`);
+  $("missionStatus").textContent=`Last deployment completed: ${battle.mission.name}. Rewards received.`;
+ }else{
+  log("Deployment failed. Squad returned with limited resources.");
+  $("missionStatus").textContent=`Deployment failed: ${battle.mission.name}.`;
+  state.requisition=Math.max(0,state.requisition-5);
+ }
+ state.squad=Math.max(0,state.squad);refresh();save();updateHud();
+}
+function interact(){
+ if(!battle.active)return;
+ if(relay&&!relay.disabled&&dist(player,relay)<65){relay.hp-=30;if(relay.hp<=0){relay.disabled=true;log("Hostile relay disabled.");}else{log(`Relay damaged (${Math.ceil(relay.hp)}% integrity remaining).`);}updateHud();return;}
+ let c=crates.find(q=>!q.collected&&dist(player,q)<65);if(c){c.collected=true;log("Supply crate recovered.");updateHud();return;}
+ if(battle.objectiveDone&&dist(player,battle.extraction)<55){finishMission(true);return;}
+ if(battle.objectiveDone){log("Objective complete. Return to the marked extraction zone and interact.");return;}
+ log("Nothing nearby to interact with.");
+}
+function retreat(){if(battle.active)finishMission(false);}
+function aimFromPointer(e){
+ let r=canvas.getBoundingClientRect(),scaleX=canvas.width/r.width,scaleY=canvas.height/r.height;
+ battle.mouse.x=(e.clientX-r.left)*scaleX;battle.mouse.y=(e.clientY-r.top)*scaleY;
+}
+canvas.addEventListener("pointermove",aimFromPointer);
+canvas.addEventListener("pointerdown",e=>{if(e.pointerType==="mouse"){battle.mouse.down=true;aimFromPointer(e);}});
+window.addEventListener("pointerup",()=>battle.mouse.down=false);
+canvas.addEventListener("pointercancel",()=>battle.mouse.down=false);
+window.addEventListener("keydown",e=>{let k=e.key.toLowerCase(),wasDown=!!battle.keys[k];battle.keys[k]=true;if(k==="r")reload();if(k==="e"&&!wasDown)interact();if(["w","a","s","d","arrowup","arrowdown","arrowleft","arrowright"," "].includes(k))e.preventDefault();});
+window.addEventListener("keyup",e=>battle.keys[e.key.toLowerCase()]=false);
+$("reloadBtn").addEventListener("click",reload);$("interactBtn").addEventListener("click",interact);$("retreatBtn").addEventListener("click",retreat);
+$("touchFire").addEventListener("pointerdown",e=>{e.preventDefault();battle.touch.fire=true;});$("touchFire").addEventListener("pointerup",()=>battle.touch.fire=false);$("touchFire").addEventListener("pointercancel",()=>battle.touch.fire=false);window.addEventListener("pointerup",()=>battle.touch.fire=false);
+$("touchReload").addEventListener("click",reload);$("touchInteract").addEventListener("click",interact);$("touchExit").addEventListener("click",retreat);
+let joy=$("joystick"),knob=$("joyKnob"),joyActive=false;
+function joyUpdate(e){let r=joy.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=e.clientX-cx,dy=e.clientY-cy,limit=36,mag=Math.hypot(dx,dy);if(mag>limit){dx=dx/mag*limit;dy=dy/mag*limit;}knob.style.transform=`translate(${dx}px,${dy}px)`;battle.touch.x=dx/limit;battle.touch.y=dy/limit;}
+joy.addEventListener("pointerdown",e=>{joyActive=true;joy.setPointerCapture(e.pointerId);joyUpdate(e);});
+joy.addEventListener("pointermove",e=>{if(joyActive)joyUpdate(e);});
+function joyEnd(){joyActive=false;battle.touch.x=0;battle.touch.y=0;knob.style.transform="translate(0,0)";}
+joy.addEventListener("pointerup",joyEnd);joy.addEventListener("pointercancel",joyEnd);
+
+let last=performance.now();
+function loop(t){let dt=Math.min((t-last)/1000,.05);last=t;if(battle.active){update(dt);drawBattle();}requestAnimationFrame(loop);}
+function init(){
+ load();if(!state.buildings.some(b=>b.type==="command"))state.buildings.unshift({type:"command",x:450,y:250});
+ refresh();log("Landing zone operational. Awaiting deployment orders.");save();
+}
+init();requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
