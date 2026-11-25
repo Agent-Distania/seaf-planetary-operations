@@ -16,6 +16,7 @@
 - Footprint-aware construction placement and save-compatible existing buildings
 
 ## v0.5 — Base Visual Polish & Vehicle Facilities (next)
+- Revisit the Bastion and exosuit silhouettes against the newly supplied top-down references during mobile playtest.
 - Test and refine the new base artwork and building footprints
 - Expand transport support and dedicated aerospace staging
 - Improve motor-pool presentation and add further original support vehicles
