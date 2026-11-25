@@ -3,34 +3,28 @@
 A single-player, top-down 2D sci-fi military game about ordinary SEAF soldiers fighting to reclaim hostile worlds. Built as a browser game with PC and mobile controls.
 
 ## Current status
-- **Latest planned/build version:** v0.1 — Foundation
-- **Development status:** Early prototype
+- **Latest build:** v0.2 — Gameplay Fixes & Quality of Life
+- **Development status:** Early prototype; browser gameplay testing remains incomplete
 - **Platform:** Browser (HTML/CSS/JavaScript)
 - **Perspective:** Top-down, fully 2D
 
-The v0.1 prototype is currently maintained as a standalone HTML file. It has not yet been committed to this repository because the build file is not available in the current working session. It will be added once the file is recovered or re-uploaded.
+## Gameplay loop
+Manage a forward base, select an operation, deploy with squadmates, complete objectives, return to extraction, and use rewards to expand your base.
 
-## Core gameplay
-1. Expand and manage a small SEAF forward base.
-2. Recruit squadmates and prepare for deployment.
-3. Choose a mission and deploy to the battlefield.
-4. Fight enemies, complete objectives, and recover resources.
-5. Return to base and use rewards to expand your operations.
+## Current prototype systems
+- Forward base and construction
+- Resources: supplies, components, requisition, intel
+- Recruitment and squadmates
+- Three missions: Clear the Area, Supply Recovery, Relay Sabotage
+- Top-down deployment combat
+- Desktop keyboard/mouse and mobile touch controls
+- Local browser saves
 
-## Planned prototype features
-- Direct soldier control and basic combat
-- AI squadmates that follow and fight
-- Mission types: clear hostile area, supply recovery, relay sabotage
-- Base construction and recruit management
-- Supplies, components, requisition, and intel resources
-- Save/load
-- PC and touch controls
+## Controls
+**Desktop:** WASD/arrows move, mouse aim, left click fire, R reload, E interact.
+**Mobile:** joystick movement, FIRE auto-aim, RELOAD, INTERACT, RETREAT.
 
-## Roadmap
-See [docs/ROADMAP.md](docs/ROADMAP.md).
+## Development notes
+The prototype is experimental. Static code checks have been performed, but full gameplay testing in a browser and on mobile devices is still pending.
 
-## Development approach
-Each update should begin with a code review of the current build, fix discovered bugs, implement a focused set of changes, review the code again, test as much as possible, and update the changelog. Testing notes must distinguish verified tests from untested behavior.
-
-## Patch history
-See [CHANGELOG.md](CHANGELOG.md).
+See [CHANGELOG.md](CHANGELOG.md) for version history and [docs/ROADMAP.md](docs/ROADMAP.md) for planned milestones.
