@@ -23,6 +23,11 @@
 - Update menu, panels, buttons and base-map interface to match the same SEAF visual identity
 - Preserve saves, construction footprints, costs, map camera and gameplay systems
 
+## v0.5.1 — Motor Pool Silhouette Refinement (implemented)
+- Removed the exosuit's rear legs/feet and helmet-like front block.
+- Removed light-grey muzzle tips from the exosuit rotary gun and Bastion cannon.
+- Changed the Bastion silhouette to a fixed-casemate tank destroyer with the gun mount integrated into the rear chassis.
+
 ## v0.6 — Base Expansion & Logistics (next)
 - Expand dedicated aerospace staging and transport support
 - Add more support buildings and storage/service infrastructure
