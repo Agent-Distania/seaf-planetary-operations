@@ -16,46 +16,52 @@
 - Footprint-aware construction placement and save-compatible existing buildings
 
 ## v0.5 — SEAF Blue-Grey Base Visual Overhaul (implemented)
-- Rebuild ground, road, perimeter, gate, forecourt and landing-apron colors and surface treatments
-- Establish blue-grey structural surfaces, blue identification panels, white details and restrained yellow safety markings
-- Rework all seven building silhouettes with modular roof details and distinct service identities
-- Rework motor-pool bays, parked vehicle colors, construction pads, watch posts and utility props
-- Update menu, panels, buttons and base-map interface to match the same SEAF visual identity
-- Preserve saves, construction footprints, costs, map camera and gameplay systems
+- Rebuilt ground, roads, perimeter, gate, forecourt and landing-apron surface treatments
+- Established blue-grey structural surfaces, blue identification panels, white details and restrained yellow safety markings
+- Reworked all seven building silhouettes, motor-pool bays, construction pads, watch posts and utility props
+- Updated menu, panels, buttons and base-map interface to match the SEAF visual identity
 
 ## v0.5.1 — Motor Pool Silhouette Refinement (implemented)
-- Removed the exosuit's rear legs/feet and helmet-like front block.
-- Removed light-grey muzzle tips from the exosuit rotary gun and Bastion cannon.
-- Changed the Bastion silhouette to a fixed-casemate tank destroyer with the gun mount integrated into the rear chassis.
+- Removed the exosuit's rear legs/feet and helmet-like front block
+- Removed light-grey muzzle tips from the exosuit rotary gun and Bastion cannon
+- Changed the Bastion into a fixed-casemate tank destroyer with its gun mount integrated into the rear chassis
 
-## v0.6 — Base Expansion & Logistics (next)
-- Expand dedicated aerospace staging and transport support
-- Add more support buildings and storage/service infrastructure
-- Add new original support-vehicle silhouettes and service props
-- Improve base logistics and useful building functions
+## v0.6 — Transport & Logistics (implemented)
+- Added a new top-down Pelican-inspired landing-pad vehicle illustration
+- Shortened the Bastion's fixed cannon barrel by approximately 25%
+- Added visible supply/component storage capacities and a dedicated Logistics & Storage panel
+- Made Supply Depots increase supplies/components capacity
+- Capped mission supply/component rewards at available storage and report overflow
+- Made Barracks increase the recruitable squad capacity from 4 to 6 to 8
+- Preserved old campaign saves without a schema migration
 
-## v0.7 — Combat Expansion (planned)
+## v0.7 — Base Operations & Services (next)
+- Add meaningful functions to the Medical Station, Radar Station and Engineering Depot
+- Introduce vehicle readiness/maintenance as a genuine gameplay system before adding more service vehicles
+- Expand the transport staging area and base logistics layout where new mechanics require space
+- Add additional base facilities only when they have a defined player-facing function
+
+## v0.8 — Combat Expansion (planned)
 - Improve combat feedback and balance
 - Expand enemy behaviors and encounter variety
-- Refine reload interactions
-- Squad combat improvements
+- Refine reload interactions and squad combat
 
-## v0.8 — Planetary Exploration (planned)
+## v0.9 — Planetary Exploration (planned)
 - More varied mission environments and exploration events
 - Additional mission types and points of interest
 
-## v0.9 — Equipment & Progression (planned)
+## v0.10 — Equipment & Progression (planned)
 - Equipment choices and soldier progression
 - Reward and unlock pacing
 
-## v0.10 — Missions & Campaign (planned)
+## v0.11 — Missions & Campaign (planned)
 - Mission chains and campaign progression
 - More meaningful operational choices
 
-## v0.11 — World & Enemy Expansion (planned)
+## v0.12 — World & Enemy Expansion (planned)
 - Broader enemy roster and planetary world details
 
-## v0.12 — Polish (planned)
+## v0.13 — Polish (planned)
 - UI, accessibility, balance, performance and bug fixing
 
 ## v1.0 — Planetary Campaign (planned)
