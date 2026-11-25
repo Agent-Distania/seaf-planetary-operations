@@ -19,7 +19,8 @@
 
 ### Testing
 - Static source checks confirmed the intended blue-grey palette and the removal of the previous olive base-ground/building color tokens.
-- Repository source and documentation are being re-fetched for final verification.
+- The published source and documentation were re-fetched to verify the v0.5 release contents.
+- The embedded JavaScript parsed successfully; the expected drawing functions are present exactly once, and save slots, migration, placement rules, building costs and camera controls remain in place.
 - A real mobile Safari visual playtest has not been performed by the assistant; the user should inspect the map on-device for visual scale, overlap and readability.
 
 
