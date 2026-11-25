@@ -253,6 +253,8 @@ function getBasePlots(){
  for(let y=110;y<=710;y+=100)for(let x=120;x<=1080;x+=120){
   // Keep the main north-south and east-west access lanes clear.
   if((x>=535&&x<=665)||(y>=350&&y<=450))continue;
+  // Reserve the southeast service yard for heavy vehicles and exosuit maintenance.
+  if(x>=840&&x<=960&&y>=510)continue;
   plots.push({x,y});
  }
  return plots;
@@ -587,6 +589,53 @@ function drawCentralPlaza(c){
  c.fillStyle="#d2c7a0";for(let i=0;i<4;i++){c.fillRect(466+i*18,314,10,3);c.fillRect(466+i*18,483,10,3);}
  c.fillStyle="#52594a";c.font="bold 9px system-ui";c.textAlign="center";c.fillText("SEAF COMMAND COMPOUND",600,330);
 }
+function drawHeavyVehicleSilhouette(c,x,y){
+ // Original compact top-down armored vehicle silhouette for the SEAF motor pool.
+ c.save();c.translate(x,y);
+ fillRound(c,-43,-23,86,46,7,"#30382f","#a9a78a",1.5);
+ fillRound(c,-35,-19,70,38,5,"#747c68","#303a31",2);
+ fillRound(c,-27,-15,54,30,5,"#8b9078","#c0b895",1);
+ // Track housings and segmented road wheels.
+ for(const side of [-1,1]){
+  fillRound(c,side*34-8,-26,16,52,4,"#343c34","#aba88b",1.5);
+  for(let j=0;j<4;j++){c.fillStyle="#8b8d76";c.beginPath();c.arc(side*34,-17+j*11,3.2,0,Math.PI*2);c.fill();}
+ }
+ fillRound(c,-13,-12,26,24,6,"#626d5c","#c7be9d",1.5);
+ c.fillStyle="#b9b89a";c.beginPath();c.arc(0,0,5,0,Math.PI*2);c.fill();
+ c.fillStyle="#d0ad69";c.fillRect(-3,15,6,3);
+ c.restore();
+}
+function drawExosuitSilhouette(c,x,y){
+ // Original top-down powered-frame silhouette, used here as a parked maintenance prop.
+ c.save();c.translate(x,y);
+ fillRound(c,-28,-23,16,46,5,"#424c40","#b3ad8d",1.5);
+ fillRound(c,12,-23,16,46,5,"#424c40","#b3ad8d",1.5);
+ fillRound(c,-34,-26,18,17,5,"#697561","#d0c7a5",1.5);
+ fillRound(c,16,-26,18,17,5,"#697561","#d0c7a5",1.5);
+ fillRound(c,-13,-22,26,42,6,"#879078","#d3c8a3",2);
+ fillRound(c,-9,-17,18,12,3,"#3d4d45","#bdc0a0",1);
+ fillRound(c,-11,22,10,17,3,"#515b4a","#b8b292",1.5);
+ fillRound(c,1,22,10,17,3,"#515b4a","#b8b292",1.5);
+ c.fillStyle="#d6b46c";c.fillRect(-4,3,8,4);
+ c.restore();
+}
+function drawMotorPool(c){
+ // Reserved service yard, with separate parking bays for a heavy vehicle and a powered frame.
+ fillRound(c,790,500,220,226,8,"#777866","#b5b092",2);
+ c.strokeStyle="#d2c8a5";c.lineWidth=2;c.setLineDash([10,7]);c.strokeRect(800,510,200,206);c.setLineDash([]);
+ fillRound(c,806,522,88,178,5,"#5b6051","#b7ad8b",1.5);
+ fillRound(c,906,522,88,178,5,"#5b6051","#b7ad8b",1.5);
+ c.strokeStyle="#c5bb98";c.lineWidth=1.5;c.setLineDash([6,6]);c.strokeRect(814,530,72,162);c.strokeRect(914,530,72,162);c.setLineDash([]);
+ c.fillStyle="#dfd6b4";c.font="bold 8px system-ui";c.textAlign="center";c.fillText("HEAVY VEHICLE",850,542);c.fillText("EXOSUIT SERVICE",950,542);
+ drawHeavyVehicleSilhouette(c,850,610);
+ drawExosuitSilhouette(c,950,612);
+ // Tool lockers, wheel chocks and inspection lamps.
+ for(let i=0;i<3;i++){
+  fillRound(c,812+i*28,675,18,10,2,"#444d40","#b3aa89",1);
+ }
+ for(let i=0;i<4;i++){c.fillStyle="#d7b66e";c.beginPath();c.arc(812+i*58,706,2.5,0,Math.PI*2);c.fill();}
+ c.fillStyle="#e0d5ae";c.font="bold 9px system-ui";c.fillText("SEAF MOTOR POOL",900,718);
+}
 function drawUtilityProps(c){
  fillRound(c,390,332,27,22,3,"#515b4c","#b0ab8d",1.5);c.fillStyle="#c7b984";c.fillRect(395,336,17,4);c.fillStyle="#333d34";c.fillRect(395,343,17,7);
  c.strokeStyle="#a8a486";c.lineWidth=1.5;c.beginPath();c.moveTo(403,332);c.lineTo(403,323);c.stroke();
@@ -604,8 +653,9 @@ function drawBase(){
  drawRoad(c,[{x:600,y:736},{x:600,y:758}],38);
  drawRoad(c,[{x:58,y:400},{x:442,y:400}],44);
  drawRoad(c,[{x:758,y:400},{x:1142,y:400}],44);
+ drawRoad(c,[{x:900,y:422},{x:900,y:500}],34);
  drawCentralPlaza(c);drawLandingZone(c);
- drawPerimeter(c);
+ drawPerimeter(c);drawMotorPool(c);
  for(const plot of getBasePlots())drawConstructionPad(c,plot);
  drawUtilityProps(c);
  // The transport apron is the first dedicated vehicle-support area; additional motor-pool
