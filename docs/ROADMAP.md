@@ -12,7 +12,7 @@
 - Central SEAF command compound and transport landing apron
 - Original top-down artwork for all seven existing building types
 - Dedicated motor pool with a heavy-vehicle silhouette and exosuit service stand
-- Reserved construction plots around the motor-pool yard
+- Reserved construction plots around the motor-pool yard and transport landing apron
 - Footprint-aware construction placement and save-compatible existing buildings
 
 ## v0.5 — Base Visual Polish & Vehicle Facilities (next)
