@@ -2,6 +2,29 @@
 
 All notable changes to SEAF: Planetary Operations will be recorded here.
 
+## v0.3.1 — Main Menu & Save Slots
+
+### Added
+- Main menu shown when the game opens.
+- Three local campaign save slots, each with Continue and New Campaign actions when occupied.
+- Fresh campaign creation with the original starting resources, squad and Command Post.
+- Confirmation before replacing an occupied save slot.
+- Automatic import of the previous single-save data into Campaign Slot 1 when that slot is empty.
+- Main Menu navigation from the base, operations and deployment screens.
+
+### Changed
+- Saves now write to the currently selected campaign slot rather than a single shared save key.
+- The main menu hides campaign resources and gameplay navigation until a save is selected.
+
+### Fixed
+- Starting a test campaign no longer requires manually clearing browser storage.
+- Existing legacy campaign data is copied into the first slot without deleting the original legacy key.
+
+### Testing
+- JavaScript syntax and static save-slot flow checks passed.
+- The repository files were re-fetched after publishing.
+- Actual browser storage behavior and iPhone menu interaction still require a user playtest.
+
 ## v0.3 — Base Technical Update
 
 ### Added
