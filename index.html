@@ -255,6 +255,8 @@ function getBasePlots(){
   if((x>=535&&x<=665)||(y>=350&&y<=450))continue;
   // Reserve the southeast service yard for heavy vehicles and exosuit maintenance.
   if(x>=840&&x<=960&&y>=510)continue;
+  // Keep the southern central approach and landing apron clear of new structures.
+  if(x>=480&&x<=720&&y>=610)continue;
   plots.push({x,y});
  }
  return plots;
