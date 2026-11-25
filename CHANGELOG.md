@@ -1,3 +1,19 @@
+## v0.8.3 — Operations Expanded, Part I: Enemy Silhouette Refinement
+*Released November 25, 2026*
+
+### Changed
+- Reworked enemy canvas silhouettes with clearer top-down mechanical shapes and role-specific armor profiles.
+- Standard Trooper now has a more readable humanoid armored outline, helmet/optic, backpack and rifle silhouette.
+- Devastator now has a broader reinforced profile and visibly heavier forward weapon.
+- Scout retains a narrow reconnaissance silhouette with sensor details.
+- Added compact type labels above enemy health bars for readability during combat.
+
+### Verification
+- Published JavaScript syntax compilation passed.
+- Canvas-mock draw smoke tests passed for Scout, Trooper and Devastator.
+- Not tested in live Safari/mobile browser; on-device visual review is still needed.
+
+
 ## v0.8.2 — Operations Expanded, Part I: Enemy Overhaul
 *Released November 25, 2026*
 
