@@ -1,5 +1,28 @@
 # Changelog
 
+## v0.5 — SEAF Blue-Grey Base Visual Overhaul
+
+### Changed
+- Rebuilt the base ground treatment in cool blue-grey concrete and compacted surface tones, with restrained deterministic texture and engineered expansion seams.
+- Reworked roads with concrete shoulders, darker sealed lanes, pale route markings, blue-grey edging and yellow safety ticks.
+- Reworked the perimeter wall, gate piers, observation posts and wall lighting around a reinforced Super Earth military-facility look.
+- Rebuilt the command forecourt and transport apron with pale concrete surfaces, blue SEAF identification, white touchdown markings and yellow hazard boundaries.
+- Reworked all seven facility silhouettes: Command Post, Barracks, Supply Depot, Medical Station, Radar Station, Defense Turret and Engineering Depot.
+- Reworked construction pads, motor-pool service bays, electrical cabinets and the landing-transport palette to match the SEAF blue-grey identity.
+- Recolored the parked Bastion and exosuit artwork to fit the same palette without changing their silhouettes or service-yard placement.
+- Updated the main menu, panels, controls and base-map feedback to use a coordinated blue-grey interface theme.
+
+### Preserved
+- Existing campaign save format, three save slots and legacy-save migration.
+- Existing building costs, building limits, footprints, plot reservations and placement workflow.
+- Base camera, zoom, panning, touch gestures, missions, combat and mobile controls.
+
+### Testing
+- Static source checks confirmed the intended blue-grey palette and the removal of the previous olive base-ground/building color tokens.
+- Repository source and documentation are being re-fetched for final verification.
+- A real mobile Safari visual playtest has not been performed by the assistant; the user should inspect the map on-device for visual scale, overlap and readability.
+
+
 ## v0.4.1 — Vehicle Silhouette Reference Pass
 
 ### Changed
