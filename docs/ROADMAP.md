@@ -1,49 +1,42 @@
 # Development Roadmap
 
-## v0.1 — Foundation (prototype)
-- Basic movement, combat, health, and reload
-- Enemy AI and two AI squadmates
-- Basic battlefield and mission selection
-- Clear the Area, Supply Recovery, and Relay Sabotage
-- Starting base and building placement
-- Supplies, components, requisition, intel
-- Recruitment and save/load
-- PC and touch controls
+## v0.3 — Base Technical Update (implemented)
+- Zoom in/out and reset camera controls
+- Touch pinch-to-zoom and drag-to-pan
+- Expanded base map with camera bounds
+- Highlighted building plots and placement preview
+- Tap/click-to-place construction with grid snapping
+- Save migration for existing building coordinates
 
-## v0.2 — Gameplay Fixes & Quality of Life (implemented)
-- Objective completion followed by return-to-extraction
-- Mobile touch firing auto-aim
-- Relay sabotage interaction improvements
-- Desktop/mobile control visibility fix
-- Squad casualty handling fix
+## v0.4 — Base Visual Overhaul (next)
+- Redesign the terrain to resemble an organized SEAF forward operating base
+- Add roads, pathways, landing zone, perimeter and infrastructure details
+- Replace placeholder building shapes with recognizable building models
+- Establish distinct functional zones around the Command Post
+- Preserve building functions, costs, upgrades, recruitment and save compatibility
 
-## v0.3 — Combat Expansion (planned)
+## v0.5 — Combat Expansion (planned)
 - Improve combat feedback and balance
 - Expand enemy behaviors and encounter variety
 - Refine weapon/reload interactions
 - Squad combat improvements
 
-## v0.4 — Base Expansion (planned)
-- More useful construction and base progression
-- More personnel and support systems
-- Clearer resource/economy feedback
-
-## v0.5 — Planetary Exploration (planned)
+## v0.6 — Planetary Exploration (planned)
 - More varied mission environments and exploration events
 - Additional mission types and points of interest
 
-## v0.6 — Equipment & Progression (planned)
+## v0.7 — Equipment & Progression (planned)
 - Equipment choices and soldier progression
 - Reward and unlock pacing
 
-## v0.7 — Missions & Campaign (planned)
+## v0.8 — Missions & Campaign (planned)
 - Mission chains and campaign progression
 - More meaningful operational choices
 
-## v0.8 — World & Enemy Expansion (planned)
+## v0.9 — World & Enemy Expansion (planned)
 - Broader enemy roster and planetary world details
 
-## v0.9 — Polish (planned)
+## v0.10 — Polish (planned)
 - UI, accessibility, balance, performance, and bug fixing
 
 ## v1.0 — Planetary Campaign (planned)
