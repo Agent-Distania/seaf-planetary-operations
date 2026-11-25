@@ -16,7 +16,7 @@ Manage a forward base, select an operation, deploy with squadmates, complete obj
 - Overhead Pelican-inspired transport staged on a marked landing apron; vehicle artwork is original canvas illustration
 - Zoomable/pannable base camera and plot-based construction
 - Resources: supplies, components, requisition, intel
-- Recruitment and squadmates; each Barracks increases squad capacity by two, up to eight
+- Recruitment and squadmates; each Barracks increases squad capacity by two, from the existing eight-person baseline up to twelve
 - Logistics and storage: Supply Depots increase supply/component capacity; mission rewards are capped by available storage with overflow reported
 - Three missions: Clear the Area, Supply Recovery, Relay Sabotage
 - Top-down deployment combat
