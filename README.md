@@ -3,7 +3,7 @@
 A single-player, top-down 2D sci-fi military game about ordinary SEAF soldiers fighting to reclaim hostile worlds. Built as a browser game with PC and mobile controls.
 
 ## Current status
-- **Latest build:** v0.7 — Combat Foundation & Squad AI
+- **Latest build:** v0.8 — Pelican VTOL & Battlefield Installations
 - **Development status:** Early prototype; browser gameplay testing remains incomplete
 - **Platform:** Browser (HTML/CSS/JavaScript)
 - **Perspective:** Top-down, fully 2D
@@ -13,7 +13,8 @@ Manage a forward base, select an operation, deploy with squadmates, complete obj
 
 ## Current prototype systems
 - SEAF blue-grey forward base with pale concrete structures, blue identification panels, yellow safety markings, detailed perimeter and gate, engineered roads, transport apron, motor pool, reserved service zones, full-base camera framing and footprint-aware construction
-- Overhead Pelican-inspired transport staged on a marked landing apron; vehicle artwork is original canvas illustration
+- Overhead Pelican transport with wingtip VTOL engines and expanded apron
+- Five recognizable enemy-colored facility footprints: communications array/dish, generator, command post, defense post and supply compound
 - Zoomable/pannable base camera and plot-based construction
 - Resources: supplies, components, requisition, intel
 - Recruitment and squadmates; each Barracks increases squad capacity by two, from the existing eight-person baseline up to twelve
