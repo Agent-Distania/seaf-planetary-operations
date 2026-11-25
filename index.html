@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>SEAF: Planetary Operations — v0.3</title>
+<title>SEAF: Planetary Operations — v0.3.1</title>
 <style>
 :root{--bg:#101713;--panel:#1b2620;--panel2:#233229;--line:#3c5144;--text:#e4ece4;--muted:#a5b7a8;--accent:#c7d6a1;--danger:#e26b5e;--gold:#d8b46a}
 *{box-sizing:border-box}
@@ -22,6 +22,26 @@ header{display:flex;gap:12px;align-items:center;justify-content:space-between;fl
 .resource{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:7px 11px;font-size:13px}
 .tabs{display:flex;gap:7px;margin:8px 0 12px;flex-wrap:wrap}
 .tabs button.active{background:#68794e;border-color:#9baa76}
+.tabs.menu-hidden{display:none}
+.menuShell{max-width:850px;margin:clamp(12px,5vh,54px) auto 24px}
+.menuHero{padding:clamp(22px,5vw,46px);border:1px solid #506653;border-radius:16px;background:linear-gradient(135deg,#26382b,#17231b 70%);position:relative;overflow:hidden}
+.menuHero:after{content:"";position:absolute;right:-58px;top:-88px;width:260px;height:260px;border:1px solid #80916a55;border-radius:50%;box-shadow:0 0 0 22px #80916a11,0 0 0 46px #80916a0b;pointer-events:none}
+.menuKicker{font-size:11px;letter-spacing:.2em;color:#bdce9c;font-weight:800}
+.menuHero h1{font-size:clamp(28px,6vw,48px);line-height:1.05;letter-spacing:.04em;margin:12px 0 8px}
+.menuHero p{max-width:570px;color:#b6c5b5;line-height:1.5;margin:0;font-size:14px}
+.menuPanel{margin-top:14px;padding:clamp(14px,3vw,22px);border:1px solid var(--line);border-radius:14px;background:var(--panel)}
+.menuPanelHead{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.menuPanelHead h2{font-size:17px;margin:0}
+.saveSlots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.saveSlot{border:1px solid #435747;background:#202e24;border-radius:10px;padding:12px;min-width:0}
+.saveSlot.empty{border-style:dashed;background:#1b2720}
+.saveSlot h3{font-size:14px;margin:0 0 6px}
+.saveSlot p{font-size:12px;color:var(--muted);line-height:1.45;min-height:35px;margin:0 0 10px}
+.saveSlotActions{display:flex;gap:6px;flex-wrap:wrap}
+.saveSlotActions button{flex:1;min-width:90px}
+.menuNote{font-size:11px;color:#8fa292;margin:12px 0 0;line-height:1.45}
+#menuMessage{font-size:12px;color:#e0c28d;min-height:18px;margin-top:8px}
+@media(max-width:650px){.saveSlots{grid-template-columns:1fr}.saveSlot p{min-height:0}.menuHero{padding:24px 18px}.menuShell{margin-top:12px}}
 .view{display:none}.view.active{display:block}
 .layout{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(250px,1fr);gap:12px}
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px}
@@ -63,16 +83,36 @@ footer{margin-top:10px;color:#819387;font-size:11px;text-align:center}
 <body>
 <div id="app">
 <header>
-  <div class="brand">SEAF <span>PLANETARY OPERATIONS · PROTOTYPE 0.3</span></div>
+  <div class="brand">SEAF <span>PLANETARY OPERATIONS · PROTOTYPE 0.3.1</span></div>
   <div class="resourcebar" id="resources"></div>
 </header>
-<div class="tabs">
+<div class="tabs menu-hidden">
   <button class="active" data-view="baseView">Forward Base</button>
   <button data-view="missionsView">Operations</button>
   <button data-view="battleView" id="battleTab" disabled>Deployment</button>
+  <button data-view="menuView" id="mainMenuBtn">Main Menu</button>
 </div>
 
-<section class="view active" id="baseView">
+<section class="view active" id="menuView">
+  <div class="menuShell">
+    <div class="menuHero">
+      <div class="menuKicker">SEAF · UNITED EARTH FEDERATION</div>
+      <h1>PLANETARY OPERATIONS</h1>
+      <p>Establish a foothold, organize your forward base, and lead SEAF squads on operations across hostile worlds.</p>
+    </div>
+    <div class="menuPanel">
+      <div class="menuPanelHead">
+        <h2>Campaign Saves</h2>
+        <span class="baseZoomLabel">LOCAL STORAGE</span>
+      </div>
+      <div class="saveSlots" id="saveSlots"></div>
+      <div class="menuNote">Campaigns are saved in this browser on this device. Starting a new campaign in an occupied slot requires confirmation before replacing it.</div>
+      <div id="menuMessage" role="status" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+
+<section class="view" id="baseView">
 <div class="layout">
   <div class="panel">
     <h2>Forward Operating Base — Landing Zone Cedar</h2>
@@ -149,7 +189,13 @@ const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 const rand=(a,b)=>a+Math.random()*(b-a);
 const now=()=>new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});
-const saveKey="seaf_planetary_ops_v01_save";
+const legacySaveKey="seaf_planetary_ops_v01_save";
+const SAVE_SLOT_IDS=["slot1","slot2","slot3"];
+const SAVE_SLOT_LABELS={slot1:"Campaign Slot 1",slot2:"Campaign Slot 2",slot3:"Campaign Slot 3"};
+const SAVE_SLOT_PREFIX="seaf_planetary_ops_";
+const LAST_SAVE_SLOT_KEY="seaf_planetary_ops_last_slot";
+let activeSaveSlot=null;
+const saveSlotKey=slot=>SAVE_SLOT_PREFIX+slot+"_save";
 const buildings={
  command:{name:"Command Post",cost:{supplies:0,components:0},desc:"Your operational hub.",limit:1,color:"#b6bd85"},
  barracks:{name:"Barracks",cost:{supplies:45,components:10},desc:"+1 recruit capacity and squad recovery.",limit:2,color:"#829a78"},
@@ -164,12 +210,13 @@ const missions=[
  {id:"recover",name:"Supply Recovery",type:"Recovery",desc:"Recover marked supply crates and eliminate resistance.",reward:{supplies:70,components:10,requisition:15},enemyCount:6,crates:3},
  {id:"relay",name:"Relay Sabotage",type:"Sabotage",desc:"Disable a hostile relay site guarded by patrols.",reward:{supplies:35,components:25,requisition:30},enemyCount:10,relay:true}
 ];
-let state={
+function createInitialState(){return {
  supplies:100,components:55,requisition:65,intel:0,
  buildings:[{type:"command",x:600,y:400}],
  squad:2,missionWins:0,selectedBuilding:null,baseLog:[],
  mission:null,saveVersion:1,layoutVersion:2
-};
+};}
+let state=createInitialState();
 let player=null,squad=[],enemies=[],crates=[],relay=null,bullets=[],enemyBullets=[],particles=[];
 let battle={active:false,completed:false,failed:false,elapsed:0,ammo:24,maxAmmo:24,reloadTimer:0,shootCooldown:0,spawned:0,kills:0,objectiveDone:false,keys:{},mouse:{x:0,y:0,down:false},touch:{x:0,y:0,fire:false},camera:{x:0,y:0},mission:null,extraction:{x:500,y:500}};
 let baseCanvas=$("baseCanvas"),baseCtx=baseCanvas.getContext("2d"),canvas=$("battleCanvas"),ctx=canvas.getContext("2d");
@@ -232,21 +279,77 @@ function updatePlacementUI(){
 }
 function log(msg){state.baseLog.unshift(`[${now()}] ${msg}`);state.baseLog=state.baseLog.slice(0,30);$("baseLog").innerHTML=state.baseLog.map(x=>`<div>${escapeHTML(x)}</div>`).join("");}
 function escapeHTML(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
-function save(){try{localStorage.setItem(saveKey,JSON.stringify(state));}catch(e){log("Save unavailable on this browser.");}}
-function load(){try{
- let raw=localStorage.getItem(saveKey);
- if(raw){
-  let s=JSON.parse(raw);
-  if(s&&Array.isArray(s.buildings)&&Number.isFinite(s.supplies)){
-   const needsLayoutMigration=!Number.isFinite(s.layoutVersion)||s.layoutVersion<2;
-   state={...state,...s};state.mission=null;
-   if(needsLayoutMigration){
-    state.buildings=state.buildings.map(b=>({...b,x:(Number.isFinite(b.x)?b.x:450)+150,y:(Number.isFinite(b.y)?b.y:250)+150}));
-    state.layoutVersion=2;
+function readSaveSlot(slot){
+ try{
+  const raw=localStorage.getItem(saveSlotKey(slot));if(!raw)return null;
+  const data=JSON.parse(raw);
+  return data&&Array.isArray(data.buildings)&&Number.isFinite(data.supplies)?data:null;
+ }catch(e){console.warn("Save slot read failed",slot,e);return null;}
+}
+function migrateLegacySave(){
+ try{
+  if(!localStorage.getItem(saveSlotKey("slot1"))){
+   const legacy=localStorage.getItem(legacySaveKey);
+   if(legacy){
+    const parsed=JSON.parse(legacy);
+    if(parsed&&Array.isArray(parsed.buildings)&&Number.isFinite(parsed.supplies))
+     localStorage.setItem(saveSlotKey("slot1"),legacy);
    }
   }
+ }catch(e){console.warn("Legacy save migration failed",e);$("menuMessage").textContent="The previous save could not be imported. Its original browser data has not been deleted.";}
+}
+function save(){
+ if(!activeSaveSlot)return;
+ try{
+  localStorage.setItem(saveSlotKey(activeSaveSlot),JSON.stringify(state));
+  localStorage.setItem(LAST_SAVE_SLOT_KEY,activeSaveSlot);
+ }catch(e){console.warn("Save failed",e);if($("menuMessage"))$("menuMessage").textContent="Save unavailable: this browser may be out of storage space.";}
+}
+function renderSaveSlots(){
+ const container=$("saveSlots");if(!container)return;
+ container.innerHTML=SAVE_SLOT_IDS.map(slot=>{
+  const data=readSaveSlot(slot),occupied=!!data;
+  const summary=occupied
+   ? (data.buildings.length+" structures · "+(Number(data.missionWins)||0)+" operations · "+(Number(data.squad)||0)+" squadmates")
+   : "No campaign saved in this slot.";
+  return '<div class="saveSlot '+(occupied?"":"empty")+'">'+
+   '<h3>'+SAVE_SLOT_LABELS[slot]+'</h3>'+
+   '<p>'+summary+'</p>'+
+   '<div class="saveSlotActions">'+
+    (occupied?'<button class="primary" data-load-slot="'+slot+'">Continue</button>':'')+
+    '<button class="'+(occupied?"small":"primary")+'" data-new-slot="'+slot+'">'+(occupied?"New Campaign":"Start New Save")+'</button>'+
+   '</div></div>';
+ }).join("");
+ container.querySelectorAll("[data-load-slot]").forEach(button=>button.addEventListener("click",()=>loadSaveSlot(button.dataset.loadSlot)));
+ container.querySelectorAll("[data-new-slot]").forEach(button=>button.addEventListener("click",()=>startNewSave(button.dataset.newSlot)));
+}
+function loadSaveSlot(slot){
+ const data=readSaveSlot(slot);if(!data){$("menuMessage").textContent="That save slot is empty or unreadable.";renderSaveSlots();return;}
+ state={...createInitialState(),...data};
+ state.mission=null;
+ state.baseLog=Array.isArray(state.baseLog)?state.baseLog:[];
+ const needsLayoutMigration=!Number.isFinite(data.layoutVersion)||data.layoutVersion<2;
+ if(needsLayoutMigration){
+  state.buildings=state.buildings.map(b=>({...b,x:(Number.isFinite(b.x)?b.x:450)+150,y:(Number.isFinite(b.y)?b.y:250)+150}));
+  state.layoutVersion=2;
  }
- }catch(e){console.warn("Save load failed",e);}}
+ if(!state.buildings.some(b=>b.type==="command"))state.buildings.unshift({type:"command",x:600,y:400});
+ state.layoutVersion=2;activeSaveSlot=slot;pendingBuilding=null;basePointerWorld=null;
+ player=null;squad=[];enemies=[];crates=[];relay=null;bullets=[];enemyBullets=[];particles=[];
+ resetBaseCamera();updatePlacementUI();refresh();
+ log(SAVE_SLOT_LABELS[slot]+" loaded. Welcome back.");save();
+ $("menuMessage").textContent="";switchView("baseView");
+}
+function startNewSave(slot){
+ const existing=readSaveSlot(slot);
+ if(existing&&!window.confirm("Replace "+SAVE_SLOT_LABELS[slot]+" with a fresh campaign? This cannot be undone."))return;
+ activeSaveSlot=slot;state=createInitialState();pendingBuilding=null;basePointerWorld=null;
+ player=null;squad=[];enemies=[];crates=[];relay=null;bullets=[];enemyBullets=[];particles=[];
+ battle.active=false;battle.completed=false;battle.failed=false;battle.mission=null;
+ resetBaseCamera();updatePlacementUI();refresh();
+ log("New campaign started. Landing zone operational; awaiting deployment orders.");
+ save();$("menuMessage").textContent="";switchView("baseView");
+}
 function counts(type){return state.buildings.filter(b=>b.type===type).length;}
 function renderResources(){$("resources").innerHTML=[["Supplies",state.supplies],["Components",state.components],["Requisition",state.requisition],["Intel",state.intel]].map(([n,v])=>`<div class="resource">${n}: <b>${v}</b></div>`).join("");}
 function renderBuildings(){
@@ -336,7 +439,19 @@ function renderMissions(){
 }
 function refresh(){renderResources();renderBuildings();drawBase();renderMissions();$("baseStatus").textContent=`Buildings: ${state.buildings.length} · Missions completed: ${state.missionWins} · Squad strength: ${state.squad}`;}
 function recruit(){if(state.requisition<30||state.squad>=8)return;state.requisition-=30;state.squad++;log("New SEAF squadmate recruited.");refresh();save();}
-function switchView(id){document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===id));document.querySelectorAll(".tabs button[data-view]").forEach(b=>b.classList.toggle("active",b.dataset.view===id));}
+function switchView(id){
+ if(id==="menuView"){
+  if(battle.active){
+   if(!window.confirm("Return to the main menu? The active deployment will be abandoned."))return;
+   retreat();
+  }
+  save();renderSaveSlots();
+ }
+ document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===id));
+ document.querySelectorAll(".tabs button[data-view]").forEach(b=>b.classList.toggle("active",b.dataset.view===id));
+ document.querySelector(".tabs").classList.toggle("menu-hidden",id==="menuView");
+ $("resources").style.display=id==="menuView"?"none":"flex";
+}
 document.querySelectorAll(".tabs button[data-view]").forEach(b=>b.addEventListener("click",()=>switchView(b.dataset.view)));
 $("recruitBtn").addEventListener("click",recruit);
 
@@ -557,10 +672,11 @@ joy.addEventListener("pointerup",joyEnd);joy.addEventListener("pointercancel",jo
 let last=performance.now();
 function loop(t){let dt=Math.min((t-last)/1000,.05);last=t;if(battle.active){update(dt);drawBattle();}requestAnimationFrame(loop);}
 function init(){
- load();
- if(!state.buildings.some(b=>b.type==="command"))state.buildings.unshift({type:"command",x:600,y:400});
- state.layoutVersion=2;resetBaseCamera();updatePlacementUI();
- refresh();log("Landing zone operational. Awaiting deployment orders.");save();
+ migrateLegacySave();
+ $("resources").style.display="none";
+ renderSaveSlots();
+ updatePlacementUI();
+ switchView("menuView");
 }
 init();requestAnimationFrame(loop);
 })();
