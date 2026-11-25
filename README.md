@@ -22,6 +22,8 @@ Manage a forward base, select an operation, deploy with squadmates, complete obj
 - Main menu with three local campaign save slots
 - Legacy single-save migration into Campaign Slot 1
 
+The v0.4.1 motor-pool vehicle silhouettes were redrawn to better match the supplied overhead Bastion tank-destroyer and SEAF exosuit references. Canvas silhouettes are still stylized stand-ins, not imported game models.
+
 ## Controls
 **Desktop:** WASD/arrows move, mouse aim, left click fire, R reload, E interact.
 **Mobile base:** pinch to zoom, drag to pan, and tap an open building plot to place a selected structure. **Mobile deployment:** joystick movement, FIRE auto-aim, RELOAD, INTERACT, RETREAT.
