@@ -976,18 +976,18 @@ function formationSlot(index){
  return{x:player.x-fx*back+rx*side,y:player.y-fy*back+ry*side};
 }
 function separateSquad(){
- // Repeated overlap resolution prevents squadmates from occupying the same visible space.
- for(let pass=0;pass<4;pass++){
+ // Repeated overlap resolution keeps clear daylight between every deployed soldier.
+ for(let pass=0;pass<5;pass++){
   for(let i=0;i<squad.length;i++){
    const unit=squad[i];if(unit.dead)continue;
-   const pd=dist(unit,player),pMin=unit.radius+player.radius+9;
+   const pd=dist(unit,player),pMin=unit.radius+player.radius+12;
    if(pd<pMin){
     const a=pd<.01?Math.PI/2:Math.atan2(unit.y-player.y,unit.x-player.x);
     unit.x+=Math.cos(a)*(pMin-pd);unit.y+=Math.sin(a)*(pMin-pd);
    }
    for(let j=i+1;j<squad.length;j++){
     const other=squad[j];if(other.dead)continue;
-    const d=dist(unit,other),minimum=unit.radius+other.radius+8;
+    const d=dist(unit,other),minimum=unit.radius+other.radius+12;
     if(d<minimum){
      const a=d<.01?(i+j+1)*1.7:Math.atan2(other.y-unit.y,other.x-unit.x);
      const push=(minimum-d)/2;
@@ -997,7 +997,10 @@ function separateSquad(){
    }
   }
  }
- squad.forEach(u=>{u.x=clamp(u.x,35,965);u.y=clamp(u.y,35,965);});
+ squad.forEach(u=>{
+  if(unitBlocked(u)){const p=nearestOpenBattlePoint(u.x,u.y,u.radius);u.x=p.x;u.y=p.y;}
+  u.x=clamp(u.x,35,965);u.y=clamp(u.y,35,965);
+ });
 }
 function setSquadOrder(order){
  if(!battle.active)return;
