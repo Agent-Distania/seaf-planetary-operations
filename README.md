@@ -19,18 +19,19 @@ Manage a forward base, select an operation, deploy with squadmates, complete obj
 - Recruitment and squadmates; each Barracks increases squad capacity by two, from the existing eight-person baseline up to twelve
 - Logistics and storage: Supply Depots increase supply/component capacity; mission rewards are capped by available storage with overflow reported
 - Three missions: Clear the Area, Supply Recovery, Relay Sabotage
-- Top-down deployment combat
+- Combat foundation with distinct squad formation spacing, HOLD/FOLLOW orders, cover collision and destructible barricades
+- Three enemy archetypes, visible health/ammunition HUD, 30-round service rifle and interaction-based objectives
 - Desktop keyboard/mouse and mobile touch controls
 - Main menu with three local campaign save slots
 - Legacy single-save migration into Campaign Slot 1
 
-The v0.6 transport artwork is an original top-down Pelican-inspired fan-game silhouette; the Bastion remains a fixed-casemate tank destroyer with a shortened barrel. Vehicle artwork is stylized canvas illustration, not imported game models.
+The v0.7 combat update adds visible squad spacing, HOLD/FOLLOW commands, battlefield cover and three enemy archetypes. The v0.6 transport artwork is an original top-down Pelican-inspired fan-game silhouette; vehicle artwork is stylized canvas illustration, not imported game models.
 
 ## Controls
 **Desktop:** WASD/arrows move, mouse aim, left click fire, R reload, E interact.
 **Mobile base:** pinch to zoom, drag to pan, and tap an open building plot to place a selected structure. **Mobile deployment:** joystick movement, FIRE auto-aim, RELOAD, INTERACT, RETREAT.
 
 ## Development notes
-The v0.6 release adds functional storage limits and Barracks personnel capacity while preserving existing save data and construction costs. New storage capacity is derived from constructed Supply Depots, so older saves do not need a data conversion. Static source checks were performed; test the Pelican's scale and all base panels on desktop and mobile.
+The v0.7 release expands combat and squad AI while preserving campaign saves, logistics, base construction and resource rules. Test squad spacing, cover, HOLD/FOLLOW controls and combat readability on desktop and mobile.
 
 See [CHANGELOG.md](CHANGELOG.md) for version history and [docs/ROADMAP.md](docs/ROADMAP.md) for planned milestones.
