@@ -27,41 +27,48 @@
 - Changed the Bastion into a fixed-casemate tank destroyer with its gun mount integrated into the rear chassis
 
 ## v0.6 — Transport & Logistics (implemented)
-- Added a new top-down Pelican-inspired landing-pad vehicle illustration
-- Shortened the Bastion's fixed cannon barrel by approximately 25%
-- Added visible supply/component storage capacities and a dedicated Logistics & Storage panel
-- Made Supply Depots increase supplies/components capacity
-- Capped mission supply/component rewards at available storage and report overflow
-- Preserved the existing base squad capacity of 8; each Barracks adds 2, up to 10 then 12
-- Preserved old campaign saves without a schema migration
+- Added top-down Pelican-inspired transport art on the landing apron
+- Shortened the Bastion fixed cannon barrel by approximately 25%
+- Added supply/component storage capacities and a Logistics & Storage panel
+- Made Supply Depots increase resource storage and mission rewards respect available capacity
+- Preserved the existing eight-person base squad capacity; each Barracks adds two, up to twelve
+- Preserved campaign saves without a schema migration
 
-## v0.7 — Base Operations & Services (next)
-- Add meaningful functions to the Medical Station, Radar Station and Engineering Depot
-- Introduce vehicle readiness/maintenance as a genuine gameplay system before adding more service vehicles
-- Expand the transport staging area and base logistics layout where new mechanics require space
-- Add additional base facilities only when they have a defined player-facing function
+## v0.7 — Combat Foundation & Squad AI (implemented)
+- Added two-row follow formation, assigned squad positions, spacing/separation and obstacle-aware movement
+- Added squad HOLD/FOLLOW orders for desktop and mobile
+- Added battlefield rocks, walls, destructible barricades and movement/projectile collision
+- Added line-of-sight checks, enemy target selection and three enemy types: Scout, Raider and Heavy
+- Improved soldier silhouettes, squad numbering, health bars, muzzle flashes, impacts and damage feedback
+- Updated the service rifle to a 30-round magazine and improved the combat HUD
+- Added explicit supply-cache interaction and moved extraction to the far side of the battlefield
 
-## v0.8 — Combat Expansion (planned)
-- Improve combat feedback and balance
-- Expand enemy behaviors and encounter variety
-- Refine reload interactions and squad combat
+## v0.8 — Transport & Battlefield Polish (next)
+- Move Pelican VTOL engine nacelles to the outer ends of the wings and expand the landing apron if needed
+- Visual playtest and tune combat/map readability on mobile
+- Add further battlefield layouts and objective locations after the first combat playtest
+- Improve transport staging and support-vehicle presentation
 
-## v0.9 — Planetary Exploration (planned)
-- More varied mission environments and exploration events
-- Additional mission types and points of interest
+## v0.9 — Base Operations & Services (planned)
+- Add useful functions to the Medical Station, Radar Station and Engineering Depot
+- Introduce vehicle readiness and maintenance
+- Expand logistics only where gameplay systems need additional space
 
-## v0.10 — Equipment & Progression (planned)
-- Equipment choices and soldier progression
-- Reward and unlock pacing
+## v0.10 — Combat & Progression Expansion (planned)
+- Add weapon selection, specialist equipment and ammunition resupply
+- Expand squad commands and enemy behaviors
+- Add stratagem-style support and reinforcement systems
 
-## v0.11 — Missions & Campaign (planned)
-- Mission chains and campaign progression
-- More meaningful operational choices
+## v0.11 — Planetary Exploration (planned)
+- More varied mission environments, exploration events and points of interest
 
-## v0.12 — World & Enemy Expansion (planned)
+## v0.12 — Missions & Campaign (planned)
+- Mission chains, campaign progression and more meaningful operational choices
+
+## v0.13 — World & Enemy Expansion (planned)
 - Broader enemy roster and planetary world details
 
-## v0.13 — Polish (planned)
+## v0.14 — Polish (planned)
 - UI, accessibility, balance, performance and bug fixing
 
 ## v1.0 — Planetary Campaign (planned)
