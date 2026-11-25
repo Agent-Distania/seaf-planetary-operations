@@ -444,9 +444,9 @@ function drawWatchPost(c,x,y){
 }
 function drawPerimeter(c){
  c.save();
- c.strokeStyle="#29322a";c.lineWidth=18;c.strokeRect(48,48,BASE_WORLD_W-96,BASE_WORLD_H-96);
- c.strokeStyle="#89866e";c.lineWidth=8;c.strokeRect(48,48,BASE_WORLD_W-96,BASE_WORLD_H-96);
- c.strokeStyle="#b7b092";c.lineWidth=1.5;c.strokeRect(54,54,BASE_WORLD_W-108,BASE_WORLD_H-108);
+ c.strokeStyle="#29322a";c.lineWidth=18;c.strokeRect(28,28,BASE_WORLD_W-56,BASE_WORLD_H-56);
+ c.strokeStyle="#89866e";c.lineWidth=8;c.strokeRect(28,28,BASE_WORLD_W-56,BASE_WORLD_H-56);
+ c.strokeStyle="#b7b092";c.lineWidth=1.5;c.strokeRect(34,34,BASE_WORLD_W-68,BASE_WORLD_H-68);
  // Southern gate opening and reinforced posts.
  c.fillStyle="#4b503d";c.fillRect(540,748,120,24);
  fillRound(c,528,730,20,42,4,"#515747","#b0a98c",2);fillRound(c,652,730,20,42,4,"#515747","#b0a98c",2);
@@ -490,7 +490,7 @@ function drawCommandPost(c,x,y){
  c.fillStyle="#3f4940";c.beginPath();c.arc(x-39,y+27,7,0,Math.PI*2);c.fill();
  c.strokeStyle="#b5b394";c.lineWidth=1.5;c.beginPath();c.arc(x-39,y+27,5,Math.PI,Math.PI*2);c.stroke();
  fillRound(c,x-13,y+28,26,10,2,"#343d35","#b8b293",1);c.fillStyle="#d3ad64";c.fillRect(x-4,y+31,8,3);
- drawBuildingLabel(c,"COMMAND",x,y+51);
+ drawBuildingLabel(c,"COMMAND",x,y+33);
 }
 function drawBarracks(c,x,y){
  drawBuildingBase(c,x,y,94,66);fillRound(c,x-39,y-24,78,48,4,"#77816a","#30392f",2.5);
@@ -500,7 +500,7 @@ function drawBarracks(c,x,y){
   drawRoofVent(c,x-22+i*25,y+13,10,6);
  }
  fillRound(c,x-11,y+24,22,7,2,"#4b5548","#c4c1a0",1);c.fillStyle="#d6b56e";c.fillRect(x-5,y+26,10,2);
- drawBuildingLabel(c,"BARRACKS",x,y+44);
+ drawBuildingLabel(c,"BARRACKS",x,y+25);
 }
 function drawSupplyDepot(c,x,y){
  drawBuildingBase(c,x,y,104,76);fillRound(c,x-43,y-28,86,56,4,"#927d5c","#393d31",3);
@@ -509,7 +509,7 @@ function drawSupplyDepot(c,x,y){
  c.fillStyle="#4a5144";c.fillRect(x-31,y-8,62,16);c.strokeStyle="#b9ad8a";c.lineWidth=1;c.strokeRect(x-31,y-8,62,16);
  for(let i=0;i<3;i++){fillRound(c,x-33+i*23,y+19,18,8,1,"#343d35","#d0bd91",1);c.fillStyle="#c8ae76";c.fillRect(x-29+i*23,y+21,10,2);}
  fillRound(c,x-48,y-22,9,15,1,"#6b775e","#c6bb94",1);fillRound(c,x+39,y-21,9,14,1,"#a16e4c","#d2ae79",1);
- drawBuildingLabel(c,"SUPPLY DEPOT",x,y+52);
+ drawBuildingLabel(c,"SUPPLY DEPOT",x,y+30);
 }
 function drawMedicalStation(c,x,y){
  drawBuildingBase(c,x,y,88,68);fillRound(c,x-35,y-25,70,50,4,"#8b9180","#374138",2.5);
@@ -517,7 +517,7 @@ function drawMedicalStation(c,x,y){
  c.fillStyle="#c2c3a9";c.fillRect(x-22,y-13,44,5);c.fillStyle="#52645a";c.fillRect(x-20,y-3,40,13);
  fillRound(c,x-9,y-28,18,13,2,"#f0ead7","#5c6255",1);c.fillStyle="#b8493f";c.fillRect(x-2,y-25,4,8);c.fillRect(x-6,y-22,12,3);
  fillRound(c,x-12,y+23,24,8,2,"#454f44","#d4d0b4",1);c.fillStyle="#d9b36c";c.fillRect(x-4,y+25,8,3);
- drawBuildingLabel(c,"MEDICAL",x,y+46);
+ drawBuildingLabel(c,"MEDICAL",x,y+30);
 }
 function drawRadarStation(c,x,y){
  drawBuildingBase(c,x,y,82,82);fillRound(c,x-35,y+7,40,23,3,"#687665","#343e34",2);
@@ -528,7 +528,7 @@ function drawRadarStation(c,x,y){
  c.beginPath();c.moveTo(x-7,y-29);c.lineTo(x+31,y+9);c.moveTo(x+31,y-29);c.lineTo(x-7,y+9);c.stroke();
  c.fillStyle="#c8c3a1";c.beginPath();c.arc(x+12,y-10,5,0,Math.PI*2);c.fill();
  c.strokeStyle="#d0c79e";c.lineWidth=2;c.beginPath();c.moveTo(x-4,y+16);c.lineTo(x-14,y+32);c.stroke();
- drawBuildingLabel(c,"RADAR",x,y+49);
+ drawBuildingLabel(c,"RADAR",x,y+31);
 }
 function drawDefenseTurret(c,x,y){
  drawBuildingBase(c,x,y,66,66);c.fillStyle="#555b4c";c.beginPath();c.arc(x,y,25,0,Math.PI*2);c.fill();
@@ -536,7 +536,7 @@ function drawDefenseTurret(c,x,y){
  c.strokeStyle="#343d33";c.lineWidth=4;c.beginPath();c.arc(x,y,11,0,Math.PI*2);c.stroke();
  fillRound(c,x-12,y-12,24,27,5,"#666f5e","#c3bd98",2);fillRound(c,x-5,y-31,10,24,3,"#343f37","#a8aa8d",1.5);
  c.fillStyle="#aeb49b";c.fillRect(x-2,y-35,4,8);c.fillStyle="#d1ad68";c.beginPath();c.arc(x,y+21,3,0,Math.PI*2);c.fill();
- drawBuildingLabel(c,"TURRET",x,y+43);
+ drawBuildingLabel(c,"TURRET",x,y+27);
 }
 function drawEngineeringDepot(c,x,y){
  drawBuildingBase(c,x,y,104,76);fillRound(c,x-43,y-27,86,54,4,"#747c66","#343d33",2.5);
@@ -547,7 +547,7 @@ function drawEngineeringDepot(c,x,y){
  }
  fillRound(c,x-12,y-25,24,8,2,"#3d4840","#b4ad8c",1);drawRoofVent(c,x-31,y+21,10,8);drawRoofVent(c,x+31,y+21,10,8);
  c.fillStyle="#d7b45f";c.beginPath();c.moveTo(x+34,y-26);c.lineTo(x+43,y-26);c.lineTo(x+43,y-17);c.closePath();c.fill();
- drawBuildingLabel(c,"ENGINEERING",x,y+51);
+ drawBuildingLabel(c,"ENGINEERING",x,y+30);
 }
 function drawBaseBuilding(c,b){
  c.save();switch(b.type){
@@ -575,8 +575,9 @@ function drawLandingZone(c){
  fillRound(c,525,612,150,124,8,"#777866","#b5b092",2);
  c.strokeStyle="#d5cfaa";c.lineWidth=2.5;c.setLineDash([10,7]);c.strokeRect(534,621,132,106);c.setLineDash([]);
  c.strokeStyle="#ded8b7";c.lineWidth=2.5;c.beginPath();c.arc(600,674,37,0,Math.PI*2);c.stroke();
- c.font="bold 24px system-ui";c.fillStyle="#e0dcc0";c.textAlign="center";c.textBaseline="middle";c.fillText("H",600,674);
- drawPelicanStyleTransport(c,600,650);
+ c.font="bold 24px system-ui";c.fillStyle="#e0dcc0";c.textAlign="center";c.textBaseline="middle";
+ drawPelicanStyleTransport(c,600,642);
+ c.font="bold 23px system-ui";c.fillText("H",600,695);
  c.font="bold 8px system-ui";c.fillText("TRANSPORT APRON",600,728);
  for(let i=0;i<4;i++){c.fillStyle="#d7b66e";c.beginPath();c.arc(540+i*40,615,2.5,0,Math.PI*2);c.fill();c.beginPath();c.arc(540+i*40,733,2.5,0,Math.PI*2);c.fill();}
 }
@@ -600,16 +601,15 @@ function drawBase(){
  // Main road network connects the command compound, transport apron and secured entrance.
  drawRoad(c,[{x:600,y:58},{x:600,y:302}],48);
  drawRoad(c,[{x:600,y:498},{x:600,y:612}],48);
+ drawRoad(c,[{x:600,y:736},{x:600,y:758}],38);
  drawRoad(c,[{x:58,y:400},{x:442,y:400}],44);
  drawRoad(c,[{x:758,y:400},{x:1142,y:400}],44);
  drawCentralPlaza(c);drawLandingZone(c);
  drawPerimeter(c);
  for(const plot of getBasePlots())drawConstructionPad(c,plot);
  drawUtilityProps(c);
- // Small motor-pool staging apron reserved for future SEAF ground vehicles.
- fillRound(c,792,342,116,42,5,"#5c6251","#a49d7e",1.5);
- c.strokeStyle="#c8bd95";c.lineWidth=1.5;c.setLineDash([7,5]);c.strokeRect(800,348,100,30);c.setLineDash([]);
- c.fillStyle="#ddd3ad";c.font="bold 8px system-ui";c.textAlign="center";c.fillText("VEHICLE STAGING",850,338);
+ // The transport apron is the first dedicated vehicle-support area; additional motor-pool
+ // and exosuit service structures are reserved for the next base expansion pass.
  state.buildings.forEach(b=>drawBaseBuilding(c,b));
  if(pendingBuilding){
   const hint=basePointerWorld||{x:600,y:400},ghost=nearestOpenBasePlot(hint,BASE_WORLD_W);
