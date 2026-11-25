@@ -8,6 +8,17 @@
 - Kept the motor-pool layout and other base artwork unchanged.
 
 ### Testing
+- Repository update verified. The source has not yet been run in a full browser or mobile visual test; that remains outstanding.
+
+
+## v0.4.1 — Vehicle Silhouette Reference Pass
+
+### Changed
+- Reworked the motor-pool Bastion tank destroyer silhouette to read as a long tracked vehicle from overhead, with centerline fixed gun, tread runs, glacis and rear deck details.
+- Reworked the SEAF exosuit overhead silhouette with a broad armored torso, separated legs, asymmetrical shield arm and under-arm rotary weapon.
+- Kept the motor-pool layout and other base artwork unchanged.
+
+### Testing
 - JavaScript syntax and static function checks passed before publication; actual visual inspection in mobile Safari remains for the user.
 
 
