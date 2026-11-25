@@ -10,58 +10,41 @@
 - Recruitment and save/load
 - PC and touch controls
 
-## v0.2 — Gameplay Fixes & Quality of Life (next)
-- Review and fix current prototype bugs before adding content
-- Fix touch aiming and mobile controls
-- Ensure touch UI does not show on desktop
-- Improve squad following and combat behavior
-- Clarify mission objectives and interactions
-- Add reliable extraction/completion flow
-- Improve notifications/message organization
-- Add timestamps to mission events/messages where useful
-- Improve phone layout and readability
-- Test save/load and mission outcomes
+## v0.2 — Gameplay Fixes & Quality of Life (implemented)
+- Objective completion followed by return-to-extraction
+- Mobile touch firing auto-aim
+- Relay sabotage interaction improvements
+- Desktop/mobile control visibility fix
+- Squad casualty handling fix
 
-## v0.3 — Combat Expansion
-- More enemy types and behavior patterns
-- Weapon selection and variety, grenades, ammo management
-- Squad AI improvements and friendly-fire options
+## v0.3 — Combat Expansion (planned)
+- Improve combat feedback and balance
+- Expand enemy behaviors and encounter variety
+- Refine weapon/reload interactions
+- Squad combat improvements
 
-## v0.4 — Base Expansion
-- Additional buildings and upgrades
-- Base personnel and management
-- Improved recruitment and recovery systems
-- Better construction placement and defenses
+## v0.4 — Base Expansion (planned)
+- More useful construction and base progression
+- More personnel and support systems
+- Clearer resource/economy feedback
 
-## v0.5 — Planetary Exploration
-- Larger and more varied maps: forest, rocky, ruin, facility
-- Points of interest, random events, optional objectives, exploration rewards
+## v0.5 — Planetary Exploration (planned)
+- More varied mission environments and exploration events
+- Additional mission types and points of interest
 
-## v0.6 — Equipment & Progression
-- Unlockable equipment and upgrades
-- Soldier/squad progression and specialization
-- More meaningful resource spending
+## v0.6 — Equipment & Progression (planned)
+- Equipment choices and soldier progression
+- Reward and unlock pacing
 
-## v0.7 — Missions & Campaign
-- More mission types and multi-stage operations
-- Rescue, defense, search, and recovery missions
-- Region-based campaign progression and mission consequences
+## v0.7 — Missions & Campaign (planned)
+- Mission chains and campaign progression
+- More meaningful operational choices
 
-## v0.8 — World & Enemy Expansion
-- Additional enemy types/factions, elites, enemy structures, patrols
-- Dynamic battlefield encounters
+## v0.8 — World & Enemy Expansion (planned)
+- Broader enemy roster and planetary world details
 
-## v0.9 — Polish
-- Balance, UI/UX, mobile optimization, performance, save hardening, testing, bug fixes
+## v0.9 — Polish (planned)
+- UI, accessibility, balance, performance, and bug fixing
 
-## v1.0 — Planetary Campaign
-A complete playable campaign loop with a growing SEAF base, multiple regions, missions, enemy variety, recruitment, progression, environments, resource economy, deployment, combat, and extraction.
-
-## Development rules
-- Inspect existing code before each update.
-- Identify bugs and conflicts before adding features.
-- Keep updates focused and avoid unnecessary changes to unrelated systems.
-- Review code again after changes.
-- Test as much as possible and clearly report what was tested.
-- Update patch notes for every release.
-- If work must be split, state what remains and resume from the exact point on request.
+## v1.0 — Planetary Campaign (planned)
+- Coherent campaign loop with expanded progression and stable systems
