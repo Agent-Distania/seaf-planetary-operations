@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.8.1 — Save Menu Startup Fix
+
+### Fixed
+- Corrected a malformed loop in the relay objective renderer that caused a JavaScript parse error and prevented the game from initializing.
+- Restored startup rendering of all three campaign save-slot cards and access to the save-slot selection screen.
+
+### Verification
+- Embedded JavaScript syntax compilation passed.
+- Runtime smoke test with a simulated browser DOM confirmed initialization completes and all three save-slot cards render.
+- Full interactive playtesting in mobile Safari remains pending.
+
+
 ## v0.8 — Pelican VTOL & Battlefield Installations
 
 ### Added
