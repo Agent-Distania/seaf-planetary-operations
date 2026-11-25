@@ -12,7 +12,7 @@ A single-player, top-down 2D sci-fi military game about ordinary SEAF soldiers f
 Manage a forward base, select an operation, deploy with squadmates, complete objectives, return to extraction, and use rewards to expand your base.
 
 ## Current prototype systems
-- Redesigned SEAF forward base with top-down facility artwork, perimeter security, roads, landing apron and footprint-aware construction
+- Redesigned SEAF forward base with top-down facility artwork, perimeter security, roads, Pelican-style transport apron, motor pool and footprint-aware construction
 - Zoomable/pannable base camera and plot-based construction
 - Resources: supplies, components, requisition, intel
 - Recruitment and squadmates
