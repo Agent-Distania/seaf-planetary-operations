@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>SEAF: Planetary Operations — v0.3.1</title>
+<title>SEAF: Planetary Operations — v0.4</title>
 <style>
 :root{--bg:#101713;--panel:#1b2620;--panel2:#233229;--line:#3c5144;--text:#e4ece4;--muted:#a5b7a8;--accent:#c7d6a1;--danger:#e26b5e;--gold:#d8b46a}
 *{box-sizing:border-box}
@@ -83,7 +83,7 @@ footer{margin-top:10px;color:#819387;font-size:11px;text-align:center}
 <body>
 <div id="app">
 <header>
-  <div class="brand">SEAF <span>PLANETARY OPERATIONS · PROTOTYPE 0.3.1</span></div>
+  <div class="brand">SEAF <span>PLANETARY OPERATIONS · PROTOTYPE 0.4</span></div>
   <div class="resourcebar" id="resources"></div>
 </header>
 <div class="tabs menu-hidden">
@@ -115,8 +115,8 @@ footer{margin-top:10px;color:#819387;font-size:11px;text-align:center}
 <section class="view" id="baseView">
 <div class="layout">
   <div class="panel">
-    <h2>Forward Operating Base — Landing Zone Cedar</h2>
-    <p>Place structures around your foothold. Buildings cost resources and provide useful services.</p>
+    <h2>SEAF Forward Operating Base — Landing Zone Cedar</h2>
+    <p>A fortified planetary foothold supporting personnel, logistics, communications and orbital transport operations.</p>
     <canvas id="baseCanvas" width="900" height="500" aria-label="Interactive forward base map"></canvas>
     <div class="baseToolbar" aria-label="Base map camera controls">
       <button class="small" id="baseZoomOut" aria-label="Zoom out">−</button>
@@ -257,8 +257,20 @@ function getBasePlots(){
  }
  return plots;
 }
-function basePlotOpen(plot){
- return state.buildings.every(b=>Math.abs(b.x-plot.x)>=86||Math.abs(b.y-plot.y)>=66);
+function baseFootprint(type){
+ return ({
+  command:{w:108,h:82},barracks:{w:94,h:66},depot:{w:104,h:76},
+  medical:{w:88,h:68},radar:{w:82,h:82},turret:{w:66,h:66},
+  engineering:{w:104,h:76}
+ })[type]||{w:86,h:64};
+}
+function basePlotOpen(plot,type=pendingBuilding||"barracks"){
+ const candidate=baseFootprint(type);
+ return state.buildings.every(building=>{
+  const current=baseFootprint(building.type);
+  return Math.abs(building.x-plot.x)>=(candidate.w+current.w)/2+12||
+         Math.abs(building.y-plot.y)>=(candidate.h+current.h)/2+12;
+ });
 }
 function nearestOpenBasePlot(point,maxDistance=78){
  let best=null,bestDistance=maxDistance;
@@ -388,49 +400,232 @@ function placeBuildingAt(worldPoint){
  pendingBuilding=null;updatePlacementUI();
  log(`${b.name} constructed at the selected plot.`);refresh();save();
 }
+function roundRectPath(c,x,y,w,h,r){
+ const q=Math.min(r,w/2,h/2);c.beginPath();c.moveTo(x+q,y);c.lineTo(x+w-q,y);
+ c.quadraticCurveTo(x+w,y,x+w,y+q);c.lineTo(x+w,y+h-q);c.quadraticCurveTo(x+w,y+h,x+w-q,y+h);
+ c.lineTo(x+q,y+h);c.quadraticCurveTo(x,y+h,x,y+h-q);c.lineTo(x,y+q);c.quadraticCurveTo(x,y,x+q,y);c.closePath();
+}
+function fillRound(c,x,y,w,h,r,fill,stroke,lineWidth=1){
+ roundRectPath(c,x,y,w,h,r);c.fillStyle=fill;c.fill();if(stroke){c.strokeStyle=stroke;c.lineWidth=lineWidth;c.stroke();}
+}
+function drawRoad(c,points,width){
+ c.save();c.lineCap="round";c.lineJoin="round";c.beginPath();
+ points.forEach((p,i)=>i?c.lineTo(p.x,p.y):c.moveTo(p.x,p.y));
+ c.strokeStyle="#34392f";c.lineWidth=width+12;c.stroke();
+ c.strokeStyle="#666657";c.lineWidth=width;c.stroke();
+ c.strokeStyle="#a49b79";c.lineWidth=2;c.setLineDash([18,20]);c.stroke();c.setLineDash([]);c.restore();
+}
+function drawGround(c){
+ c.fillStyle="#4b503d";c.fillRect(0,0,BASE_WORLD_W,BASE_WORLD_H);
+ for(let i=0;i<92;i++){
+  const x=(i*173+61)%BASE_WORLD_W,y=(i*257+37)%BASE_WORLD_H;
+  c.globalAlpha=.10+(i%4)*.025;c.fillStyle=i%3?"#7a7958":"#292f27";
+  c.beginPath();c.ellipse(x,y,24+(i%6)*7,13+(i%5)*5,(i%7)*.22,0,Math.PI*2);c.fill();
+ }
+ c.globalAlpha=1;
+ for(let i=0;i<540;i++){
+  const x=(i*83+19)%BASE_WORLD_W,y=(i*137+31)%BASE_WORLD_H;
+  c.strokeStyle=i%3?"#63674b":"#353c30";c.lineWidth=i%5===0?2:1;
+  c.beginPath();c.moveTo(x,y);c.lineTo(x+((i%5)-2)*2,y+((i%7)-3)*2);c.stroke();
+ }
+ for(let i=0;i<160;i++){
+  const x=(i*97+43)%BASE_WORLD_W,y=(i*181+73)%BASE_WORLD_H;
+  c.fillStyle=i%2?"#77775a":"#31382d";c.globalAlpha=.55;
+  c.beginPath();c.arc(x,y,1+(i%3),0,Math.PI*2);c.fill();
+ }
+ c.globalAlpha=1;
+}
+function drawWatchPost(c,x,y){
+ c.save();fillRound(c,x-22,y-19,44,38,5,"#464b3c","#252d27",3);
+ fillRound(c,x-15,y-13,30,26,3,"#777b64","#c0b88f",1.5);
+ c.fillStyle="#343a31";c.fillRect(x-8,y-8,16,16);
+ c.fillStyle="#bdc49c";c.fillRect(x-2,y-15,4,30);c.fillRect(x-15,y-2,30,4);
+ c.fillStyle="#d2aa62";c.beginPath();c.arc(x,y,3,0,Math.PI*2);c.fill();c.restore();
+}
+function drawPerimeter(c){
+ c.save();
+ c.strokeStyle="#29322a";c.lineWidth=18;c.strokeRect(48,48,BASE_WORLD_W-96,BASE_WORLD_H-96);
+ c.strokeStyle="#89866e";c.lineWidth=8;c.strokeRect(48,48,BASE_WORLD_W-96,BASE_WORLD_H-96);
+ c.strokeStyle="#b7b092";c.lineWidth=1.5;c.strokeRect(54,54,BASE_WORLD_W-108,BASE_WORLD_H-108);
+ // Southern gate opening and reinforced posts.
+ c.fillStyle="#4b503d";c.fillRect(540,748,120,24);
+ fillRound(c,528,730,20,42,4,"#515747","#b0a98c",2);fillRound(c,652,730,20,42,4,"#515747","#b0a98c",2);
+ c.strokeStyle="#c1b991";c.lineWidth=4;c.beginPath();c.moveTo(548,749);c.lineTo(600,765);c.lineTo(652,749);c.stroke();
+ for(let x=90;x<510;x+=42){c.fillStyle="#a6a084";c.fillRect(x,42,3,12);c.fillRect(x,746,3,12);}
+ for(let x=690;x<1120;x+=42){c.fillStyle="#a6a084";c.fillRect(x,42,3,12);c.fillRect(x,746,3,12);}
+ for(let y=90;y<730;y+=42){c.fillStyle="#a6a084";c.fillRect(42,y,12,3);c.fillRect(1146,y,12,3);}
+ drawWatchPost(c,76,76);drawWatchPost(c,1124,76);drawWatchPost(c,76,724);drawWatchPost(c,1124,724);
+ c.restore();
+}
+function drawConstructionPad(c,plot){
+ fillRound(c,plot.x-53,plot.y-41,106,82,5,"#747461","#aaa58a",1.2);
+ c.strokeStyle="#575c4b";c.lineWidth=1;c.setLineDash([5,5]);c.strokeRect(plot.x-48,plot.y-36,96,72);c.setLineDash([]);
+ c.fillStyle="#b0a88a";c.fillRect(plot.x-44,plot.y-34,10,3);c.fillRect(plot.x+34,plot.y+31,10,3);
+}
+function drawRoofVent(c,x,y,w=12,h=8){
+ fillRound(c,x-w/2,y-h/2,w,h,2,"#333b34","#8d927b",1);
+ c.strokeStyle="#a6a58a";c.lineWidth=1;for(let i=-2;i<=2;i++){c.beginPath();c.moveTo(x+i*2,y-h/2+2);c.lineTo(x+i*2,y+h/2-2);c.stroke();}
+}
+function drawBuildingLabel(c,name,x,y){
+ c.save();c.font="bold 10px system-ui";c.textAlign="center";c.textBaseline="middle";
+ c.lineWidth=3;c.strokeStyle="#1f2921";c.strokeText(name,x,y);c.fillStyle="#e1dfc4";c.fillText(name,x,y);c.restore();
+}
+function drawBuildingBase(c,x,y,w,h){
+ fillRound(c,x-w/2+3,y-h/2+6,w,h,5,"#252c25",null);
+ fillRound(c,x-w/2,y-h/2,w,h,5,"#85816b","#d0c6a0",1.4);
+ c.strokeStyle="#555b4b";c.lineWidth=1;c.setLineDash([6,4]);c.strokeRect(x-w/2+5,y-h/2+5,w-10,h-10);c.setLineDash([]);
+}
+function drawCommandPost(c,x,y){
+ drawBuildingBase(c,x,y,108,82);
+ fillRound(c,x-39,y-29,78,58,5,"#66715d","#252f29",3);
+ fillRound(c,x-51,y-20,18,40,3,"#727966","#30382f",2);fillRound(c,x+33,y-20,18,40,3,"#727966","#30382f",2);
+ fillRound(c,x-31,y-22,62,44,3,"#89907a","#c2bea0",1.4);
+ c.fillStyle="#4c5b50";c.fillRect(x-25,y-17,50,7);c.fillStyle="#b5b99a";c.fillRect(x-22,y-7,44,2);
+ c.fillStyle="#465448";c.fillRect(x-21,y+1,42,15);
+ fillRound(c,x-16,y-26,32,9,2,"#3b4c46","#9da58d",1);
+ c.fillStyle="#d7d4ae";c.font="bold 7px system-ui";c.textAlign="center";c.fillText("SEAF HQ",x,y-20);
+ fillRound(c,x+28,y-29,12,13,2,"#444d43","#a8ad91",1);
+ c.strokeStyle="#c4c7a7";c.lineWidth=2;c.beginPath();c.moveTo(x+34,y-28);c.lineTo(x+42,y-42);c.stroke();
+ c.fillStyle="#b7b99d";c.beginPath();c.arc(x+42,y-43,4,0,Math.PI*2);c.fill();
+ c.fillStyle="#3f4940";c.beginPath();c.arc(x-39,y+27,7,0,Math.PI*2);c.fill();
+ c.strokeStyle="#b5b394";c.lineWidth=1.5;c.beginPath();c.arc(x-39,y+27,5,Math.PI,Math.PI*2);c.stroke();
+ fillRound(c,x-13,y+28,26,10,2,"#343d35","#b8b293",1);c.fillStyle="#d3ad64";c.fillRect(x-4,y+31,8,3);
+ drawBuildingLabel(c,"COMMAND",x,y+51);
+}
+function drawBarracks(c,x,y){
+ drawBuildingBase(c,x,y,94,66);fillRound(c,x-39,y-24,78,48,4,"#77816a","#30392f",2.5);
+ for(let i=0;i<3;i++){
+  fillRound(c,x-32+i*25,y-18,20,36,2,i===1?"#92957c":"#858b72","#c4c1a0",1);
+  c.fillStyle="#414a3e";c.fillRect(x-29+i*25,y-12,14,4);c.fillStyle="#596456";c.fillRect(x-29+i*25,y-3,14,13);
+  drawRoofVent(c,x-22+i*25,y+13,10,6);
+ }
+ fillRound(c,x-11,y+24,22,7,2,"#4b5548","#c4c1a0",1);c.fillStyle="#d6b56e";c.fillRect(x-5,y+26,10,2);
+ drawBuildingLabel(c,"BARRACKS",x,y+44);
+}
+function drawSupplyDepot(c,x,y){
+ drawBuildingBase(c,x,y,104,76);fillRound(c,x-43,y-28,86,56,4,"#927d5c","#393d31",3);
+ fillRound(c,x-36,y-22,72,44,2,"#9a8a68","#d0bd91",1.2);
+ c.strokeStyle="#655a47";c.lineWidth=2;for(let i=-28;i<=28;i+=12){c.beginPath();c.moveTo(x+i,y-19);c.lineTo(x+i,y+17);c.stroke();}
+ c.fillStyle="#4a5144";c.fillRect(x-31,y-8,62,16);c.strokeStyle="#b9ad8a";c.lineWidth=1;c.strokeRect(x-31,y-8,62,16);
+ for(let i=0;i<3;i++){fillRound(c,x-33+i*23,y+19,18,8,1,"#343d35","#d0bd91",1);c.fillStyle="#c8ae76";c.fillRect(x-29+i*23,y+21,10,2);}
+ fillRound(c,x-48,y-22,9,15,1,"#6b775e","#c6bb94",1);fillRound(c,x+39,y-21,9,14,1,"#a16e4c","#d2ae79",1);
+ drawBuildingLabel(c,"SUPPLY DEPOT",x,y+52);
+}
+function drawMedicalStation(c,x,y){
+ drawBuildingBase(c,x,y,88,68);fillRound(c,x-35,y-25,70,50,4,"#8b9180","#374138",2.5);
+ fillRound(c,x-28,y-18,56,36,2,"#adb09a","#e2dcc0",1);fillRound(c,x-43,y-7,12,25,2,"#7c8d7b","#d6d7b9",1);
+ c.fillStyle="#c2c3a9";c.fillRect(x-22,y-13,44,5);c.fillStyle="#52645a";c.fillRect(x-20,y-3,40,13);
+ fillRound(c,x-9,y-28,18,13,2,"#f0ead7","#5c6255",1);c.fillStyle="#b8493f";c.fillRect(x-2,y-25,4,8);c.fillRect(x-6,y-22,12,3);
+ fillRound(c,x-12,y+23,24,8,2,"#454f44","#d4d0b4",1);c.fillStyle="#d9b36c";c.fillRect(x-4,y+25,8,3);
+ drawBuildingLabel(c,"MEDICAL",x,y+46);
+}
+function drawRadarStation(c,x,y){
+ drawBuildingBase(c,x,y,82,82);fillRound(c,x-35,y+7,40,23,3,"#687665","#343e34",2);
+ fillRound(c,x-28,y+12,26,12,2,"#374a45","#aeb59b",1);c.fillStyle="#c6d2b2";c.fillRect(x-24,y+15,5,4);c.fillRect(x-15,y+15,5,4);
+ c.fillStyle="#414a40";c.beginPath();c.arc(x+12,y-10,29,0,Math.PI*2);c.fill();
+ c.strokeStyle="#b5baa0";c.lineWidth=2;c.beginPath();c.arc(x+12,y-10,25,0,Math.PI*2);c.stroke();
+ c.beginPath();c.moveTo(x-10,y-10);c.lineTo(x+34,y-10);c.moveTo(x+12,y-32);c.lineTo(x+12,y+12);c.stroke();
+ c.beginPath();c.moveTo(x-7,y-29);c.lineTo(x+31,y+9);c.moveTo(x+31,y-29);c.lineTo(x-7,y+9);c.stroke();
+ c.fillStyle="#c8c3a1";c.beginPath();c.arc(x+12,y-10,5,0,Math.PI*2);c.fill();
+ c.strokeStyle="#d0c79e";c.lineWidth=2;c.beginPath();c.moveTo(x-4,y+16);c.lineTo(x-14,y+32);c.stroke();
+ drawBuildingLabel(c,"RADAR",x,y+49);
+}
+function drawDefenseTurret(c,x,y){
+ drawBuildingBase(c,x,y,66,66);c.fillStyle="#555b4c";c.beginPath();c.arc(x,y,25,0,Math.PI*2);c.fill();
+ c.strokeStyle="#c0b895";c.lineWidth=3;c.stroke();c.fillStyle="#79816c";c.beginPath();c.arc(x,y,18,0,Math.PI*2);c.fill();
+ c.strokeStyle="#343d33";c.lineWidth=4;c.beginPath();c.arc(x,y,11,0,Math.PI*2);c.stroke();
+ fillRound(c,x-12,y-12,24,27,5,"#666f5e","#c3bd98",2);fillRound(c,x-5,y-31,10,24,3,"#343f37","#a8aa8d",1.5);
+ c.fillStyle="#aeb49b";c.fillRect(x-2,y-35,4,8);c.fillStyle="#d1ad68";c.beginPath();c.arc(x,y+21,3,0,Math.PI*2);c.fill();
+ drawBuildingLabel(c,"TURRET",x,y+43);
+}
+function drawEngineeringDepot(c,x,y){
+ drawBuildingBase(c,x,y,104,76);fillRound(c,x-43,y-27,86,54,4,"#747c66","#343d33",2.5);
+ for(let i=0;i<2;i++){
+  const bx=x-34+i*37;fillRound(c,bx,y-15,31,31,2,"#3d4940","#c2bd98",1.3);
+  c.fillStyle="#8b9279";c.fillRect(bx+3,y-11,25,4);
+  for(let k=0;k<4;k++){c.strokeStyle="#b5aa7e";c.lineWidth=1;c.beginPath();c.moveTo(bx+4,y-5+k*5);c.lineTo(bx+27,y-5+k*5);c.stroke();}
+ }
+ fillRound(c,x-12,y-25,24,8,2,"#3d4840","#b4ad8c",1);drawRoofVent(c,x-31,y+21,10,8);drawRoofVent(c,x+31,y+21,10,8);
+ c.fillStyle="#d7b45f";c.beginPath();c.moveTo(x+34,y-26);c.lineTo(x+43,y-26);c.lineTo(x+43,y-17);c.closePath();c.fill();
+ drawBuildingLabel(c,"ENGINEERING",x,y+51);
+}
+function drawBaseBuilding(c,b){
+ c.save();switch(b.type){
+  case "command":drawCommandPost(c,b.x,b.y);break;
+  case "barracks":drawBarracks(c,b.x,b.y);break;
+  case "depot":drawSupplyDepot(c,b.x,b.y);break;
+  case "medical":drawMedicalStation(c,b.x,b.y);break;
+  case "radar":drawRadarStation(c,b.x,b.y);break;
+  case "turret":drawDefenseTurret(c,b.x,b.y);break;
+  case "engineering":drawEngineeringDepot(c,b.x,b.y);break;
+ }c.restore();
+}
+function drawPelicanStyleTransport(c,x,y){
+ // Original fan-game transport silhouette; not a port of the game's model or texture.
+ c.save();c.translate(x,y);
+ c.fillStyle="#252e28";c.beginPath();c.ellipse(0,5,59,23,0,0,Math.PI*2);c.fill();
+ c.beginPath();c.moveTo(-42,-5);c.lineTo(-64,12);c.lineTo(-57,25);c.lineTo(-20,14);c.lineTo(20,14);c.lineTo(57,25);c.lineTo(64,12);c.lineTo(42,-5);c.closePath();
+ c.fillStyle="#727b68";c.fill();c.strokeStyle="#c0b99a";c.lineWidth=1.5;c.stroke();
+ fillRound(c,-12,-33,24,62,8,"#858b73","#d3c7a4",2);fillRound(c,-9,-26,18,14,5,"#253b3d","#b6c2ae",1);
+ fillRound(c,-61,9,18,14,4,"#384239","#b5b397",1.5);fillRound(c,43,9,18,14,4,"#384239","#b5b397",1.5);
+ c.fillStyle="#d7b56e";c.fillRect(-6,7,12,8);c.fillStyle="#343d34";c.fillRect(-4,19,8,12);
+ c.restore();
+}
+function drawLandingZone(c){
+ fillRound(c,525,612,150,124,8,"#777866","#b5b092",2);
+ c.strokeStyle="#d5cfaa";c.lineWidth=2.5;c.setLineDash([10,7]);c.strokeRect(534,621,132,106);c.setLineDash([]);
+ c.strokeStyle="#ded8b7";c.lineWidth=2.5;c.beginPath();c.arc(600,674,37,0,Math.PI*2);c.stroke();
+ c.font="bold 24px system-ui";c.fillStyle="#e0dcc0";c.textAlign="center";c.textBaseline="middle";c.fillText("H",600,674);
+ drawPelicanStyleTransport(c,600,650);
+ c.font="bold 8px system-ui";c.fillText("TRANSPORT APRON",600,728);
+ for(let i=0;i<4;i++){c.fillStyle="#d7b66e";c.beginPath();c.arc(540+i*40,615,2.5,0,Math.PI*2);c.fill();c.beginPath();c.arc(540+i*40,733,2.5,0,Math.PI*2);c.fill();}
+}
+function drawCentralPlaza(c){
+ fillRound(c,448,306,304,188,14,"#777663","#b9b292",2);
+ c.strokeStyle="#aaa58a";c.lineWidth=2;c.setLineDash([8,7]);c.strokeRect(460,318,280,164);c.setLineDash([]);
+ c.fillStyle="#d2c7a0";for(let i=0;i<4;i++){c.fillRect(466+i*18,314,10,3);c.fillRect(466+i*18,483,10,3);}
+ c.fillStyle="#52594a";c.font="bold 9px system-ui";c.textAlign="center";c.fillText("SEAF COMMAND COMPOUND",600,330);
+}
+function drawUtilityProps(c){
+ fillRound(c,390,332,27,22,3,"#515b4c","#b0ab8d",1.5);c.fillStyle="#c7b984";c.fillRect(395,336,17,4);c.fillStyle="#333d34";c.fillRect(395,343,17,7);
+ c.strokeStyle="#a8a486";c.lineWidth=1.5;c.beginPath();c.moveTo(403,332);c.lineTo(403,323);c.stroke();
+ fillRound(c,783,453,29,22,3,"#786849","#c8b88d",1.5);c.fillStyle="#3d4839";c.fillRect(788,458,19,11);c.fillStyle="#d2b36c";c.fillRect(786,453,23,3);
+ for(let i=0;i<5;i++){fillRound(c,548+i*26,718,8,18,2,"#4a5044","#b9b192",1);}
+}
 function drawBase(){
  const w=baseCanvas.width,h=baseCanvas.height,c=baseCtx;
- c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,w,h);
- c.fillStyle="#17231a";c.fillRect(0,0,w,h);
+ c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,w,h);c.fillStyle="#172019";c.fillRect(0,0,w,h);
  c.setTransform(baseCamera.zoom,0,0,baseCamera.zoom,-baseCamera.x*baseCamera.zoom,-baseCamera.y*baseCamera.zoom);
- c.fillStyle="#283b2c";c.fillRect(0,0,BASE_WORLD_W,BASE_WORLD_H);
- // Stable ground marks prevent the old grass texture from flickering on every redraw.
- for(let i=0;i<430;i++){
-  const x=(i*83+19)%BASE_WORLD_W,y=(i*137+31)%BASE_WORLD_H;
-  c.strokeStyle=i%2?"#354b36":"#314532";c.beginPath();c.moveTo(x,y);c.lineTo(x+((i%5)-2)*2,y+((i%7)-3)*2);c.stroke();
- }
- c.strokeStyle="#78866d";c.lineWidth=5;c.strokeRect(28,28,BASE_WORLD_W-56,BASE_WORLD_H-56);
- // Existing access lanes are retained and extended into the expanded map.
- c.fillStyle="#675f4a";c.fillRect(550,28,100,BASE_WORLD_H-56);c.fillRect(28,375,BASE_WORLD_W-56,50);
- c.fillStyle="#81765b";c.fillRect(570,28,60,BASE_WORLD_H-56);c.fillRect(28,385,BASE_WORLD_W-56,30);
- // Placement plots are only shown while the player is choosing a building site.
+ drawGround(c);
+ // Main road network connects the command compound, transport apron and secured entrance.
+ drawRoad(c,[{x:600,y:58},{x:600,y:302}],48);
+ drawRoad(c,[{x:600,y:498},{x:600,y:612}],48);
+ drawRoad(c,[{x:58,y:400},{x:442,y:400}],44);
+ drawRoad(c,[{x:758,y:400},{x:1142,y:400}],44);
+ drawCentralPlaza(c);drawLandingZone(c);
+ drawPerimeter(c);
+ for(const plot of getBasePlots())drawConstructionPad(c,plot);
+ drawUtilityProps(c);
+ // Small motor-pool staging apron reserved for future SEAF ground vehicles.
+ fillRound(c,792,342,116,42,5,"#5c6251","#a49d7e",1.5);
+ c.strokeStyle="#c8bd95";c.lineWidth=1.5;c.setLineDash([7,5]);c.strokeRect(800,348,100,30);c.setLineDash([]);
+ c.fillStyle="#ddd3ad";c.font="bold 8px system-ui";c.textAlign="center";c.fillText("VEHICLE STAGING",850,338);
+ state.buildings.forEach(b=>drawBaseBuilding(c,b));
  if(pendingBuilding){
+  const hint=basePointerWorld||{x:600,y:400},ghost=nearestOpenBasePlot(hint,BASE_WORLD_W);
+  if(ghost){
+   const fp=baseFootprint(pendingBuilding);
+   c.save();c.globalAlpha=.72;c.setLineDash([8,5]);c.strokeStyle="#d8e8ad";c.lineWidth=3;
+   c.strokeRect(ghost.x-fp.w/2-5,ghost.y-fp.h/2-5,fp.w+10,fp.h+10);c.setLineDash([]);
+   drawBaseBuilding(c,{type:pendingBuilding,x:ghost.x,y:ghost.y});c.restore();
+  }
   for(const plot of getBasePlots()){
    const open=basePlotOpen(plot);
-   c.save();c.setLineDash([7,5]);c.lineWidth=2;c.strokeStyle=open?"#b9d99a":"#b66d5e";
-   c.fillStyle=open?"#a8cc7920":"#b66d5e18";
-   c.fillRect(plot.x-38,plot.y-29,76,58);c.strokeRect(plot.x-38,plot.y-29,76,58);c.restore();
+   c.save();c.globalAlpha=.85;c.setLineDash([6,5]);c.lineWidth=2;c.strokeStyle=open?"#c8e0a1":"#c77b68";
+   c.strokeRect(plot.x-45,plot.y-34,90,68);c.restore();
   }
  }
- // Building footprints remain readable at normal zoom and scale with the camera.
- state.buildings.forEach(b=>{
-  const d=buildings[b.type];if(!d)return;const x=b.x,y=b.y;
-  c.fillStyle="#162219";c.fillRect(x-36,y-27,72,54);
-  c.fillStyle=d.color;c.fillRect(x-28,y-21,56,42);
-  c.strokeStyle="#d4d7b2";c.lineWidth=2;c.strokeRect(x-28,y-21,56,42);
-  c.fillStyle="#1d2b22";c.fillRect(x-7,y-7,14,14);
-  c.fillStyle="#e5e7d2";c.font="bold 11px system-ui";c.textAlign="center";c.fillText(d.name,x,y+36);
- });
- // Show the selected structure as a translucent preview at the nearest available plot.
- if(pendingBuilding){
-  const hint=basePointerWorld||{x:600,y:400};
-  const ghost=nearestOpenBasePlot(hint,BASE_WORLD_W);
-  if(ghost){
-   const d=buildings[pendingBuilding];c.save();c.globalAlpha=.62;c.fillStyle=d.color;c.fillRect(ghost.x-28,ghost.y-21,56,42);
-   c.strokeStyle="#dff0bc";c.lineWidth=3;c.strokeRect(ghost.x-28,ghost.y-21,56,42);c.restore();
-  }
- }
- c.fillStyle="#c4d39c";c.beginPath();c.arc(600,400,8,0,Math.PI*2);c.fill();
+ c.fillStyle="#e0d5ae";c.font="bold 10px system-ui";c.textAlign="center";c.fillText("SEAF ACCESS GATE",600,786);
  c.setTransform(1,0,0,1,0,0);updateBaseZoomLabel();
 }
 function renderMissions(){
