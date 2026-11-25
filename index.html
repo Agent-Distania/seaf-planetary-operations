@@ -220,18 +220,18 @@ let state=createInitialState();
 let player=null,squad=[],enemies=[],crates=[],relay=null,bullets=[],enemyBullets=[],particles=[];
 let battle={active:false,completed:false,failed:false,elapsed:0,ammo:24,maxAmmo:24,reloadTimer:0,shootCooldown:0,spawned:0,kills:0,objectiveDone:false,keys:{},mouse:{x:0,y:0,down:false},touch:{x:0,y:0,fire:false},camera:{x:0,y:0},mission:null,extraction:{x:500,y:500}};
 let baseCanvas=$("baseCanvas"),baseCtx=baseCanvas.getContext("2d"),canvas=$("battleCanvas"),ctx=canvas.getContext("2d");
-const BASE_WORLD_W=1200,BASE_WORLD_H=800,BASE_MIN_ZOOM=.5,BASE_MAX_ZOOM=1.8,BASE_DEFAULT_ZOOM=.75;
+const BASE_WORLD_W=1200,BASE_WORLD_H=800,BASE_MIN_ZOOM=.5,BASE_MAX_ZOOM=1.8,BASE_DEFAULT_ZOOM=.62;
 let baseCamera={x:0,y:0,zoom:BASE_DEFAULT_ZOOM},pendingBuilding=null,basePointerWorld=null;
 let basePointers=new Map(),baseGesture=null;
 function clampBaseCamera(){
  const visibleW=baseCanvas.width/baseCamera.zoom,visibleH=baseCanvas.height/baseCamera.zoom;
- baseCamera.x=clamp(baseCamera.x,0,Math.max(0,BASE_WORLD_W-visibleW));
- baseCamera.y=clamp(baseCamera.y,0,Math.max(0,BASE_WORLD_H-visibleH));
+ baseCamera.x=visibleW>=BASE_WORLD_W?(BASE_WORLD_W-visibleW)/2:clamp(baseCamera.x,0,BASE_WORLD_W-visibleW);
+ baseCamera.y=visibleH>=BASE_WORLD_H?(BASE_WORLD_H-visibleH)/2:clamp(baseCamera.y,0,BASE_WORLD_H-visibleH);
 }
 function resetBaseCamera(){
  baseCamera.zoom=BASE_DEFAULT_ZOOM;
- baseCamera.x=Math.max(0,(BASE_WORLD_W-baseCanvas.width/baseCamera.zoom)/2);
- baseCamera.y=Math.max(0,(BASE_WORLD_H-baseCanvas.height/baseCamera.zoom)/2);
+ baseCamera.x=(BASE_WORLD_W-baseCanvas.width/baseCamera.zoom)/2;
+ baseCamera.y=(BASE_WORLD_H-baseCanvas.height/baseCamera.zoom)/2;
  clampBaseCamera();updateBaseZoomLabel();drawBase();
 }
 function updateBaseZoomLabel(){
@@ -659,7 +659,7 @@ function drawBase(){
  drawCentralPlaza(c);drawLandingZone(c);
  drawPerimeter(c);drawMotorPool(c);
  for(const plot of getBasePlots())drawConstructionPad(c,plot);
- drawUtilityProps(c);
+ // Landing and access markings remain unobstructed.
  // The transport apron is the first dedicated vehicle-support area; additional motor-pool
  // and exosuit service structures are reserved for the next base expansion pass.
  state.buildings.forEach(b=>drawBaseBuilding(c,b));
