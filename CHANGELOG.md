@@ -7,11 +7,12 @@ All notable changes to SEAF: Planetary Operations will be recorded here.
 ### Added
 - A detailed top-down terrain treatment with deterministic ground variation and gravel detail.
 - Fortified perimeter walls, watch posts, reinforced access gate and road network.
-- Central SEAF Command Compound and dedicated transport landing apron.
+- Central SEAF Command Compound and dedicated transport landing apron, visible in the default full-base camera view.
 - Original top-down vector-style artwork for Command Post, Barracks, Supply Depot, Medical Station, Radar Station, Defense Turret and Engineering Depot.
 - A dedicated motor-pool yard with original top-down heavy-vehicle and exosuit silhouettes, plus reserved construction space.
 - Reserved construction space around the transport apron to keep the landing approach clear.
 - Concrete construction pads and facility-specific silhouettes.
+- Default camera framing and centering adjusted to show the full installation.
 
 ### Changed
 - Base building models now have different visual silhouettes, roof equipment, doors, loading areas, antennae and identifying markings.
