@@ -1,5 +1,38 @@
 # Changelog
 
+## v0.7 — Combat Foundation & Squad AI
+
+### Added
+- A distinct two-row squad follow formation with assigned offsets, obstacle-aware steering and repeated separation checks so deployed SEAF squadmates remain visibly spaced instead of stacking on the player.
+- Squad HOLD/FOLLOW orders, available via Q on desktop and a dedicated mobile control.
+- A handcrafted battlefield obstacle layout with rocks, walls and destructible barricades.
+- Collision handling that keeps the player, squadmates and enemies from walking through solid battlefield cover.
+- Line-of-sight checks and projectile collision against cover; destructible barricades can be damaged and destroyed.
+- Three enemy archetypes with different health, movement, attack ranges and fire rates: Scout, Raider and Heavy.
+- Improved top-down soldier/enemy silhouettes, visible squad identifiers, enemy health bars, muzzle flashes, impact effects and player damage feedback.
+- A 30-round SEAF Service Rifle magazine, reload feedback and updated combat HUD.
+- Explicit INTERACT pickup for supply caches and a southern extraction point away from the player's insertion location.
+
+### Changed
+- Squadmates now engage enemies they can see and maintain separate assigned positions while following or holding.
+- Enemies select the nearest visible SEAF target instead of always attacking the player.
+- Player and enemy movement respects map obstacles; projectiles stop at cover.
+- Mission supply caches require deliberate interaction rather than automatic collection on contact.
+- Clear-area, supply-recovery and relay missions retain their existing objective/reward structures, with the battlefield and extraction approach improved.
+
+### Preserved
+- Three local campaign save slots and legacy-save migration.
+- Logistics storage capacities and overflow handling.
+- Barracks squad capacity progression, recruitment and existing construction costs.
+- Base map, vehicles, campaign resources and mission reward values.
+
+### Verification
+- Embedded JavaScript syntax check passed.
+- Lightweight simulated-browser checks passed for mission startup, mobile/desktop squad-order controls, movement-frame rendering, save flow and squad spacing.
+- Geometry checks confirmed the two squadmates remain separated from each other and from the player during simulated movement.
+- Full playtesting in mobile Safari remains outstanding.
+
+
 ## v0.6 — Transport & Logistics
 
 ### Added
