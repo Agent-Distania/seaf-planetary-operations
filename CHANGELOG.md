@@ -1,5 +1,18 @@
 # Changelog
 
+### v0.5.1 — Motor Pool Silhouette Refinement
+
+### Changed
+- Removed the exosuit's visible rear legs/feet and forward helmet-like head block, keeping the torso, shield arm and under-arm rotary gun.
+- Removed the light-grey end cap from the exosuit rotary gun so its tip reads as part of the weapon housing rather than an assault-rifle muzzle.
+- Reworked the Bastion into a fixed-casemate tank destroyer silhouette with its gun mount integrated into the rear of the chassis, rather than a conventional turret.
+- Removed the Bastion cannon's light-grey muzzle tip.
+
+### Verification
+- JavaScript syntax check passed after the silhouette changes.
+- Real mobile visual verification remains pending.
+
+
 ## v0.5 — SEAF Blue-Grey Base Visual Overhaul
 
 ### Changed
