@@ -647,68 +647,62 @@ function drawCentralPlaza(c){
  for(let x of [476,724]){fillRound(c,x-9,387,18,34,3,"#596d79","#c2ccd0",1);c.fillStyle="#d8b64f";c.fillRect(x-2,390,4,4);}
 }
 function drawHeavyVehicleSilhouette(c,x,y){
- // Bastion tank destroyer: compact tracked hull, fixed central gun, top-down north-facing silhouette.
+ // Bastion tank destroyer: fixed casemate, gun anchored at the rear of the chassis.
+ // The cannon projects forward from its integrated rear mount; no turret or muzzle cap.
  c.save();c.translate(x,y);
- // Track runs and tread blocks.
+ // Track runs with tread segments and exposed road wheels.
  for(const side of [-1,1]){
   fillRound(c,side*30-8,-48,16,96,4,"#263b4a","#bac6cc",1.5);
-  for(let j=0;j<10;j++){
-   fillRound(c,side*30-7,-43+j*9,14,5,1,"#718999","#233644",.7);
-  }
-  // Track rollers visible inside the track run.
+  for(let j=0;j<10;j++)fillRound(c,side*30-7,-43+j*9,14,5,1,"#718999","#233644",.7);
   for(let j=0;j<5;j++){
    c.fillStyle="#c0ccd1";c.beginPath();c.arc(side*30,-34+j*17,4.3,0,Math.PI*2);c.fill();
    c.fillStyle="#3b5362";c.beginPath();c.arc(side*30,-34+j*17,2,0,Math.PI*2);c.fill();
   }
  }
- // Main armored hull with angled forward glacis and broad rear engine deck.
+ // Low, elongated chassis and fixed armored casemate (not a conventional turret).
  fillRound(c,-24,-47,48,94,6,"#516b7c","#d0d9dd",1.7);
  fillRound(c,-19,-43,38,82,4,"#8497a2","#dbe2e4",1.3);
  c.fillStyle="#a6b4bc";c.beginPath();c.moveTo(-18,-40);c.lineTo(18,-40);c.lineTo(16,-23);c.lineTo(0,-15);c.lineTo(-16,-23);c.closePath();c.fill();
  c.strokeStyle="#dce3e5";c.lineWidth=1.2;c.stroke();
- // Fixed gun mount and long centerline cannon, pointing toward the top of the bay.
- fillRound(c,-13,-22,26,27,4,"#3f5a6d","#c6d1d5",1.4);
- fillRound(c,-5,-57,10,43,3,"#2c4252","#c2cdd1",1.4);
- fillRound(c,-3,-63,6,12,2,"#aebbc2","#e0e6e7",1);
- fillRound(c,-9,-25,18,18,3,"#8397a3","#e0e6e7",1.3);
- // Rear deck vents, access panels, and yellow service stripe.
+ // Fixed central gun with its mount integrated into the rear deck of the casemate.
+ fillRound(c,-14,22,28,23,4,"#3f5a6d","#c6d1d5",1.4);
+ fillRound(c,-9,26,18,16,3,"#8397a3","#e0e6e7",1.3);
+ fillRound(c,-5,-53,10,81,3,"#2c4252","#aebdc4",1.2);
+ // Flat dark muzzle end only; no light-grey tip that resembles a separate attachment.
+ c.fillStyle="#263b4a";c.fillRect(-5,-55,10,4);
+ c.fillStyle="#152a38";c.fillRect(-3,-54,6,2);
+ // Rear deck vents, panels and restrained yellow service marks.
  for(let side of [-1,1]){
-  fillRound(c,side*10-5,25,10,20,2,"#516a79","#c2cdd1",1);
-  for(let k=0;k<4;k++){c.strokeStyle="#353c36";c.lineWidth=1;c.beginPath();c.moveTo(side*10-3,28+k*4);c.lineTo(side*10+3,28+k*4);c.stroke();}
+  fillRound(c,side*10-5,-16,10,20,2,"#516a79","#c2cdd1",1);
+  for(let k=0;k<4;k++){c.strokeStyle="#353c36";c.lineWidth=1;c.beginPath();c.moveTo(side*10-3,-13+k*4);c.lineTo(side*10+3,-13+k*4);c.stroke();}
  }
  fillRound(c,-9,39,18,7,2,"#333a34","#b9c7cc",1);
  c.fillStyle="#c8b46f";c.fillRect(-3,11,6,3);c.fillRect(-16,46,32,2);
  c.restore();
 }
 function drawExosuitSilhouette(c,x,y){
- // Overhead SEAF exosuit reference: broad armored torso, heavy asymmetric arms,
- // left shield assembly, right under-arm weapon and separated lower legs/feet.
+ // Overhead SEAF exosuit: no rear legs or feet and no forward helmet/head.
+ // The visible mass is the armored torso, shield arm and right under-arm rotary weapon.
  c.save();c.translate(x,y);
- // Legs and broad boot pads, visible below the torso.
- fillRound(c,-16,24,13,27,3,"#5a7180","#c6d1d5",1.4);
- fillRound(c,3,24,13,27,3,"#5a7180","#c6d1d5",1.4);
- fillRound(c,-18,45,17,9,2,"#304756","#bbc8ce",1);
- fillRound(c,2,45,17,9,2,"#304756","#bbc8ce",1);
- // Torso: squared environmental armor with central chest plate.
+ // Torso: broad environmental armor and central chest plate.
  fillRound(c,-23,-28,46,55,5,"#526c7b","#d0dadd",1.8);
  fillRound(c,-18,-23,36,43,3,"#8296a1","#dce3e5",1.3);
  fillRound(c,-13,-18,26,29,3,"#30495a","#b0bec5",1.1);
  fillRound(c,-9,-12,18,17,2,"#9fadb5","#d5dfe2",1);
  c.fillStyle="#d8b64f";c.fillRect(-4,4,8,4);
- // Helmet/collar at the forward end.
- fillRound(c,-10,-39,20,15,4,"#2e4656","#d5dfe2",1.3);
- fillRound(c,-6,-35,12,5,2,"#c4d0d5","#414a43",1);
- // Left arm and broad defensive shield module.
- fillRound(c,-40,-25,15,49,4,"#516b7b","#cbd6da",1.5);
+ // Left shoulder/arm and broad defensive shield.
+ fillRound(c,-40,-25,15,39,4,"#516b7b","#cbd6da",1.5);
  fillRound(c,-47,-30,25,21,4,"#7d929d","#dce3e5",1.4);
  fillRound(c,-49,-8,29,34,4,"#30495a","#c8d3d7",1.4);
  c.strokeStyle="#c8bd9a";c.lineWidth=1.4;c.beginPath();c.moveTo(-44,-5);c.lineTo(-25,-5);c.lineTo(-25,18);c.lineTo(-44,18);c.closePath();c.stroke();
- // Right arm, exposed upper-arm joint, and under-arm rotary cannon extending forward.
+ // Right shoulder and exposed upper-arm joint remain visible beside the under-arm gun.
  fillRound(c,25,-25,15,39,4,"#536c7b","#cbd6da",1.5);
  fillRound(c,29,-20,10,19,3,"#93a4ad","#dce3e5",1.2);
  fillRound(c,25,2,21,20,4,"#30495a","#cad5d9",1.3);
- fillRound(c,31,-48,12,48,3,"#2d4555","#d0dadd",1.3);
- fillRound(c,34,-55,6,13,2,"#aebdc4","#e1e7e7",1);
+ // Under-arm rotary gun: continuous dark barrel housing with a flat dark muzzle.
+ fillRound(c,31,-48,12,48,3,"#2d4555","#aebdc4",1.3);
+ c.fillStyle="#263b4a";c.fillRect(32,-52,10,4);
+ c.fillStyle="#152a38";c.fillRect(34,-51,6,2);
  for(let k=0;k<3;k++){c.fillStyle="#243a49";c.beginPath();c.arc(37,7+k*5,2,0,Math.PI*2);c.fill();}
  c.restore();
 }
