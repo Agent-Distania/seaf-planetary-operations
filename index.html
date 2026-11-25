@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -174,7 +173,7 @@ let state={
 let player=null,squad=[],enemies=[],crates=[],relay=null,bullets=[],enemyBullets=[],particles=[];
 let battle={active:false,completed:false,failed:false,elapsed:0,ammo:24,maxAmmo:24,reloadTimer:0,shootCooldown:0,spawned:0,kills:0,objectiveDone:false,keys:{},mouse:{x:0,y:0,down:false},touch:{x:0,y:0,fire:false},camera:{x:0,y:0},mission:null,extraction:{x:500,y:500}};
 let baseCanvas=$("baseCanvas"),baseCtx=baseCanvas.getContext("2d"),canvas=$("battleCanvas"),ctx=canvas.getContext("2d");
-const BASE_WORLD_W=1200,BASE_WORLD_H=800,BASE_MIN_ZOOM=.5,BASE_MAX_ZOOM=1.8,BASE_DEFAULT_ZOOM=.72;
+const BASE_WORLD_W=1200,BASE_WORLD_H=800,BASE_MIN_ZOOM=.5,BASE_MAX_ZOOM=1.8,BASE_DEFAULT_ZOOM=.75;
 let baseCamera={x:0,y:0,zoom:BASE_DEFAULT_ZOOM},pendingBuilding=null,basePointerWorld=null;
 let basePointers=new Map(),baseGesture=null;
 function clampBaseCamera(){
@@ -383,6 +382,10 @@ function endBasePointer(e,allowPlacement){
 }
 baseCanvas.addEventListener("pointerup",e=>endBasePointer(e,true));
 baseCanvas.addEventListener("pointercancel",e=>endBasePointer(e,false));
+// Window fallbacks handle pointer releases that occur just outside the canvas on browsers
+// where pointer capture is unavailable or interrupted.
+window.addEventListener("pointerup",e=>{if(basePointers.has(e.pointerId))endBasePointer(e,true);});
+window.addEventListener("pointercancel",e=>{if(basePointers.has(e.pointerId))endBasePointer(e,false);});
 $("baseZoomIn").addEventListener("click",()=>zoomBaseAt(baseCanvas.width/2,baseCanvas.height/2,1.18));
 $("baseZoomOut").addEventListener("click",()=>zoomBaseAt(baseCanvas.width/2,baseCanvas.height/2,1/1.18));
 $("baseZoomReset").addEventListener("click",resetBaseCamera);
