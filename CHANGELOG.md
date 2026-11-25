@@ -2,6 +2,30 @@
 
 All notable changes to SEAF: Planetary Operations will be recorded here.
 
+## v0.4 — Base Visual Overhaul
+
+### Added
+- A detailed top-down terrain treatment with deterministic ground variation and gravel detail.
+- Fortified perimeter walls, watch posts, reinforced access gate and road network.
+- Central SEAF Command Compound and dedicated transport landing apron.
+- Original top-down vector-style artwork for Command Post, Barracks, Supply Depot, Medical Station, Radar Station, Defense Turret and Engineering Depot.
+- A small marked vehicle-staging apron to establish space for future SEAF vehicle systems.
+- Concrete construction pads and facility-specific silhouettes.
+
+### Changed
+- Base building models now have different visual silhouettes, roof equipment, doors, loading areas, antennae and identifying markings.
+- Construction overlap checks now use each building's individual footprint instead of one generic spacing rule.
+- The base heading and description now present Landing Zone Cedar as a fortified SEAF installation.
+
+### Fixed
+- Building placement highlights and previews use the selected building's footprint.
+- Facility artwork is drawn after terrain and infrastructure so buildings remain visually distinct.
+
+### Testing
+- JavaScript syntax and static layout/footprint checks passed before publishing.
+- Repository files were re-fetched to verify the published release.
+- Live Safari/iPhone visual testing remains necessary; canvas artwork has not been physically tested on the user's device.
+
 ## v0.3.1 — Main Menu & Save Slots
 
 ### Added
