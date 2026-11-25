@@ -3,7 +3,7 @@
 A single-player, top-down 2D sci-fi military game about ordinary SEAF soldiers fighting to reclaim hostile worlds. Built as a browser game with PC and mobile controls.
 
 ## Current status
-- **Latest build:** v0.8.1 — Save Menu Startup Fix
+- **Latest build:** v0.8.2 — Operations Expanded, Part I: Enemy Overhaul
 - **Development status:** Early prototype; browser gameplay testing remains incomplete
 - **Platform:** Browser (HTML/CSS/JavaScript)
 - **Perspective:** Top-down, fully 2D
@@ -21,12 +21,13 @@ Manage a forward base, select an operation, deploy with squadmates, complete obj
 - Logistics and storage: Supply Depots increase supply/component capacity; mission rewards are capped by available storage with overflow reported
 - Three missions: Clear the Area, Supply Recovery, Relay Sabotage
 - Combat foundation with distinct squad formation spacing, HOLD/FOLLOW orders, cover collision and destructible barricades
-- Three enemy archetypes, visible health/ammunition HUD, 30-round service rifle and interaction-based objectives
+- Three distinct enemy archetypes — fast Scout, standard armored Trooper and heavily armored Devastator — with dedicated overhead silhouettes, red hostile optics, role-specific durability, movement and engagement distances
+- Visible enemy health bars, ammunition HUD, 30-round service rifle and interaction-based objectives
 - Desktop keyboard/mouse and mobile touch controls
 - Main menu with three local campaign save slots
 - Legacy single-save migration into Campaign Slot 1
 
-The v0.8.1 patch fixes a JavaScript startup error that prevented the campaign save-slot menu from appearing. The v0.7 combat update adds visible squad spacing, HOLD/FOLLOW commands, battlefield cover and three enemy archetypes. The v0.6 transport artwork is an original top-down Pelican-inspired fan-game silhouette; vehicle artwork is stylized canvas illustration, not imported game models.
+The v0.8.2 Operations Expanded, Part I: Enemy Overhaul update replaces the shared enemy token art with separate top-down Scout, Trooper and Devastator silhouettes, updates their combat roles and prioritizes visible SEAF targets for ranged enemies. It does not expand the arena or add patrols; those belong to Operations Expanded, Part II: Battlefield Overhaul and its follow-on encounter systems. The v0.8.1 patch fixes the startup error that prevented the campaign save-slot menu from appearing. The v0.6 transport artwork is an original top-down Pelican-inspired fan-game silhouette; vehicle artwork is stylized canvas illustration, not imported game models.
 
 ## Controls
 **Desktop:** WASD/arrows move, mouse aim, left click fire, R reload, E interact, Q toggle squad HOLD/FOLLOW.
