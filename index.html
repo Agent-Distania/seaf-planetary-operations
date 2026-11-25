@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>SEAF: Planetary Operations — v0.5</title>
+<title>SEAF: Planetary Operations — v0.6</title>
 <style>
 :root{--bg:#111a22;--panel:#1d2a35;--panel2:#273846;--line:#455c6b;--text:#e6edf0;--muted:#a9bbc5;--accent:#83b0ce;--danger:#e26b5e;--gold:#d8b64f}
 *{box-sizing:border-box}
@@ -61,6 +61,15 @@ header{display:flex;gap:12px;align-items:center;justify-content:space-between;fl
 .buildCard,.missionCard{border:1px solid var(--line);background:var(--panel2);border-radius:9px;padding:10px}
 .buildCard h4,.missionCard h4{margin:0 0 4px;font-size:14px}
 .buildCard p,.missionCard p{margin:0 0 8px}
+.storageStatus{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0 12px}
+.storageCard{border:1px solid #496477;border-radius:9px;background:#223441;padding:9px;min-width:0}
+.storageHead{display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:12px;color:#c9d7de}
+.storageHead b{font-variant-numeric:tabular-nums;color:#edf2f4;white-space:nowrap}
+.storageTrack{height:8px;border-radius:8px;background:#14232e;overflow:hidden;margin:8px 0 5px}
+.storageFill{height:100%;border-radius:8px;min-width:2px}
+.storageCard small{font-size:10px;color:#a9bbc5}
+.storageNote{grid-column:1/-1;font-size:11px;color:#a9bbc5;line-height:1.4;margin:0}
+@media(max-width:420px){.storageStatus{grid-template-columns:1fr}}
 .statusline{display:flex;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin:8px 0}
 .log{max-height:230px;overflow:auto;font-size:12px;color:var(--muted);line-height:1.5;padding-right:4px}
 .log div{border-bottom:1px solid #344a59;padding:4px 0}
@@ -83,7 +92,7 @@ footer{margin-top:10px;color:#8fa5b2;font-size:11px;text-align:center}
 <body>
 <div id="app">
 <header>
-  <div class="brand">SEAF <span>PLANETARY OPERATIONS · PROTOTYPE 0.5</span></div>
+  <div class="brand">SEAF <span>PLANETARY OPERATIONS · PROTOTYPE 0.6</span></div>
   <div class="resourcebar" id="resources"></div>
 </header>
 <div class="tabs menu-hidden">
@@ -133,7 +142,9 @@ footer{margin-top:10px;color:#8fa5b2;font-size:11px;text-align:center}
   <div class="panel">
     <h2>Construction</h2>
     <div class="cards" id="buildCards"></div>
-    <h3 style="margin-top:12px">Base Personnel</h3>
+    <h3 style="margin-top:14px">Logistics & Storage</h3>
+    <div id="storageStatus" class="storageStatus" aria-live="polite"></div>
+    <h3 style="margin-top:14px">Base Personnel</h3>
     <p id="personnel"></p>
     <button id="recruitBtn" class="primary">Recruit squadmate — 30 requisition</button>
     <h3 style="margin-top:14px">Operations Log</h3>
@@ -198,8 +209,8 @@ let activeSaveSlot=null;
 const saveSlotKey=slot=>SAVE_SLOT_PREFIX+slot+"_save";
 const buildings={
  command:{name:"Command Post",cost:{supplies:0,components:0},desc:"Your operational hub.",limit:1,color:"#527f9e"},
- barracks:{name:"Barracks",cost:{supplies:45,components:10},desc:"+1 recruit capacity and squad recovery.",limit:2,color:"#8299a6"},
- depot:{name:"Supply Depot",cost:{supplies:35,components:8},desc:"Increases supply storage.",limit:2,color:"#647f91"},
+ barracks:{name:"Barracks",cost:{supplies:45,components:10},desc:"+2 squad capacity, up to 8 personnel.",limit:2,color:"#8299a6"},
+ depot:{name:"Supply Depot",cost:{supplies:35,components:8},desc:"+100 supply and +50 component storage.",limit:2,color:"#647f91"},
  medical:{name:"Medical Station",cost:{supplies:40,components:15},desc:"Recover from injuries between deployments.",limit:1,color:"#c2d0d5"},
  radar:{name:"Radar Station",cost:{supplies:55,components:20},desc:"Reveals additional mission opportunities.",limit:1,color:"#6d9ab8"},
  turret:{name:"Defense Turret",cost:{supplies:25,components:12},desc:"Base defense infrastructure (prototype decorative).",limit:4,color:"#405b6c"},
@@ -367,20 +378,51 @@ function startNewSave(slot){
  save();$("menuMessage").textContent="";switchView("baseView");
 }
 function counts(type){return state.buildings.filter(b=>b.type===type).length;}
-function renderResources(){$("resources").innerHTML=[["Supplies",state.supplies],["Components",state.components],["Requisition",state.requisition],["Intel",state.intel]].map(([n,v])=>`<div class="resource">${n}: <b>${v}</b></div>`).join("");}
+function getStorageCapacity(resource){
+ const depots=counts("depot");
+ if(resource==="supplies")return 150+depots*100;
+ if(resource==="components")return 90+depots*50;
+ return Infinity;
+}
+function getSquadCapacity(){return Math.min(8,4+counts("barracks")*2);}
+function creditStoredResource(resource,amount){
+ const capacity=getStorageCapacity(resource);
+ const accepted=Math.min(Math.max(0,amount),Math.max(0,capacity-state[resource]));
+ state[resource]+=accepted;return Math.max(0,amount-accepted);
+}
+function renderLogistics(){
+ const container=$("storageStatus");if(!container)return;
+ const rows=[
+  {name:"Supplies",value:state.supplies,cap:getStorageCapacity("supplies"),color:"#d8b64f"},
+  {name:"Components",value:state.components,cap:getStorageCapacity("components"),color:"#83b0ce"}
+ ];
+ container.innerHTML=rows.map(row=>{
+  const pct=Math.min(100,Math.max(0,row.value/row.cap*100));
+  return '<div class="storageCard"><div class="storageHead"><span>'+row.name+'</span><b>'+row.value+' / '+row.cap+'</b></div><div class="storageTrack"><div class="storageFill" style="width:'+pct+'%;background:'+row.color+'"></div></div><small>'+Math.max(0,row.cap-row.value)+' available capacity</small></div>';
+ }).join("")+
+ '<p class="storageNote">Each Supply Depot adds 100 supply and 50 component storage. Depots: '+counts("depot")+'/2.</p>'+
+ '<p class="storageNote">Each Barracks adds 2 squad capacity. Personnel: '+state.squad+'/'+getSquadCapacity()+'.</p>';
+}
+function renderResources(){
+ $("resources").innerHTML=[
+  ["Supplies",state.supplies+"/"+getStorageCapacity("supplies")],
+  ["Components",state.components+"/"+getStorageCapacity("components")],
+  ["Requisition",state.requisition],["Intel",state.intel]
+ ].map(([n,v])=>'<div class="resource">'+n+': <b>'+v+'</b></div>').join("");
+}
 function renderBuildings(){
  $("buildCards").innerHTML=Object.entries(buildings).filter(([k])=>k!=="command").map(([k,b])=>{
-  let count=counts(k),cost=`${b.cost.supplies} supplies · ${b.cost.components} components`;
+  const count=counts(k),cost=`${b.cost.supplies} supplies · ${b.cost.components} components`;
   const selected=pendingBuilding===k,disabled=count>=b.limit||state.supplies<b.cost.supplies||state.components<b.cost.components;
   return `<div class="buildCard"><h4>${b.name} ${count}/${b.limit}</h4><p>${b.desc}</p><p><small>${cost}</small></p><button class="small" data-build="${k}" ${disabled&&!selected?"disabled":""}>${selected?"Cancel":"Place"}</button></div>`;
  }).join("");
  $("buildCards").querySelectorAll("[data-build]").forEach(btn=>btn.addEventListener("click",()=>{
-  const type=btn.dataset.build;
-  if(pendingBuilding===type)cancelBuildingPlacement();else build(type);
+  const type=btn.dataset.build;if(pendingBuilding===type)cancelBuildingPlacement();else build(type);
  }));
- $("personnel").textContent=`${state.squad} squadmates available for deployment. Your squad can accompany you on missions.`;
- $("recruitBtn").disabled=state.requisition<30||state.squad>=8;
- $("recruitBtn").textContent=state.squad>=8?"Squad capacity reached":"Recruit squadmate — 30 requisition";
+ $("personnel").textContent=`${state.squad}/${getSquadCapacity()} squadmates available. Construct Barracks to expand personnel capacity.`;
+ $("recruitBtn").disabled=state.requisition<30||state.squad>=getSquadCapacity();
+ $("recruitBtn").textContent=state.squad>=getSquadCapacity()?"Squad capacity reached":"Recruit squadmate — 30 requisition";
+ renderLogistics();
 }
 function build(type){
  const b=buildings[type];
@@ -610,28 +652,41 @@ function drawBaseBuilding(c,b){
  }c.restore();
 }
 function drawPelicanStyleTransport(c,x,y){
- // Original fan-game transport silhouette, using SEAF blue-grey service colors.
+ // Original Pelican-inspired transport, shown directly overhead with nose toward map north.
  c.save();c.translate(x,y);
- c.fillStyle="#273c4b";c.beginPath();c.ellipse(0,5,59,23,0,0,Math.PI*2);c.fill();
- c.beginPath();c.moveTo(-42,-5);c.lineTo(-64,12);c.lineTo(-57,25);c.lineTo(-20,14);c.lineTo(20,14);c.lineTo(57,25);c.lineTo(64,12);c.lineTo(42,-5);c.closePath();
- c.fillStyle="#718896";c.fill();c.strokeStyle="#d0dadd";c.lineWidth=1.5;c.stroke();
- fillRound(c,-12,-33,24,62,8,"#9caeb7","#e3e9e9",2);fillRound(c,-9,-26,18,14,5,"#315f82","#c4d0d5",1);
- fillRound(c,-61,9,18,14,4,"#3c596b","#cad5d9",1.5);fillRound(c,43,9,18,14,4,"#3c596b","#cad5d9",1.5);
- c.fillStyle="#d8b64f";c.fillRect(-6,7,12,8);c.fillStyle="#30495a";c.fillRect(-4,19,8,12);
- c.restore();
+ c.fillStyle="rgba(16,28,38,.34)";c.beginPath();c.ellipse(0,4,65,48,0,0,Math.PI*2);c.fill();
+ // Twin bulky side engine nacelles with paired rear VTOL exhausts.
+ for(const side of [-1,1]){
+  c.save();c.translate(side*43,4);
+  c.beginPath();c.moveTo(-9,-29);c.lineTo(7,-33);c.lineTo(12,-23);c.lineTo(12,25);c.lineTo(7,36);c.lineTo(-8,31);c.lineTo(-12,20);c.lineTo(-12,-20);c.closePath();c.fillStyle="#344b5b";c.fill();c.strokeStyle="#aebfc7";c.lineWidth=1.4;c.stroke();
+  fillRound(c,-8,-22,16,35,3,"#607b8d","#c5d1d6",1);fillRound(c,-7,-13,14,14,2,"#7892a1","#d3dde0",.8);
+  for(const dx of [-4,4]){c.fillStyle="#1b2d3a";c.beginPath();c.ellipse(dx,28,3.1,5,0,0,Math.PI*2);c.fill();c.strokeStyle="#d1dade";c.lineWidth=.8;c.stroke();}
+  c.fillStyle="#d8b64f";c.fillRect(-7,-25,14,3);c.restore();
+ }
+ // Short heavy lifting wings and small rear stabilizers.
+ c.beginPath();c.moveTo(-15,-11);c.lineTo(-65,-1);c.lineTo(-59,20);c.lineTo(-19,14);c.lineTo(19,14);c.lineTo(59,20);c.lineTo(65,-1);c.lineTo(15,-11);c.closePath();c.fillStyle="#536d7d";c.fill();c.strokeStyle="#d0dadd";c.lineWidth=1.5;c.stroke();
+ for(const side of [-1,1]){c.beginPath();c.moveTo(side*20,23);c.lineTo(side*31,43);c.lineTo(side*12,36);c.lineTo(side*9,19);c.closePath();c.fillStyle="#40596a";c.fill();c.strokeStyle="#aebfc7";c.lineWidth=1;c.stroke();}
+ // Broad armoured centre fuselage, tapered front and rear.
+ c.beginPath();c.moveTo(-7,-53);c.lineTo(7,-53);c.lineTo(17,-39);c.lineTo(20,-20);c.lineTo(18,18);c.lineTo(13,37);c.lineTo(6,48);c.lineTo(-6,48);c.lineTo(-13,37);c.lineTo(-18,18);c.lineTo(-20,-20);c.lineTo(-17,-39);c.closePath();c.fillStyle="#8297a2";c.fill();c.strokeStyle="#e0e6e7";c.lineWidth=1.8;c.stroke();
+ // Forward cockpit glazing.
+ c.beginPath();c.moveTo(-8,-43);c.lineTo(8,-43);c.lineTo(13,-31);c.lineTo(10,-21);c.lineTo(-10,-21);c.lineTo(-13,-31);c.closePath();c.fillStyle="#203b50";c.fill();c.strokeStyle="#b6c8d1";c.lineWidth=1.2;c.stroke();
+ c.strokeStyle="#6e9ab6";c.lineWidth=1;c.beginPath();c.moveTo(0,-42);c.lineTo(0,-23);c.stroke();
+ // Main transport bay and side armour panels.
+ fillRound(c,-15,-12,30,36,4,"#637d8d","#c2cfd4",1.1);fillRound(c,-11,-8,22,27,3,"#3c596e","#aebfc7",1);
+ c.strokeStyle="#c6d2d7";c.lineWidth=1;c.beginPath();c.moveTo(-9,5);c.lineTo(9,5);c.moveTo(-9,11);c.lineTo(9,11);c.stroke();
+ c.fillStyle="#315f82";c.fillRect(-16,18,32,5);c.fillStyle="#d8b64f";c.fillRect(-12,25,6,3);c.fillRect(6,25,6,3);c.fillRect(-17,-17,4,8);c.fillRect(13,-17,4,8);
+ // Folded landing gear.
+ for(const side of [-1,1]){fillRound(c,side*25,12,6,17,2,"#273d4c","#aebdc4",1);fillRound(c,side*25,25,10,6,2,"#1f303b","#d0dadd",1);}
+ fillRound(c,-5,40,10,8,2,"#273d4c","#d0dadd",1);c.restore();
 }
 function drawLandingZone(c){
- // Reinforced transport apron with readable blue/white identification and yellow safety limits.
- fillRound(c,510,596,180,150,8,"#7a8992","#dce2e4",2.2);
- fillRound(c,518,604,164,134,5,"#aeb9bf","#edf0ef",1.3);
- c.strokeStyle="#315f82";c.lineWidth=4;c.strokeRect(526,612,148,118);
- c.strokeStyle="#d8b64f";c.lineWidth=3;c.setLineDash([10,7]);c.strokeRect(533,619,134,104);c.setLineDash([]);
- // Painted touchdown circle and alignment bars.
- c.strokeStyle="#edf1f2";c.lineWidth=3;c.beginPath();c.arc(600,675,40,0,Math.PI*2);c.stroke();
- c.strokeStyle="#527f9e";c.lineWidth=3;c.beginPath();c.arc(600,675,31,0,Math.PI*2);c.stroke();
- c.fillStyle="#315f82";c.font="bold 23px system-ui";c.textAlign="center";c.textBaseline="middle";c.fillText("H",600,700);
- c.save();c.translate(600,644);drawPelicanStyleTransport(c,0,0);c.restore();
- c.fillStyle="#294b65";c.font="bold 8px system-ui";c.fillText("SEAF TRANSPORT APRON",600,737);
+ // Reinforced SEAF landing apron with staged overhead Pelican silhouette.
+ fillRound(c,510,596,180,150,8,"#7a8992","#dce2e4",2.2);fillRound(c,518,604,164,134,5,"#aeb9bf","#edf0ef",1.3);
+ c.strokeStyle="#315f82";c.lineWidth=4;c.strokeRect(526,612,148,118);c.strokeStyle="#d8b64f";c.lineWidth=3;c.setLineDash([10,7]);c.strokeRect(533,619,134,104);c.setLineDash([]);
+ c.strokeStyle="#edf1f2";c.lineWidth=2.5;c.beginPath();c.arc(600,671,43,0,Math.PI*2);c.stroke();c.strokeStyle="#527f9e";c.lineWidth=2;c.beginPath();c.arc(600,671,34,0,Math.PI*2);c.stroke();
+ c.fillStyle="#315f82";c.font="bold 22px system-ui";c.textAlign="center";c.textBaseline="middle";c.fillText("H",600,692);
+ drawPelicanStyleTransport(c,600,666);
+ c.fillStyle="#294b65";c.font="bold 8px system-ui";c.textBaseline="alphabetic";c.fillText("SEAF TRANSPORT APRON",600,739);
  for(let i=0;i<5;i++){c.fillStyle="#d8b64f";c.fillRect(536+i*32,607,13,3);c.fillRect(536+i*32,733,13,3);}
 }
 function drawCentralPlaza(c){
@@ -647,38 +702,22 @@ function drawCentralPlaza(c){
  for(let x of [476,724]){fillRound(c,x-9,387,18,34,3,"#596d79","#c2ccd0",1);c.fillStyle="#d8b64f";c.fillRect(x-2,390,4,4);}
 }
 function drawHeavyVehicleSilhouette(c,x,y){
- // Bastion tank destroyer: fixed casemate, gun anchored at the rear of the chassis.
- // The cannon projects forward from its integrated rear mount; no turret or muzzle cap.
+ // Bastion tank destroyer: fixed casemate with chassis-integrated rear gun mount.
  c.save();c.translate(x,y);
- // Track runs with tread segments and exposed road wheels.
  for(const side of [-1,1]){
   fillRound(c,side*30-8,-48,16,96,4,"#263b4a","#bac6cc",1.5);
   for(let j=0;j<10;j++)fillRound(c,side*30-7,-43+j*9,14,5,1,"#718999","#233644",.7);
-  for(let j=0;j<5;j++){
-   c.fillStyle="#c0ccd1";c.beginPath();c.arc(side*30,-34+j*17,4.3,0,Math.PI*2);c.fill();
-   c.fillStyle="#3b5362";c.beginPath();c.arc(side*30,-34+j*17,2,0,Math.PI*2);c.fill();
-  }
+  for(let j=0;j<5;j++){c.fillStyle="#c0ccd1";c.beginPath();c.arc(side*30,-34+j*17,4.3,0,Math.PI*2);c.fill();c.fillStyle="#3b5362";c.beginPath();c.arc(side*30,-34+j*17,2,0,Math.PI*2);c.fill();}
  }
- // Low, elongated chassis and fixed armored casemate (not a conventional turret).
  fillRound(c,-24,-47,48,94,6,"#516b7c","#d0d9dd",1.7);
  fillRound(c,-19,-43,38,82,4,"#8497a2","#dbe2e4",1.3);
- c.fillStyle="#a6b4bc";c.beginPath();c.moveTo(-18,-40);c.lineTo(18,-40);c.lineTo(16,-23);c.lineTo(0,-15);c.lineTo(-16,-23);c.closePath();c.fill();
- c.strokeStyle="#dce3e5";c.lineWidth=1.2;c.stroke();
- // Fixed central gun with its mount integrated into the rear deck of the casemate.
- fillRound(c,-14,22,28,23,4,"#3f5a6d","#c6d1d5",1.4);
- fillRound(c,-9,26,18,16,3,"#8397a3","#e0e6e7",1.3);
- fillRound(c,-5,-53,10,81,3,"#2c4252","#aebdc4",1.2);
- // Flat dark muzzle end only; no light-grey tip that resembles a separate attachment.
- c.fillStyle="#263b4a";c.fillRect(-5,-55,10,4);
- c.fillStyle="#152a38";c.fillRect(-3,-54,6,2);
- // Rear deck vents, panels and restrained yellow service marks.
- for(let side of [-1,1]){
-  fillRound(c,side*10-5,-16,10,20,2,"#516a79","#c2cdd1",1);
-  for(let k=0;k<4;k++){c.strokeStyle="#353c36";c.lineWidth=1;c.beginPath();c.moveTo(side*10-3,-13+k*4);c.lineTo(side*10+3,-13+k*4);c.stroke();}
- }
- fillRound(c,-9,39,18,7,2,"#333a34","#b9c7cc",1);
- c.fillStyle="#c8b46f";c.fillRect(-3,11,6,3);c.fillRect(-16,46,32,2);
- c.restore();
+ c.fillStyle="#a6b4bc";c.beginPath();c.moveTo(-18,-40);c.lineTo(18,-40);c.lineTo(16,-23);c.lineTo(0,-15);c.lineTo(-16,-23);c.closePath();c.fill();c.strokeStyle="#dce3e5";c.lineWidth=1.2;c.stroke();
+ // Rear-integrated fixed mount; barrel shortened from 81 to 61 world units (~25%).
+ fillRound(c,-14,22,28,23,4,"#3f5a6d","#c6d1d5",1.4);fillRound(c,-9,26,18,16,3,"#8397a3","#e0e6e7",1.3);
+ fillRound(c,-5,-33,10,61,3,"#2c4252","#aebdc4",1.2);
+ c.fillStyle="#263b4a";c.fillRect(-5,-36,10,4);c.fillStyle="#152a38";c.fillRect(-3,-35,6,2);
+ for(const side of [-1,1]){fillRound(c,side*10-5,-16,10,20,2,"#516a79","#c2cdd1",1);for(let k=0;k<4;k++){c.strokeStyle="#353c36";c.lineWidth=1;c.beginPath();c.moveTo(side*10-3,-13+k*4);c.lineTo(side*10+3,-13+k*4);c.stroke();}}
+ fillRound(c,-9,39,18,7,2,"#333a34","#b9c7cc",1);c.fillStyle="#c8b46f";c.fillRect(-3,11,6,3);c.fillRect(-16,46,32,2);c.restore();
 }
 function drawExosuitSilhouette(c,x,y){
  // Overhead SEAF exosuit: no rear legs or feet and no forward helmet/head.
@@ -774,8 +813,14 @@ function renderMissions(){
  $("missionCards").innerHTML=missions.map(m=>`<div class="missionCard"><h4>${m.name}</h4><p><small>${m.type}</small></p><p>${m.desc}</p><p><small>Reward: ${m.reward.supplies} supplies · ${m.reward.components} components · ${m.reward.requisition} requisition</small></p><button class="primary" data-mission="${m.id}">Deploy</button></div>`).join("");
  $("missionCards").querySelectorAll("[data-mission]").forEach(b=>b.addEventListener("click",()=>startMission(b.dataset.mission)));
 }
-function refresh(){renderResources();renderBuildings();drawBase();renderMissions();$("baseStatus").textContent=`Buildings: ${state.buildings.length} · Missions completed: ${state.missionWins} · Squad strength: ${state.squad}`;}
-function recruit(){if(state.requisition<30||state.squad>=8)return;state.requisition-=30;state.squad++;log("New SEAF squadmate recruited.");refresh();save();}
+function refresh(){
+ renderResources();renderBuildings();renderLogistics();drawBase();renderMissions();
+ $("baseStatus").textContent=`Buildings: ${state.buildings.length} · Missions completed: ${state.missionWins} · Squad strength: ${state.squad}/${getSquadCapacity()}`;
+}
+function recruit(){
+ if(state.requisition<30||state.squad>=getSquadCapacity())return;
+ state.requisition-=30;state.squad++;log("New SEAF squadmate recruited.");refresh();save();
+}
 function switchView(id){
  if(id==="menuView"){
   if(battle.active){
@@ -967,12 +1012,17 @@ function finishMission(success){
  if(!battle.active)return;
  battle.active=false;battle.completed=success;$("mobileControls").style.display="none";switchView("baseView");$("battleTab").disabled=true;
  if(success){
-  state.supplies+=battle.mission.reward.supplies;state.components+=battle.mission.reward.components;state.requisition+=battle.mission.reward.requisition;state.intel+=1;state.missionWins++;
-  log(`Mission completed: ${battle.mission.name}. Rewards received.`);
-  $("missionStatus").textContent=`Last deployment completed: ${battle.mission.name}. Rewards received.`;
+  const supplyOverflow=creditStoredResource("supplies",battle.mission.reward.supplies);
+  const componentOverflow=creditStoredResource("components",battle.mission.reward.components);
+  state.requisition+=battle.mission.reward.requisition;state.intel+=1;state.missionWins++;
+  const overflowNotes=[];
+  if(supplyOverflow)overflowNotes.push(supplyOverflow+" supplies (storage full)");
+  if(componentOverflow)overflowNotes.push(componentOverflow+" components (storage full)");
+  const overflowText=overflowNotes.length?" Overflow not stored: "+overflowNotes.join(", ")+".":"";
+  log(`Mission completed: ${battle.mission.name}. Rewards secured.${overflowText}`);
+  $("missionStatus").textContent=`Last deployment completed: ${battle.mission.name}. ${overflowText||"Rewards received."}`;
  }else{
-  log("Deployment failed. Squad returned with limited resources.");
-  $("missionStatus").textContent=`Deployment failed: ${battle.mission.name}.`;
+  log("Deployment failed. Squad returned with limited resources.");$("missionStatus").textContent=`Deployment failed: ${battle.mission.name}.`;
   state.requisition=Math.max(0,state.requisition-5);
  }
  state.squad=Math.max(0,state.squad);refresh();save();updateHud();
