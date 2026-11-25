@@ -12,7 +12,7 @@ A single-player, top-down 2D sci-fi military game about ordinary SEAF soldiers f
 Manage a forward base, select an operation, deploy with squadmates, complete objectives, return to extraction, and use rewards to expand your base.
 
 ## Current prototype systems
-- Redesigned SEAF forward base with top-down facility artwork, perimeter security, roads, Pelican-style transport apron, motor pool, reserved service zones, full-base camera framing and footprint-aware construction
+- SEAF blue-grey forward base with pale concrete structures, blue identification panels, yellow safety markings, detailed perimeter and gate, engineered roads, transport apron, motor pool, reserved service zones, full-base camera framing and footprint-aware construction
 - Zoomable/pannable base camera and plot-based construction
 - Resources: supplies, components, requisition, intel
 - Recruitment and squadmates
@@ -29,6 +29,6 @@ The v0.4.1 motor-pool vehicle silhouettes were redrawn to better match the suppl
 **Mobile base:** pinch to zoom, drag to pan, and tap an open building plot to place a selected structure. **Mobile deployment:** joystick movement, FIRE auto-aim, RELOAD, INTERACT, RETREAT.
 
 ## Development notes
-The v0.4 visual overhaul uses original canvas-drawn top-down facility artwork and preserves the main menu, three local campaign slots, camera controls and placement workflow. JavaScript syntax and static footprint checks passed; test the new artwork and construction spacing on desktop and mobile.
+The v0.5 visual overhaul uses original canvas-drawn top-down facility artwork in a consistent SEAF blue-grey, white and restrained yellow palette. It preserves the main menu, three local campaign slots, camera controls, building costs and placement workflow. Static source checks were performed; test artwork scale, readability and construction spacing on desktop and mobile.
 
 See [CHANGELOG.md](CHANGELOG.md) for version history and [docs/ROADMAP.md](docs/ROADMAP.md) for planned milestones.
