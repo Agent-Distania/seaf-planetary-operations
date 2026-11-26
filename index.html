@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>SEAF: Planetary Operations — v0.8.21</title>
+<title>SEAF: Planetary Operations — v0.8.22</title>
 <style>
 :root{--bg:#111a22;--panel:#1d2a35;--panel2:#273846;--line:#455c6b;--text:#e6edf0;--muted:#a9bbc5;--accent:#83b0ce;--danger:#e26b5e;--gold:#d8b64f}
 *{box-sizing:border-box}
@@ -118,7 +118,7 @@ footer{margin-top:10px;color:#8fa5b2;font-size:11px;text-align:center}
 <body>
 <div id="app">
 <header>
-  <div class="brand">SEAF <span>PLANETARY OPERATIONS · PROTOTYPE 0.8.21</span></div>
+  <div class="brand">SEAF <span>PLANETARY OPERATIONS · PROTOTYPE 0.8.22</span></div>
   <div class="resourcebar" id="resources"></div>
 </header>
 <div class="tabs menu-hidden">
@@ -497,7 +497,7 @@ function renderBuildings(){
  $("buildCards").querySelectorAll("[data-build]").forEach(btn=>btn.addEventListener("click",()=>{
   const type=btn.dataset.build;if(pendingBuilding===type)cancelBuildingPlacement();else build(type);
  }));
- $("personnel").textContent=`${state.squad}/${getSquadCapacity()} squadmates available. Construct Barracks to expand personnel capacity.`;
+ $("personnel").textContent=`${state.squad}/${getSquadCapacity()} squadmates available. ${basePersonnel.length} SEAF base staff are on routine walkway duties.`;
  $("recruitBtn").disabled=state.requisition<30||state.squad>=getSquadCapacity();
  $("recruitBtn").textContent=state.squad>=getSquadCapacity()?"Squad capacity reached":"Recruit squadmate — 30 requisition";
  renderLogistics();
@@ -1141,6 +1141,85 @@ function drawBaseCrosswalk(c,x,y){
  for(let i=-3;i<=3;i++)fillRound(c,x-21,y+i*4-1,42,2,1,"#dce4e7",null);
  c.restore();
 }
+const BASE_PATROL_ROUTES=[
+ [{x:560,y:72},{x:560,y:282},{x:640,y:282},{x:640,y:72}],
+ [{x:66,y:366},{x:426,y:366},{x:426,y:434},{x:66,y:434}],
+ [{x:774,y:434},{x:1134,y:434},{x:1134,y:366},{x:774,y:366}],
+ [{x:560,y:520},{x:560,y:575},{x:640,y:575},{x:640,y:520}]
+];
+const BASE_PERSONNEL_STARTS=[
+ {route:0,t:.16,speed:18.5},{route:0,t:.68,speed:16.8},
+ {route:1,t:.18,speed:17.2},{route:1,t:.67,speed:19.1},
+ {route:2,t:.22,speed:18.0},{route:2,t:.72,speed:16.5},
+ {route:3,t:.18,speed:14.8},{route:3,t:.72,speed:15.6}
+];
+const basePersonnel=BASE_PERSONNEL_STARTS.map((entry,id)=>{
+ const route=BASE_PATROL_ROUTES[entry.route],a=route[0],b=route[1];
+ const x=a.x+(b.x-a.x)*entry.t,y=a.y+(b.y-a.y)*entry.t;
+ return {id,route:entry.route,segment:0,x,y,angle:Math.atan2(b.y-a.y,b.x-a.x),speed:entry.speed,
+  walkPhase:id*1.73,wait:(id%3)*.18};
+});
+function basePersonnelPositionClear(x,y){
+ if(x<54||x>1146||y<54||y>746)return false;
+ // Keep walking personnel outside every placed building's full logical footprint.
+ for(const building of state.buildings){
+  const fp=baseFootprint(building.type);
+  if(Math.abs(x-building.x)<fp.w/2+8&&Math.abs(y-building.y)<fp.h/2+8)return false;
+ }
+ // Never walk through the transport pad or the reserved motor-pool compound.
+ if(x>492&&x<708&&y>584&&y<758)return false;
+ if(x>752&&x<1148&&y>468&&y<756)return false;
+ return true;
+}
+function updateBasePersonnel(dt){
+ for(const person of basePersonnel){
+  if(person.wait>0){person.wait=Math.max(0,person.wait-dt);continue;}
+  let distanceBudget=person.speed*dt,guard=0;
+  while(distanceBudget>.01&&guard++<5){
+   const route=BASE_PATROL_ROUTES[person.route];
+   const target=route[(person.segment+1)%route.length];
+   const dx=target.x-person.x,dy=target.y-person.y,distance=Math.hypot(dx,dy);
+   if(distance<.5){
+    person.segment=(person.segment+1)%route.length;
+    person.wait=.28+((person.id+person.segment)%3)*.16;
+    break;
+   }
+   const moved=Math.min(distance,distanceBudget),nx=person.x+dx/distance*moved,ny=person.y+dy/distance*moved;
+   if(!basePersonnelPositionClear(nx,ny)){person.wait=.25;break;}
+   person.x=nx;person.y=ny;person.angle=Math.atan2(dy,dx);
+   person.walkPhase+=moved*.72;distanceBudget-=moved;
+   if(moved>=distance-.01){
+    person.x=target.x;person.y=target.y;
+    person.segment=(person.segment+1)%route.length;
+    person.wait=.28+((person.id+person.segment)%3)*.16;
+    break;
+   }
+  }
+ }
+}
+function drawBasePersonnelSprite(c,person){
+ c.save();c.translate(person.x,person.y);c.rotate(person.angle+Math.PI/2);
+ const stride=Math.sin(person.walkPhase)*1.8,armSwing=Math.sin(person.walkPhase)*1.1;
+ // Small shadow and separated boots/legs retain the same readable overhead proportions as SEAF field units.
+ c.fillStyle="rgba(9,17,22,.38)";c.beginPath();c.ellipse(1,5,9,6,0,0,Math.PI*2);c.fill();
+ fillRound(c,-5,4+stride,4,7,1.5,"#263b49","#9eafb7",.6);
+ fillRound(c,1,4-stride,4,7,1.5,"#263b49","#9eafb7",.6);
+ fillRound(c,-9,-7-armSwing,4,10,1.5,"#405968","#aebdc4",.7);
+ fillRound(c,5,-7+armSwing,4,10,1.5,"#405968","#aebdc4",.7);
+ // Blue-grey body armour, chest panel and compact field pack; no weapon is shown on these ambient base staff.
+ fillRound(c,-7,-9,14,16,3,"#344b5a","#172d3a",1);
+ fillRound(c,-5,-8,10,13,2,"#8297a2","#d4dde1",.8);
+ fillRound(c,-3,-5,6,7,1.5,"#526d7d","#283f4c",.6);
+ c.fillStyle="#315f82";c.fillRect(-4,1,8,2);
+ fillRound(c,5,-7,5,12,1.5,"#314b5a","#aebdc4",.7);
+ fillRound(c,-5,-18,10,9,3,"#263e4e","#bfccd2",.9);
+ fillRound(c,-3,-16,6,5,1.5,"#1d303d","#91a9b6",.6);
+ c.fillStyle="#8db6ce";c.fillRect(-2,-14,4,1.5);
+ c.restore();
+}
+function drawBasePersonnel(c){
+ for(const person of basePersonnel)drawBasePersonnelSprite(c,person);
+}
 function drawBase(){
  const w=baseCanvas.width,h=baseCanvas.height,c=baseCtx;
  c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,w,h);c.fillStyle="#1b2a36";c.fillRect(0,0,w,h);
@@ -1164,6 +1243,7 @@ function drawBase(){
  state.buildings.forEach(b=>drawBaseBuilding(c,b));
  const commandBuilding=state.buildings.find(b=>b.type==="command");
  if(commandBuilding)drawCommandGroundSign(c,commandBuilding.x,commandBuilding.y);
+ drawBasePersonnel(c);
  if(pendingBuilding){
   const hint=basePointerWorld||{x:600,y:400},ghost=nearestOpenBasePlot(hint,BASE_WORLD_W);
   if(ghost){
@@ -1203,7 +1283,7 @@ function renderCodex(){
 if($("codexTabs"))$("codexTabs").querySelectorAll("[data-codex-faction]").forEach(button=>button.addEventListener("click",()=>{const faction=button.dataset.codexFaction;if(faction===selectedCodexFaction)return;selectedCodexFaction=faction;selectedCodexId=faction==="seaf"?Object.keys(seafCodexDatabase)[0]:Object.keys(threatDatabase)[0];renderCodex();}));
 function refresh(){
  renderResources();renderBuildings();drawBase();renderMissions();
- $("baseStatus").textContent=`Buildings: ${state.buildings.length} · Missions completed: ${state.missionWins} · Squad strength: ${state.squad}/${getSquadCapacity()}`;
+ $("baseStatus").textContent=`Buildings: ${state.buildings.length} · Base staff: ${basePersonnel.length} · Missions completed: ${state.missionWins} · Squad strength: ${state.squad}/${getSquadCapacity()}`;
 }
 function recruit(){
  if(state.requisition<30||state.squad>=getSquadCapacity())return;
@@ -1956,8 +2036,8 @@ joy.addEventListener("pointermove",e=>{if(joyActive)joyUpdate(e);});
 function joyEnd(){joyActive=false;battle.touch.x=0;battle.touch.y=0;knob.style.transform="translate(0,0)";}
 joy.addEventListener("pointerup",joyEnd);joy.addEventListener("pointercancel",joyEnd);
 
-let last=performance.now();
-function loop(t){let dt=Math.min((t-last)/1000,.05);last=t;if(battle.active){update(dt);drawBattle();}requestAnimationFrame(loop);}
+let last=performance.now(),baseDrawAccumulator=0;
+function loop(t){let dt=Math.min((t-last)/1000,.05);last=t;if(battle.active){baseDrawAccumulator=0;update(dt);drawBattle();}else if($("baseView").classList.contains("active")){baseDrawAccumulator+=dt;if(baseDrawAccumulator>=1/30){updateBasePersonnel(baseDrawAccumulator);baseDrawAccumulator=0;drawBase();}}else{baseDrawAccumulator=0;}requestAnimationFrame(loop);}
 function init(){
  migrateLegacySave();
  $("resources").style.display="none";
