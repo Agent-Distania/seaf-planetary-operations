@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>SEAF: Planetary Operations — v0.8.18</title>
+<title>SEAF: Planetary Operations — v0.8.19</title>
 <style>
 :root{--bg:#111a22;--panel:#1d2a35;--panel2:#273846;--line:#455c6b;--text:#e6edf0;--muted:#a9bbc5;--accent:#83b0ce;--danger:#e26b5e;--gold:#d8b64f}
 *{box-sizing:border-box}
@@ -118,7 +118,7 @@ footer{margin-top:10px;color:#8fa5b2;font-size:11px;text-align:center}
 <body>
 <div id="app">
 <header>
-  <div class="brand">SEAF <span>PLANETARY OPERATIONS · PROTOTYPE 0.8.18</span></div>
+  <div class="brand">SEAF <span>PLANETARY OPERATIONS · PROTOTYPE 0.8.19</span></div>
   <div class="resourcebar" id="resources"></div>
 </header>
 <div class="tabs menu-hidden">
@@ -352,7 +352,7 @@ function getBasePlots(){
 }
 function baseFootprint(type){
  return ({
-  command:{w:108,h:82},barracks:{w:94,h:66},depot:{w:104,h:76},
+  command:{w:276,h:160},barracks:{w:94,h:66},depot:{w:104,h:76},
   medical:{w:88,h:68},radar:{w:82,h:82},turret:{w:66,h:66},
   engineering:{w:104,h:76}
  })[type]||{w:86,h:64};
@@ -639,73 +639,100 @@ function drawSeafBuildingFinish(c,b){
 }
 function drawCommandPost(c,x,y){
  c.save();
- // Keep the original 108 x 82 footprint so existing saves and placement rules remain valid.
- drawBuildingBase(c,x,y,108,82);
- // Reinforced outer shell: a broad, modular forward-command building rather than a small office.
- fillRound(c,x-49,y-32,98,64,6,"#344b5a","#1e303b",2.5);
- fillRound(c,x-45,y-28,90,56,4,"#9baab2","#e0e6e8",1.4);
- fillRound(c,x-41,y-24,82,48,3,"#526b7a","#314958",1.5);
- c.strokeStyle="#d5dfe2";c.lineWidth=1.1;c.strokeRect(x-43,y-26,86,52);
- // Paired command-support wings: roof panels, narrow windows and service access are mirrored.
+ // The HQ now occupies almost the full 276 x 160 central command-compound pad.
+ drawBuildingBase(c,x,y,276,160);
+ // Broad reinforced perimeter shell with a clearly defined outer service corridor.
+ fillRound(c,x-132,y-72,264,144,8,"#344b5a","#1e303b",3);
+ fillRound(c,x-127,y-67,254,134,6,"#9baab2","#e0e6e8",1.5);
+ fillRound(c,x-121,y-61,242,122,5,"#526b7a","#314958",1.7);
+ c.strokeStyle="#d5dfe2";c.lineWidth=1.1;c.strokeRect(x-124,y-64,248,128);
+ // Blue perimeter bands and restrained hazard marks define the facility's footprint.
+ c.fillStyle="#315f82";c.fillRect(x-116,y-59,232,4);c.fillRect(x-116,y+55,232,4);
+ c.fillStyle="#d8b64f";
  for(const side of [-1,1]){
-  const wx=x+side*32;
-  fillRound(c,wx-11,y-21,22,43,3,"#647d8b","#263e4c",1.8);
-  fillRound(c,wx-8,y-17,16,35,2,"#aab8bf","#dce4e6",1);
-  fillRound(c,wx-6,y-13,12,12,2,"#263f52","#91adbc",.9);
-  c.fillStyle="#8fb2c5";c.fillRect(wx-4,y-10,8,2);
-  fillRound(c,wx-6,y+3,12,9,1,"#415d70","#c8d4d9",.8);
-  c.strokeStyle="#d1dce0";c.lineWidth=.8;
-  for(let k=0;k<3;k++){c.beginPath();c.moveTo(wx-4,y+5+k*2);c.lineTo(wx+4,y+5+k*2);c.stroke();}
-  c.fillStyle="#315f82";c.fillRect(wx-8,y+15,16,3);
-  c.fillStyle="#d8b64f";c.fillRect(wx-8,y-18,4,2);c.fillRect(wx+4,y-18,4,2);
-  // Small paired service lights on each wing.
-  for(const sy of [-1,1]){
-   c.fillStyle="#263e4c";c.beginPath();c.arc(wx+side*7,y+sy*19,2.4,0,Math.PI*2);c.fill();
-   c.fillStyle="#8db8d0";c.beginPath();c.arc(wx+side*7,y+sy*19,1.1,0,Math.PI*2);c.fill();
+  c.fillRect(x+side*116-3,y-48,3,12);
+  c.fillRect(x+side*116-3,y+36,3,12);
+ }
+ // Symmetrical left and right operations wings, each with roof modules and ventilation.
+ for(const side of [-1,1]){
+  const wx=x+side*94;
+  fillRound(c,wx-30,y-48,60,98,5,"#344c5c","#d0dade",1.6);
+  fillRound(c,wx-25,y-43,50,88,3,"#879aa4","#dfe6e8",1.1);
+  fillRound(c,wx-21,y-38,42,78,2,"#536d7d","#344f60",1);
+  // Upper glazed workroom.
+  fillRound(c,wx-17,y-32,34,19,2,"#263f52","#b5c8d1",1);
+  c.fillStyle="#6e9bb6";c.fillRect(wx-14,y-28,28,3);
+  c.strokeStyle="#9bb7c5";c.lineWidth=.8;
+  for(const dx of [-7,0,7]){c.beginPath();c.moveTo(wx+dx,y-30);c.lineTo(wx+dx,y-15);c.stroke();}
+  // Repeating roof vents and access/service panels.
+  for(let k=0;k<3;k++){
+   fillRound(c,wx-15,y-7+k*13,30,9,1,"#344c5b","#c5d1d6",.8);
+   c.strokeStyle="#aebfc7";c.lineWidth=.7;
+   for(let j=0;j<4;j++){c.beginPath();c.moveTo(wx-10+j*6,y-5+k*13);c.lineTo(wx-10+j*6,y-1+k*13);c.stroke();}
   }
+  fillRound(c,wx-17,y+34,34,8,2,"#315f82","#cbd7dc",.8);
+  c.fillStyle="#d8b64f";c.fillRect(wx-11,y+37,22,2);
+  // Small raised utility housings on the outside edge of each wing.
+  fillRound(c,wx+side*22-5,y-47,10,16,2,"#304858","#d5dfe2",.8);
+  c.fillStyle="#d8b64f";c.fillRect(wx+side*22-2,y-43,4,2);
  }
- // Raised central operations block with a heavier armoured roofline.
- fillRound(c,x-25,y-27,50,54,4,"#344c5c","#d0dade",1.8);
- fillRound(c,x-21,y-23,42,46,3,"#8397a2","#e0e6e8",1.1);
- fillRound(c,x-18,y-20,36,40,3,"#4a6475","#263d4b",1.3);
- // Forward-facing command-room glazing is broken into distinct overhead panes.
- fillRound(c,x-14,y-16,28,13,2,"#1e3548","#b7c9d1",1.1);
- c.fillStyle="#6e9bb6";c.fillRect(x-11,y-13,22,2);
- c.strokeStyle="#9bb4c1";c.lineWidth=.8;
- for(let dx of [-5,5]){c.beginPath();c.moveTo(x+dx,y-14);c.lineTo(x+dx,y-5);c.stroke();}
- // Main operations deck and illuminated planning table.
- fillRound(c,x-14,y+1,28,14,2,"#293f50","#bdcbd1",1);
- fillRound(c,x-10,y+4,20,7,1,"#315f82","#91b4c7",.8);
- c.strokeStyle="#a8c5d5";c.lineWidth=.8;c.beginPath();c.moveTo(x,y+5);c.lineTo(x,y+10);c.moveTo(x-7,y+7);c.lineTo(x+7,y+7);c.stroke();
- // Roof service housings and a compact communications mast mark the building as a command hub.
+ // Cross-corridors join the wings to the main operations block.
  for(const side of [-1,1]){
-  fillRound(c,x+side*20-4,y-25,8,10,2,"#31495a","#c6d2d7",.8);
-  c.fillStyle="#d8b64f";c.fillRect(x+side*20-2,y-22,4,2);
+  fillRound(c,x+side*59-8,y-29,16,70,2,"#6f8591","#cbd6db",.9);
+  c.strokeStyle="#c3cfd4";c.lineWidth=1;
+  for(let yy=y-18;yy<=y+28;yy+=12){c.beginPath();c.moveTo(x+side*59-5,yy);c.lineTo(x+side*59+5,yy);c.stroke();}
  }
- fillRound(c,x-7,y-34,14,8,2,"#344d5d","#c8d4d9",1);
- c.strokeStyle="#d6e0e3";c.lineWidth=1.8;c.beginPath();c.moveTo(x,y-34);c.lineTo(x,y-41);c.moveTo(x-6,y-38);c.lineTo(x+6,y-38);c.stroke();
- c.fillStyle="#83b0ce";c.beginPath();c.arc(x,y-41,2.2,0,Math.PI*2);c.fill();
- // SEAF identity plate and simple star-in-ring command insignia.
- fillRound(c,x-22,y+17,44,8,2,"#24465f","#d5dfe2",1);
- c.fillStyle="#edf2f3";c.font="bold 6px system-ui";c.textAlign="center";c.textBaseline="middle";
- c.fillText("SEAF  •  FORWARD COMMAND",x,y+21);
- c.fillStyle="#315f82";c.beginPath();c.arc(x,y+10,5.5,0,Math.PI*2);c.fill();
- c.strokeStyle="#dce5e7";c.lineWidth=1;c.stroke();
- c.beginPath();
- for(let i=0;i<10;i++){
-  const a=-Math.PI/2+i*Math.PI/5,r=i%2===0?3.6:1.7;
-  const px=x+Math.cos(a)*r,py=y+10+Math.sin(a)*r;
-  if(i===0)c.moveTo(px,py);else c.lineTo(px,py);
+ // Raised central command block: the largest and most prominent roof volume.
+ fillRound(c,x-66,y-57,132,116,6,"#2c4352","#d2dce0",2);
+ fillRound(c,x-61,y-52,122,106,4,"#a6b5bd","#e2e8e9",1.2);
+ fillRound(c,x-56,y-47,112,96,3,"#526d7d","#304a5a",1.3);
+ // Large overhead operations-room glazing, split into distinct panes.
+ fillRound(c,x-48,y-40,96,28,3,"#20394d","#c5d2d8",1.2);
+ c.fillStyle="#6e9bb6";c.fillRect(x-43,y-36,86,3);
+ c.strokeStyle="#a9c0cb";c.lineWidth=1;
+ for(const dx of [-24,0,24]){c.beginPath();c.moveTo(x+dx,y-38);c.lineTo(x+dx,y-14);c.stroke();}
+ // Operations floor and broad illuminated planning table.
+ fillRound(c,x-46,y-5,92,43,3,"#344e60","#c5d1d7",1.1);
+ fillRound(c,x-38,y+1,76,29,2,"#263e50","#91adbc",1);
+ fillRound(c,x-31,y+6,62,19,1,"#315f82","#8cb3ca",.8);
+ c.strokeStyle="#b5cbd5";c.lineWidth=1;
+ c.beginPath();c.moveTo(x,y+8);c.lineTo(x,y+23);c.moveTo(x-24,y+15);c.lineTo(x+24,y+15);c.stroke();
+ // Mirrored command consoles and roof service equipment.
+ for(const side of [-1,1]){
+  fillRound(c,x+side*48-7,y+4,14,27,2,"#304858","#c5d1d6",.9);
+  for(let k=0;k<3;k++){
+   c.fillStyle=k===1?"#d8b64f":"#7eabc3";
+   c.fillRect(x+side*48-3,y+8+k*6,6,2);
+  }
+  fillRound(c,x+side*46-8,y-48,16,10,2,"#31495a","#c7d3d8",.8);
  }
- c.closePath();c.fillStyle="#e2e9eb";c.fill();
- // Formal southern entrance, with steps and a recessed double door facing the forecourt.
- fillRound(c,x-22,y+27,44,10,2,"#394f5d","#d0dade",1.2);
+ // Twin communications arrays mounted to the rear roofline; no emblem or lettering on the roof.
+ for(const side of [-1,1]){
+  const ax=x+side*83;
+  fillRound(c,ax-9,y-62,18,13,2,"#304a5a","#d1dce0",.9);
+  c.strokeStyle="#d8e1e4";c.lineWidth=1.4;
+  c.beginPath();c.moveTo(ax,y-62);c.lineTo(ax,y-72);c.moveTo(ax-6,y-67);c.lineTo(ax+6,y-67);c.stroke();
+  c.fillStyle="#83b0ce";c.beginPath();c.arc(ax,y-72,1.8,0,Math.PI*2);c.fill();
+ }
+ // Southern entrance vestibule and broad approach steps face the command forecourt.
+ fillRound(c,x-42,y+42,84,25,4,"#344c5c","#d4dfe2",1.4);
+ fillRound(c,x-33,y+47,66,15,2,"#8196a1","#e0e6e8",1);
+ fillRound(c,x-23,y+48,46,13,1,"#203746","#b5c6ce",1);
+ c.strokeStyle="#8fb2c5";c.lineWidth=1;c.beginPath();c.moveTo(x,y+49);c.lineTo(x,y+60);c.stroke();
+ c.fillStyle="#d8b64f";c.fillRect(x-4,y+53,3,3);c.fillRect(x+2,y+53,3,3);
  c.strokeStyle="#d7e0e3";c.lineWidth=1;
- for(let sy=29;sy<=35;sy+=3){c.beginPath();c.moveTo(x-18,y+sy);c.lineTo(x+18,y+sy);c.stroke();}
- fillRound(c,x-10,y+27,20,8,1,"#203746","#aabcc5",1);
- c.strokeStyle="#7fa4ba";c.lineWidth=1;c.beginPath();c.moveTo(x,y+28);c.lineTo(x,y+34);c.stroke();
- c.fillStyle="#d8b64f";c.fillRect(x-3,y+30,2,2);c.fillRect(x+2,y+30,2,2);
- drawBuildingLabel(c,"COMMAND HQ",x,y+39);
+ for(let sy=y+68;sy<=y+76;sy+=3){c.beginPath();c.moveTo(x-37,sy);c.lineTo(x+37,sy);c.stroke();}
+ c.restore();
+}
+function drawCommandGroundSign(c,x,y){
+ // Separate ground-mounted wayfinding sign in front of the HQ entrance, not on its roof.
+ c.save();
+ fillRound(c,x-56,y+80,112,10,2,"#263e4e","#c6d2d7",1);
+ fillRound(c,x-50,y+77,4,5,1,"#405a69","#b9c7ce",.7);
+ fillRound(c,x+46,y+77,4,5,1,"#405a69","#b9c7ce",.7);
+ c.fillStyle="#d8b64f";c.fillRect(x-51,y+82,102,1);
+ c.fillStyle="#edf2f3";c.font="bold 6px system-ui";c.textAlign="center";c.textBaseline="middle";
+ c.fillText("SEAF FORWARD COMMAND",x,y+85);
  c.restore();
 }
 function drawBarracks(c,x,y){
@@ -835,9 +862,7 @@ function drawCentralPlaza(c){
  fillRound(c,458,316,284,168,10,"#7f909a","#e0e5e6",1.2);
  c.strokeStyle="#527f9e";c.lineWidth=3;c.setLineDash([12,8]);c.strokeRect(468,326,264,148);c.setLineDash([]);
  c.fillStyle="#d8b64f";for(let i=0;i<5;i++){c.fillRect(474+i*18,313,9,3);c.fillRect(474+i*18,484,9,3);}
- // Blue institutional wayfinding panel.
- fillRound(c,510,320,180,16,3,"#315a78","#aec1cc",1);
- c.fillStyle="#edf1f2";c.font="bold 9px system-ui";c.textAlign="center";c.fillText("SEAF COMMAND COMPOUND",600,331);
+ // The HQ itself now fills this compound; no text panel is painted behind or on its roof.
  // Recessed service covers and bollards.
  for(let x of [476,724]){fillRound(c,x-9,387,18,34,3,"#596d79","#c2ccd0",1);c.fillStyle="#d8b64f";c.fillRect(x-2,390,4,4);}
 }
@@ -977,6 +1002,8 @@ function drawBase(){
  // The transport apron is the first dedicated vehicle-support area; additional motor-pool
  // and exosuit service structures are reserved for the next base expansion pass.
  state.buildings.forEach(b=>drawBaseBuilding(c,b));
+ const commandBuilding=state.buildings.find(b=>b.type==="command");
+ if(commandBuilding)drawCommandGroundSign(c,commandBuilding.x,commandBuilding.y);
  if(pendingBuilding){
   const hint=basePointerWorld||{x:600,y:400},ghost=nearestOpenBasePlot(hint,BASE_WORLD_W);
   if(ghost){
