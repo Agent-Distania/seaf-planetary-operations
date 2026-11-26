@@ -1,3 +1,28 @@
+## v0.8.5 — Operations Expanded, Part II: Battlefield Expansion & Infrastructure Pass
+*Released November 25, 2026*
+
+### Added
+- Expanded mission battlefields from 1,000 × 1,000 to 1,600 × 1,400 world units with camera tracking and movement/projectile bounds updated to match.
+- Added three mission-specific sectors: Foundry District, Automaton Supply Yard and Signal Station, each with tailored local cover and installation placement.
+- Added recognizable Automaton Fabricator and Detector Tower facility silhouettes alongside communications, power, command, defence and supply installations.
+- Added a branching industrial road network, varied ground regions, gravel/scorched patches, service pads and more scattered natural/engineered cover.
+- Added passable infantry barbed wire. Units crossing into a wire segment take damage; wire does not block movement, projectiles or line of sight.
+
+### Changed
+- Reworked facility and obstacle placement so important structures are separated and approaches remain open instead of clustering the entire battlefield into the old central arena.
+- Enemy deployment positions are now distributed around each mission's designated sector rather than around the map's four outer edges.
+- Updated navigation steering with a forward obstacle probe to help units begin moving around solid cover before colliding with it.
+- Updated HUD and mission status to identify the active sector and the southeastern extraction area.
+
+### Preserved
+- Existing campaign save format, save slots, legacy migration, resources, construction, base operations, mission rewards, enemy counts and stats, squad orders, desktop/mobile controls and Codex data.
+- Existing anti-vehicle obstacles remain deferred until vehicle movement exists. Patrols and roaming encounter systems remain a follow-on update.
+
+### Verification
+- JavaScript syntax compilation passed.
+- Geometry and smoke tests passed for the expanded world bounds, mission layouts, wire passability/damage, mission spawn distribution, terrain rendering and all facility drawing branches.
+- Simulated mission startup/render checks passed for Clear the Area, Supply Recovery and Relay Sabotage; a live iPhone Safari playtest was not performed.
+
 ## v0.8.4 — Operations Expanded, Part I: Threat Database & Faction Visual Pass
 *Released November 25, 2026*
 
