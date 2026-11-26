@@ -1,3 +1,21 @@
+## v0.8.6 — Codex Field Recognition Previews
+*Released November 25, 2026*
+
+### Added
+- Added an overhead battlefield preview directly beneath the selected enemy's name in the Threat Database.
+- Each preview uses the exact shared Automaton sprite painter used by live combat, with the current enemy shown over the game's own battlefield terrain.
+- Added clear field-reference and overhead-view labels so players can use the Codex image to recognize units during deployment.
+
+### Changed
+- Centralized Automaton sprite drawing so live encounters and Codex previews stay visually consistent when enemy models are refined.
+
+### Preserved
+- Existing enemy data, combat behavior, health and movement values, Codex selection, campaign saves, mission systems, controls and battlefield rendering.
+
+### Verification
+- JavaScript syntax compilation and shared-sprite rendering smoke tests passed for Trooper, Brawler and Devastator.
+- Codex preview rendering was simulated against the battlefield terrain renderer; live mobile Safari visual testing was not performed.
+
 ## v0.8.5 — Operations Expanded, Part II: Battlefield Expansion & Infrastructure Pass
 *Released November 25, 2026*
 
