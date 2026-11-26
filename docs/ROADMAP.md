@@ -114,3 +114,12 @@
 ## v0.8.8 — Infantry Visual Refinement (implemented)
 - Refined overhead Automaton and SEAF infantry silhouettes for greater in-game recognition.
 - Codex previews use the refreshed visual models.
+
+
+## v0.8.9 — Automaton Model Rework (implemented)
+- Rebuilt the Trooper, Brawler and Devastator as clearly recognizable bipedal humanoid silhouettes from the overhead camera.
+- Gave the Trooper a compact body with a separate head, torso, arms and two legs.
+- Rebuilt the Brawler around a readable close-assault humanoid shape with distinct paired limbs.
+- Preserved the Devastator's heavy mass while making its head, torso, paired arms and two legs immediately recognizable.
+- Kept live-combat models and Codex field previews synchronized through the shared sprite painter.
+- Preserved enemy identifiers, combat behaviour, spawn settings, campaign saves and controls.
