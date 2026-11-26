@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>SEAF: Planetary Operations — v0.8.8</title>
+<title>SEAF: Planetary Operations — v0.8.9</title>
 <style>
 :root{--bg:#111a22;--panel:#1d2a35;--panel2:#273846;--line:#455c6b;--text:#e6edf0;--muted:#a9bbc5;--accent:#83b0ce;--danger:#e26b5e;--gold:#d8b64f}
 *{box-sizing:border-box}
@@ -118,7 +118,7 @@ footer{margin-top:10px;color:#8fa5b2;font-size:11px;text-align:center}
 <body>
 <div id="app">
 <header>
-  <div class="brand">SEAF <span>PLANETARY OPERATIONS · PROTOTYPE 0.8.5</span></div>
+  <div class="brand">SEAF <span>PLANETARY OPERATIONS · PROTOTYPE 0.8.9</span></div>
   <div class="resourcebar" id="resources"></div>
 </header>
 <div class="tabs menu-hidden">
@@ -270,7 +270,7 @@ const threatDatabase={
   description:"A standard Automaton infantry unit and the most frequently encountered hostile ground soldier. Troopers form the backbone of enemy formations and are most dangerous when operating in groups.",
   behavior:"Maintains formation pressure and engages visible SEAF personnel at range. Individual units are relatively fragile, but coordinated groups can overwhelm an exposed squad.",
   assessment:"Routine contact in small numbers. Treat larger groups as a serious threat, particularly when they approach from more than one direction.",
-  identification:"Humanoid mechanical frame, compact armoured torso, red optical signature and a standard infantry profile.",
+  identification:"Compact humanoid mechanical frame with a distinct head, central torso, two paired arms, separated legs and a red optical signature.",
   fieldNote:"The Trooper is the baseline reference for identifying other humanoid Automaton infantry."
  },
  scout:{
@@ -278,7 +278,7 @@ const threatDatabase={
   description:"A compact, fast-moving Automaton built to close the distance with SEAF personnel. Its lighter frame trades protection for speed and aggressive close-range behaviour.",
   behavior:"Moves rapidly toward the nearest visible friendly unit and attacks at close range. Brawlers are especially likely to pressure isolated personnel.",
   assessment:"High immediate threat at short distance. Maintain awareness of fast-moving contacts and avoid allowing the unit to separate a squadmate from the group.",
-  identification:"Narrower frame than a Trooper, forward-leaning profile, reinforced forearms and a prominent red optical signature.",
+  identification:"Compact humanoid frame with a distinct head, forward-set shoulders, two clearly separated arms and legs, and a red optical signature.",
   fieldNote:"Brawler is the close-assault entry in this prototype's initial Automaton roster."
  },
  devastator:{
@@ -286,7 +286,7 @@ const threatDatabase={
   description:"A heavily armoured Automaton infantry platform designed to keep pressure on SEAF positions. Its broad frame and reinforced armour make it slower and substantially more durable than standard infantry.",
   behavior:"Advances deliberately and maintains a greater engagement distance than lighter units. Its size and resilience make it a visible anchor within an Automaton formation.",
   assessment:"Severe threat during sustained contact. Its heavier protection allows it to remain active after lighter units have been removed from an engagement.",
-  identification:"Broad shoulder profile, enlarged central armour, reinforced side plates and a larger red optical signature.",
+  identification:"Broad bipedal frame with a distinct forward head, wide shoulder armour, paired heavy arms, two separated legs and a red optical signature.",
   fieldNote:"The Devastator is the heavy infantry silhouette used as the visual reference for this prototype."
  }
 };
@@ -1446,31 +1446,78 @@ function drawBattleObstacles(c){
 }
 // Shared Automaton sprite painter. Both live combat and Codex field previews use this exact model.
 function drawAutomatonSprite(c,x,y,type,angle=0,scale=1){
- const palette={scout:{dark:"#1b2328",mid:"#46545b",light:"#8b5548",edge:"#10171b",optic:"#ff493d"},trooper:{dark:"#192329",mid:"#58666c",light:"#a3564b",edge:"#11181c",optic:"#ff5144"},devastator:{dark:"#141d22",mid:"#3d4a51",light:"#a64a40",edge:"#0e161a",optic:"#ff4138"}};
- const col=palette[type]||palette.trooper;c.save();c.translate(x,y);c.scale(scale,scale);c.rotate(angle||0);
- const plate=(px,py,w,h,color,r=2)=>{c.fillStyle=color;c.beginPath();c.roundRect(px,py,w,h,r);c.fill();c.strokeStyle=col.edge;c.lineWidth=1;c.stroke();};
- const metal=(px,py,w,h,color)=>{plate(px,py,w,h,color,1);c.fillStyle="rgba(210,220,225,.22)";c.fillRect(px+2,py+2,Math.max(1,w-4),1);};
- c.fillStyle="rgba(5,9,12,.48)";c.beginPath();c.ellipse(-2,5,type==="devastator"?30:type==="trooper"?21:16,type==="devastator"?19:type==="trooper"?13:10,0,0,Math.PI*2);c.fill();
+ const palette={
+  scout:{dark:"#1b2328",mid:"#46545b",light:"#8b5548",edge:"#10171b",optic:"#ff493d"},
+  trooper:{dark:"#192329",mid:"#657279",light:"#aeb8bb",edge:"#11181c",optic:"#ff5144"},
+  devastator:{dark:"#141d22",mid:"#46545b",light:"#9b5148",edge:"#0e161a",optic:"#ff4138"}
+ };
+ const col=palette[type]||palette.trooper;
+ c.save();c.translate(x,y);c.scale(scale,scale);c.rotate(angle||0);
+ const plate=(px,py,w,h,color,r=2)=>{
+  c.fillStyle=color;c.beginPath();c.roundRect(px,py,w,h,r);c.fill();
+  c.strokeStyle=col.edge;c.lineWidth=1;c.stroke();
+ };
+ const glint=(px,py,w)=>{
+  c.fillStyle="rgba(220,228,230,.22)";c.fillRect(px,py,w,1.3);
+ };
+ // The local +X axis is the unit's front. Combat rotates the complete figure
+ // toward its movement/engagement direction; the Codex shows the same neutral pose.
+ c.fillStyle="rgba(5,9,12,.42)";c.beginPath();
+ c.ellipse(-2,5,type==="devastator"?24:type==="scout"?20:19,type==="devastator"?17:14,0,0,Math.PI*2);c.fill();
  if(type==="scout"){
-  // Compact, forward-leaning Brawler silhouette with oversized forearm mass.
-  plate(-16,-10,13,22,col.dark,3);plate(-12,-12,18,24,col.mid,3);plate(-7,-9,14,17,col.light,2);plate(-3,-4,9,9,col.dark,2);
-  plate(-17,-16,9,9,col.mid,2);plate(-17,7,9,9,col.mid,2);plate(5,-12,10,21,col.dark,3);plate(10,-8,9,15,col.light,2);plate(13,-4,8,12,col.mid,2);
-  plate(-21,-16,8,13,col.dark,2);plate(-21,3,8,13,col.dark,2);plate(17,-7,6,13,col.dark,2);
-  metal(-4,-1,8,7,col.dark);c.fillStyle=col.optic;c.fillRect(10,-3,7,5);c.fillStyle="#ff9b80";c.fillRect(12,-8,3,2);c.fillRect(12,6,3,2);
+  // Brawler: compact humanoid frame, forward-set shoulders and two distinct arms.
+  // The feet, torso, head and paired forearms remain separately readable at game scale.
+  plate(-17,-10,10,8,col.dark,2);plate(-17,2,10,8,col.dark,2);
+  plate(-20,-11,7,8,col.mid,2);plate(-20,3,7,8,col.mid,2);
+  plate(-14,-5,7,10,col.dark,2); // rear power unit
+  plate(-8,-8,16,16,col.mid,3);plate(-6,-6,13,12,col.light,2);
+  plate(-3,-4,9,8,col.dark,2);glint(-5,-5,9);
+  // Shoulders and arms flare forward without turning the body into a shapeless mass.
+  plate(-3,-14,9,7,col.dark,2);plate(-3,7,9,7,col.dark,2);
+  plate(2,-16,8,6,col.mid,2);plate(2,10,8,6,col.mid,2);
+  plate(8,-17,9,7,col.dark,2);plate(8,10,9,7,col.dark,2);
+  plate(12,-16,5,5,col.light,2);plate(12,11,5,5,col.light,2);
+  // Small recessed head at the front of the torso.
+  plate(8,-5,9,10,col.dark,3);plate(10,-4,7,8,col.mid,2);
+  plate(12,-3,5,6,col.light,2);c.fillStyle=col.optic;c.fillRect(15,-1.5,3,3);
+  glint(11,-3,4);
  }else if(type==="devastator"){
-  // Broad, heavily plated upper-body footprint and large rear chassis.
-  plate(-27,-21,20,42,col.dark,4);plate(-24,-24,21,16,col.light,3);plate(-24,8,21,16,col.light,3);
-  plate(-16,-20,32,40,col.mid,4);plate(-12,-16,24,32,col.light,4);plate(-7,-11,16,22,col.dark,3);plate(-3,-8,12,16,col.mid,3);
-  plate(-17,-29,22,9,col.dark,2);plate(-17,20,22,9,col.dark,2);plate(12,-15,13,30,col.dark,3);plate(17,-10,9,20,col.light,2);
-  metal(-15,-19,12,8,col.dark);metal(-15,11,12,8,col.dark);c.fillStyle=col.optic;c.fillRect(12,-4,8,8);c.fillStyle="#ff8b78";c.fillRect(-20,-23,10,2);c.fillRect(-20,21,10,2);
+  // Devastator: a clearly bipedal heavy infantry frame, not a tracked or wheeled shape.
+  // Two separated rear legs, a central torso, paired arms and a distinct forward head.
+  plate(-21,-12,11,9,col.dark,2);plate(-21,3,11,9,col.dark,2);
+  plate(-24,-13,8,9,col.mid,2);plate(-24,4,8,9,col.mid,2);
+  plate(-15,-8,8,16,col.dark,2); // rear pack
+  plate(-10,-11,21,22,col.dark,3);plate(-8,-9,18,18,col.mid,3);
+  plate(-5,-7,14,14,col.light,2);plate(-3,-5,10,10,col.dark,2);
+  glint(-5,-8,11);
+  // Broad paired shoulder shells and heavy forearms.
+  plate(-2,-19,13,10,col.dark,3);plate(-2,9,13,10,col.dark,3);
+  plate(1,-18,11,8,col.light,2);plate(1,10,11,8,col.light,2);
+  plate(7,-17,9,7,col.mid,2);plate(7,10,9,7,col.mid,2);
+  plate(12,-16,7,8,col.dark,2);plate(12,9,7,8,col.dark,2);
+  // Forward head / sensor block is separate from the chest.
+  plate(11,-7,12,14,col.dark,3);plate(13,-5,9,10,col.mid,2);
+  plate(17,-3,6,6,col.light,2);c.fillStyle=col.optic;c.fillRect(21,-1.5,4,3);
+  // Small armour-panel accents help the heavy shoulder silhouette read at a glance.
+  plate(-1,-20,8,2,col.light,1);plate(-1,18,8,2,col.light,1);
  }else{
-  // Trooper: helmet, compact chest, shoulder shells, legs and rear backpack read separately.
-  plate(-17,-11,10,11,col.dark,3);plate(-17,1,10,11,col.dark,3);plate(-13,-10,24,22,col.mid,3);plate(-10,-12,18,25,col.light,3);plate(-7,-8,14,17,col.dark,2);
-  plate(-15,-17,9,9,col.mid,2);plate(-15,8,9,9,col.mid,2);plate(-20,-7,8,14,col.dark,3);plate(-20,-6,6,12,col.light,2);
-  plate(6,-8,11,16,col.dark,3);plate(9,-6,9,12,col.light,3);plate(7,-14,11,7,col.mid,2);plate(7,8,11,7,col.mid,2);
-  metal(-12,-5,9,10,col.dark);plate(12,-7,8,14,col.dark,2);plate(14,-3,5,6,col.light,1);c.fillStyle=col.optic;c.fillRect(14,-3,4,6);c.fillStyle="#ff987e";c.fillRect(-18,-5,3,10);
+  // Trooper: compact human-like biped. The silhouette is deliberately short,
+  // with a small head, defined chest, paired arms and two separate legs/feet.
+  plate(-15,-9,9,7,col.dark,2);plate(-15,2,9,7,col.dark,2);
+  plate(-19,-10,7,8,col.mid,2);plate(-19,3,7,8,col.mid,2);
+  plate(-13,-4,7,8,col.dark,2); // compact rear pack
+  plate(-8,-7,17,14,col.dark,3);plate(-6,-6,14,12,col.mid,2);
+  plate(-4,-4,11,8,col.light,2);plate(-2,-3,8,6,col.dark,2);
+  glint(-4,-5,9);
+  // Shoulder caps, upper arms and forearms are placed as paired human limbs.
+  plate(-3,-13,8,6,col.dark,2);plate(-3,7,8,6,col.dark,2);
+  plate(2,-14,7,5,col.mid,2);plate(2,9,7,5,col.mid,2);
+  plate(7,-14,7,5,col.dark,2);plate(7,9,7,5,col.dark,2);
+  // The head is at the front (+X), with one clear red optical point.
+  plate(8,-5,9,10,col.dark,3);plate(10,-4,7,8,col.mid,2);
+  plate(13,-3,4,6,col.light,1);c.fillStyle=col.optic;c.fillRect(15,-1.5,3,3);
  }
- c.fillStyle=col.optic;c.beginPath();c.arc(type==="devastator"?17:16,0,type==="devastator"?3.5:2.7,0,Math.PI*2);c.fill();c.restore();
+ c.restore();
 }
 function drawSeafPreviewSprite(c,x,y,scale=2.15){
  c.save();c.translate(x,y);c.scale(scale,scale);c.fillStyle="rgba(9,17,22,.42)";c.beginPath();c.ellipse(-2,5,15,10,0,0,Math.PI*2);c.fill();
@@ -1481,7 +1528,7 @@ function drawCodexPreview(){
  const preview=$("codexPreviewCanvas");if(!preview)return;const c=preview.getContext("2d");if(!c)return;
  const previousCamera=battle.camera;try{battle.camera={x:450,y:720};drawBattleTerrain(c);}finally{battle.camera=previousCamera;}
  const w=preview.width,h=preview.height;c.fillStyle="rgba(14,22,27,.82)";c.fillRect(10,10,142,20);c.strokeStyle="rgba(195,209,214,.55)";c.lineWidth=1;c.strokeRect(10.5,10.5,141,19);c.fillStyle="#e2e9eb";c.font="bold 9px system-ui,sans-serif";c.textAlign="left";c.textBaseline="middle";c.fillText("FIELD REFERENCE",18,20);
- if(selectedCodexFaction==="automaton"){drawAutomatonSprite(c,w/2,h/2+5,selectedCodexId,0,selectedCodexId==="devastator"?1.65:2.05);}
+ if(selectedCodexFaction==="automaton"){drawAutomatonSprite(c,w/2,h/2+5,selectedCodexId,0,selectedCodexId==="devastator"?1.55:selectedCodexId==="scout"?2.0:2.1);}
  else{drawSeafPreviewSprite(c,w/2,h/2+5,2.15);}
  c.fillStyle="rgba(14,22,27,.64)";c.fillRect(w-92,h-25,82,15);c.fillStyle="#d2dce0";c.font="bold 8px system-ui,sans-serif";c.textAlign="center";c.textBaseline="middle";c.fillText("OVERHEAD VIEW",w-51,h-17.5);
 }
