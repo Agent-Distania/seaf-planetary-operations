@@ -201,8 +201,9 @@ footer{margin-top:10px;color:#8fa5b2;font-size:11px;text-align:center}
     <h2>Automaton Threat Database</h2>
     <p>SEAF field identification records for known Automaton infantry encountered in the operational area. These entries are available for reference and do not consume Intel.</p>
   </div>
+  <div class="codexTabs" id="codexTabs" role="tablist" aria-label="Codex faction sections"><button class="codexTab active" data-codex-faction="automaton" role="tab" aria-selected="true">Automatons</button><button class="codexTab" data-codex-faction="seaf" role="tab" aria-selected="false">SEAF</button></div>
   <div class="codexLayout">
-    <div class="panel"><h2>Hostile Index</h2><div class="codexList" id="codexList" aria-label="Known Automaton units"></div></div>
+    <div class="panel"><h2 id="codexIndexTitle">Automaton Index</h2><div class="codexList" id="codexList" aria-label="Codex entries"></div></div>
     <div class="panel" id="codexDetail" aria-live="polite"></div>
   </div>
 </section>
@@ -289,6 +290,11 @@ const threatDatabase={
   fieldNote:"The Devastator is the heavy infantry silhouette used as the visual reference for this prototype."
  }
 };
+const seafCodexDatabase={
+ soldier:{name:"SEAF Soldier",classification:"Standard Infantry",role:"General-purpose infantry",description:"The standard SEAF soldier is the backbone of planetary operations, equipped for prolonged deployments in hostile environments.",behavior:"Operates as part of a squad, supporting the team and completing mission objectives.",assessment:"Reliable baseline personnel. Squad cohesion and support are central to field effectiveness.",identification:"Blue-grey field armour, compact helmet, layered torso protection and pale SEAF identification details.",fieldNote:"Standard personnel reference entry. Additional SEAF classes will be added as they appear in the game."},
+ squadmate:{name:"SEAF Squadmate",classification:"Squad Personnel",role:"Supporting infantry",description:"SEAF squadmates deploy alongside the player and provide additional personnel presence during operations.",behavior:"Follows the deployed player and contributes to squad activity during missions.",assessment:"A visual reference for friendly personnel deployed with the player.",identification:"Blue-grey armour, compact field silhouette, shoulder equipment and visible team markings.",fieldNote:"This entry represents current prototype squad personnel; future roles will receive individual entries."}
+};
+let selectedCodexFaction="automaton";
 let selectedCodexId="trooper";
 function createInitialState(){return {
  supplies:100,components:55,requisition:65,intel:0,
@@ -891,27 +897,21 @@ function renderMissions(){
  $("missionCards").querySelectorAll("[data-mission]").forEach(b=>b.addEventListener("click",()=>startMission(b.dataset.mission)));
 }
 function renderCodex(){
- const list=$("codexList"),detail=$("codexDetail");if(!list||!detail)return;
- const entries=Object.entries(threatDatabase);if(!threatDatabase[selectedCodexId])selectedCodexId=entries[0][0];
- list.innerHTML=entries.map(([id,entry],index)=>`<button class="codexPick ${id===selectedCodexId?"active":""}" data-codex="${id}" aria-pressed="${id===selectedCodexId}">
- <span><strong>${escapeHTML(entry.name)}</strong><small>${escapeHTML(entry.classification)}</small></span><span class="codexIndex">0${index+1}</span></button>`).join("");
+ const list=$("codexList"),detail=$("codexDetail"),indexTitle=$("codexIndexTitle"),tabs=$("codexTabs");if(!list||!detail)return;
+ const database=selectedCodexFaction==="seaf"?seafCodexDatabase:threatDatabase;
+ const entries=Object.entries(database);if(!database[selectedCodexId])selectedCodexId=entries[0][0];
+ if(indexTitle)indexTitle.textContent=selectedCodexFaction==="seaf"?"SEAF Personnel Index":"Automaton Index";
+ if(tabs)tabs.querySelectorAll("[data-codex-faction]").forEach(button=>{const active=button.dataset.codexFaction===selectedCodexFaction;button.classList.toggle("active",active);button.setAttribute("aria-selected",String(active));});
+ list.innerHTML=entries.map(([id,entry,index])=>`<button class="codexPick ${id===selectedCodexId?"active":""}" data-codex="${id}" aria-pressed="${id===selectedCodexId}"><span><strong>${escapeHTML(entry.name)}</strong><small>${escapeHTML(entry.classification)}</small></span><span class="codexIndex">0${index+1}</span></button>`).join("");
  list.querySelectorAll("[data-codex]").forEach(button=>button.addEventListener("click",()=>{selectedCodexId=button.dataset.codex;renderCodex();}));
- const entry=threatDatabase[selectedCodexId];
- detail.innerHTML=`<div class="codexDetailHead"><div><div class="codexClassification">AUTOMATON · FIELD RECORD</div><h2>${escapeHTML(entry.name)}</h2><div>${escapeHTML(entry.classification)}</div></div><span class="codexStatus">IDENTIFIED</span></div>
- <div class="codexPreviewWrap">
- <canvas class="codexPreviewCanvas" id="codexPreviewCanvas" width="640" height="260" role="img" aria-label="${escapeHTML(entry.name)} shown from directly overhead on a battlefield"></canvas>
- <span class="codexPreviewTag">FIELD REFERENCE</span>
- <div class="codexPreviewFooter"><span>TOP-DOWN FIELD VIEW</span><span>SEAF VISUAL ID · ${escapeHTML(entry.name.toUpperCase())}</span></div>
- </div>
- <div class="codexDetailGrid">
- <div class="codexField"><h3>Combat Role</h3><p>${escapeHTML(entry.role)}</p></div>
- <div class="codexField"><h3>Field Identification</h3><p>${escapeHTML(entry.identification)}</p></div>
- <div class="codexField wide"><h3>Description</h3><p>${escapeHTML(entry.description)}</p></div>
- <div class="codexField wide"><h3>Observed Behaviour</h3><p>${escapeHTML(entry.behavior)}</p></div>
- <div class="codexField wide"><h3>SEAF Threat Assessment</h3><p>${escapeHTML(entry.assessment)}</p></div>
- <div class="codexField wide"><h3>Intelligence Note</h3><p>${escapeHTML(entry.fieldNote)}</p></div></div>`;
+ const entry=database[selectedCodexId],isSeaf=selectedCodexFaction==="seaf";
+ detail.innerHTML=`<div class="codexDetailHead"><div><div class="codexClassification">${isSeaf?"SEAF · PERSONNEL RECORD":"AUTOMATON · FIELD RECORD"}</div><h2>${escapeHTML(entry.name)}</h2><div>${escapeHTML(entry.classification)}</div></div><span class="codexStatus">IDENTIFIED</span></div>
+ <div class="codexPreviewWrap"><canvas class="codexPreviewCanvas" id="codexPreviewCanvas" width="640" height="260" role="img" aria-label="${escapeHTML(entry.name)} shown from directly overhead on a battlefield"></canvas><span class="codexPreviewTag">FIELD REFERENCE</span><div class="codexPreviewFooter"><span>TOP-DOWN FIELD VIEW</span><span>${isSeaf?"SEAF VISUAL ID":"AUTOMATON VISUAL ID"} · ${escapeHTML(entry.name.toUpperCase())}</span></div></div>
+ <div class="codexDetailGrid"><div class="codexField"><h3>Role</h3><p>${escapeHTML(entry.role)}</p></div><div class="codexField"><h3>Field Identification</h3><p>${escapeHTML(entry.identification)}</p></div><div class="codexField wide"><h3>Description</h3><p>${escapeHTML(entry.description)}</p></div><div class="codexField wide"><h3>Observed Behaviour</h3><p>${escapeHTML(entry.behavior)}</p></div><div class="codexField wide"><h3>${isSeaf?"Personnel Assessment":"SEAF Threat Assessment"}</h3><p>${escapeHTML(entry.assessment)}</p></div><div class="codexField wide"><h3>Intelligence Note</h3><p>${escapeHTML(entry.fieldNote)}</p></div></div>`;
  drawCodexPreview();
 }
+
+if($("codexTabs"))$("codexTabs").querySelectorAll("[data-codex-faction]").forEach(button=>button.addEventListener("click",()=>{const faction=button.dataset.codexFaction;if(faction===selectedCodexFaction)return;selectedCodexFaction=faction;selectedCodexId=faction==="seaf"?Object.keys(seafCodexDatabase)[0]:Object.keys(threatDatabase)[0];renderCodex();}));
 function refresh(){
  renderResources();renderBuildings();drawBase();renderMissions();
  $("baseStatus").textContent=`Buildings: ${state.buildings.length} · Missions completed: ${state.missionWins} · Squad strength: ${state.squad}/${getSquadCapacity()}`;
@@ -1469,22 +1469,14 @@ function drawAutomatonSprite(c,x,y,type,angle=0,scale=1){
  c.fillStyle=col.optic;c.beginPath();c.arc(type==="devastator"?15:17,0,type==="devastator"?3.2:2.4,0,Math.PI*2);c.fill();c.restore();
 }
 function drawCodexPreview(){
- const preview=$("codexPreviewCanvas");if(!preview)return;
- const c=preview.getContext("2d");if(!c)return;
- const previousCamera=battle.camera;
- try{
-  // Use the actual battlefield terrain painter, framed around an open field sector.
-  battle.camera={x:450,y:720};drawBattleTerrain(c);
- }finally{battle.camera=previousCamera;}
- const w=preview.width,h=preview.height;
- c.fillStyle="rgba(14,22,27,.82)";c.fillRect(10,10,142,20);
- c.strokeStyle="rgba(195,209,214,.55)";c.lineWidth=1;c.strokeRect(10.5,10.5,141,19);
- c.fillStyle="#e2e9eb";c.font="bold 9px system-ui,sans-serif";c.textAlign="left";c.textBaseline="middle";c.fillText("FIELD REFERENCE",18,20);
- const scale=selectedCodexId==="devastator"?1.65:2.05;
- drawAutomatonSprite(c,w/2,h/2+5,selectedCodexId,0,scale);
- c.fillStyle="rgba(14,22,27,.64)";c.fillRect(w-92,h-25,82,15);
- c.fillStyle="#d2dce0";c.font="bold 8px system-ui,sans-serif";c.textAlign="center";c.textBaseline="middle";c.fillText("OVERHEAD VIEW",w-51,h-17.5);
+ const preview=$("codexPreviewCanvas");if(!preview)return;const c=preview.getContext("2d");if(!c)return;
+ const previousCamera=battle.camera;try{battle.camera={x:450,y:720};drawBattleTerrain(c);}finally{battle.camera=previousCamera;}
+ const w=preview.width,h=preview.height;c.fillStyle="rgba(14,22,27,.82)";c.fillRect(10,10,142,20);c.strokeStyle="rgba(195,209,214,.55)";c.lineWidth=1;c.strokeRect(10.5,10.5,141,19);c.fillStyle="#e2e9eb";c.font="bold 9px system-ui,sans-serif";c.textAlign="left";c.textBaseline="middle";c.fillText("FIELD REFERENCE",18,20);
+ if(selectedCodexFaction==="automaton"){drawAutomatonSprite(c,w/2,h/2+5,selectedCodexId,0,selectedCodexId==="devastator"?1.65:2.05);}
+ else{c.save();c.translate(w/2,h/2+5);const z=2.15;c.fillStyle="rgba(9,17,22,.42)";c.beginPath();c.ellipse(-1,4,14*z,9*z,0,0,Math.PI*2);c.fill();fillRound(c,-8*z,4*z,6*z,8*z,2*z,"#253944","#9aabb3",.8);fillRound(c,2*z,4*z,6*z,8*z,2*z,"#253944","#9aabb3",.8);fillRound(c,-7*z,-7*z,14*z,17*z,4*z,"#263f50","#172b38",1.2);fillRound(c,-7*z,-8*z,14*z,15*z,4*z,"#82917a","#d3dde1",1);fillRound(c,-5*z,-6*z,10*z,10*z,3*z,"#637b67","#263d4b",.8);fillRound(c,-11*z,-7*z,5*z,8*z,2*z,"#647985","#c4d0d5",.8);fillRound(c,6*z,-7*z,5*z,8*z,2*z,"#647985","#c4d0d5",.8);fillRound(c,5*z,-5*z,8*z,10*z,4*z,"#a7b4ba","#dce3e5",.9);fillRound(c,8*z,-3*z,4*z,6*z,2*z,"#233f53","#86a8ba",.6);c.fillStyle="#d8b65b";c.fillRect(-2*z,1*z,4*z,3*z);fillRound(c,11*z,-2*z,10*z,4*z,1*z,"#263b49","#9eafb7",.7);c.fillStyle="#d8b65b";c.fillRect(16*z,-1*z,3*z,2*z);c.restore();}
+ c.fillStyle="rgba(14,22,27,.64)";c.fillRect(w-92,h-25,82,15);c.fillStyle="#d2dce0";c.font="bold 8px system-ui,sans-serif";c.textAlign="center";c.textBaseline="middle";c.fillText("OVERHEAD VIEW",w-51,h-17.5);
 }
+
 function drawBattle(){
  if(!battle.active)return;
  const w=canvas.width,h=canvas.height,c=ctx;
