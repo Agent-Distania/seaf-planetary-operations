@@ -1,5 +1,10 @@
 # Development Roadmap
 
+## v0.8.17 — Command Forecourt Cleanup (implemented)
+- Removed the four diagonal construction plots surrounding the central Command Post forecourt.
+- Preserved all other construction plots and existing building placement behavior.
+
+
 ## v0.8.16 — Symmetrical Motor Pool Layout (implemented)
 - Recentered the apron and inner border around the existing two-bay centerline.
 - Aligned the access road to the central service aisle.
