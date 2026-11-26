@@ -123,3 +123,9 @@
 - Preserved the Devastator's heavy mass while making its head, torso, paired arms and two legs immediately recognizable.
 - Kept live-combat models and Codex field previews synchronized through the shared sprite painter.
 - Preserved enemy identifiers, combat behaviour, spawn settings, campaign saves and controls.
+
+
+## v0.8.10 — Rear Leg Silhouette Cleanup (implemented)
+- Removed rear leg/foot plate shapes from Trooper, Brawler and Devastator sprites to simplify their overhead silhouettes.
+- Kept their front-facing heads, torso, arm details, rear pack and combat rotation intact.
+- Codex previews continue to use the same shared sprite painter.
