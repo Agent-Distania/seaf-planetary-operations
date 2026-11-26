@@ -1,3 +1,23 @@
+## v0.8.23 — Base Personnel Orientation & Silhouette Fix
+*Released November 26, 2026*
+
+### Changed
+- Rebuilt the ambient base-staff sprite with a centered rounded head at the leading end of the body, a visible neck, a compact torso, attached arms and separated walking legs.
+- Removed the side-mounted shape that made the small overhead figures read like they were carrying a backpack.
+- Matched the sprite's forward-facing axis to each person's route movement direction.
+- Updated corner pauses so staff turn toward the next path segment before walking again.
+
+### Preserved
+- Kept all four staff routes, eight staff positions, walking speeds, base layout, building artwork, campaign saves and deployment systems unchanged.
+- Kept ambient base staff separate from recruitable squadmates.
+
+### Verification
+- Embedded JavaScript syntax compiled successfully.
+- Direction-vector checks passed for all four cardinal headings.
+- Static checks confirmed corner turns set the facing angle from the next route segment.
+- No visual browser or mobile test performed.
+
+
 ## v0.8.22 — Living Base Personnel
 *Released November 26, 2026*
 
