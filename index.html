@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>SEAF: Planetary Operations — v0.8.10</title>
+<title>SEAF: Planetary Operations — v0.8.11</title>
 <style>
 :root{--bg:#111a22;--panel:#1d2a35;--panel2:#273846;--line:#455c6b;--text:#e6edf0;--muted:#a9bbc5;--accent:#83b0ce;--danger:#e26b5e;--gold:#d8b64f}
 *{box-sizing:border-box}
@@ -1568,7 +1568,7 @@ function drawBattle(){
  }
  // SEAF personnel use compact human silhouettes with layered field armour and team markings.
  function drawUnit(u,color,outline,angle,role="squad",index=0){
-  const p=worldToScreen(u);c.save();c.translate(p.x,p.y);c.rotate(angle||0);const playerUnit=role==="player";
+  const p=worldToScreen(u);c.save();c.translate(p.x,p.y);c.rotate((angle||0)+Math.PI/2);const playerUnit=role==="player";
   // Overhead SEAF silhouette: helmet, pack, shoulder plates, separated limbs and torso markings.
   c.fillStyle="rgba(9,17,22,.44)";c.beginPath();c.ellipse(-2,5,15,10,0,0,Math.PI*2);c.fill();
   fillRound(c,-8,6,6,9,2,"#263a45","#9baeb7",.8);fillRound(c,2,6,6,9,2,"#263a45","#9baeb7",.8);
@@ -1581,7 +1581,7 @@ function drawBattle(){
   fillRound(c,8,-9,8,15,3,"#334d5b","#b5c4ca",1);fillRound(c,10,-7,5,9,2,"#263e4b","#809aa8",.8);
   c.fillStyle=playerUnit?"#d8b65b":"#d7e1e5";c.fillRect(-2,1,4,3);c.fillRect(-5,-2,3,2);
   fillRound(c,11,-3,9,4,1,"#263b49","#9eafb7",.7);if(playerUnit){c.fillStyle="#d8b65b";c.fillRect(16,-2,3,3);}
-  if(role==="squad"){c.rotate(-(angle||0));c.fillStyle="#f1f4f4";c.font="bold 9px system-ui";c.textAlign="center";c.fillText(String(index+1),0,24);}
+  if(role==="squad"){c.rotate(-((angle||0)+Math.PI/2));c.fillStyle="#f1f4f4";c.font="bold 9px system-ui";c.textAlign="center";c.fillText(String(index+1),0,24);}
   c.restore();if(playerUnit){c.strokeStyle="#e6d18c";c.lineWidth=1.5;c.beginPath();c.arc(p.x,p.y,18,0,Math.PI*2);c.stroke();}
  }
  // Automaton silhouettes use distinct body massing and optical signatures for quick recognition.
