@@ -1430,7 +1430,9 @@ function drawBattleObstacles(c){
    c.restore();
   }else if(o.type==="rock"){
    c.fillStyle="#394951";c.beginPath();c.moveTo(x+5,y+o.h*.25);c.lineTo(x+o.w*.35,y);c.lineTo(x+o.w*.82,y+o.h*.12);c.lineTo(x+o.w,y+o.h*.6);c.lineTo(x+o.w*.7,y+o.h);c.lineTo(x+o.w*.12,y+o.h*.86);c.closePath();c.fill();c.strokeStyle="#82949a";c.lineWidth=2;c.stroke();c.fillStyle="#667982";c.beginPath();c.ellipse(x+o.w*.48,y+o.h*.35,o.w*.25,o.h*.16,-.25,0,Math.PI*2);c.fill();
-  }else if(o.type==="checkpoint"){\n   fillRound(c,x,y,o.w,o.h,3,"#4a606b","#d5b45c",1.8);c.fillStyle="#d5b45c";c.fillRect(x+3,y+3,o.w-6,3);c.fillStyle="#263744";c.fillRect(x+3,y+o.h*.6,o.w-6,4);\n   }else if(o.type==="barricade"){
+  }else if(o.type==="checkpoint"){
+   fillRound(c,x,y,o.w,o.h,3,"#4a606b","#d5b45c",1.8);c.fillStyle="#d5b45c";c.fillRect(x+3,y+3,o.w-6,3);c.fillStyle="#263744";c.fillRect(x+3,y+o.h*.6,o.w-6,4);
+   }else if(o.type==="barricade"){
    fillRound(c,x,y,o.w,o.h,4,"#4a606b","#a7b7be",1.6);c.fillStyle="#d3b452";c.fillRect(x+5,y+4,o.w-10,4);
    for(let k=0;k<Math.floor(o.w/18);k++){c.fillStyle="#8196a0";c.fillRect(x+9+k*18,y+o.h*.45,10,5);}
    if(o.destructible&&o.hp<o.maxHp){c.fillStyle="#263744";c.fillRect(x,y-7,o.w,4);c.fillStyle="#d3b452";c.fillRect(x,y-7,o.w*clamp(o.hp/o.maxHp,0,1),4);}
