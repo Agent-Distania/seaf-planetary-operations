@@ -1,3 +1,19 @@
+## v0.8.19 — Expanded Forward Command HQ
+*Released November 26, 2026*
+
+### Changed
+- Expanded the SEAF Forward Command HQ across nearly the entire central compound pad (276 × 160 logical units).
+- Rebuilt its roof plan with broad mirrored operations wings, a large central command block, connected corridors, roof service equipment and twin communications arrays.
+- Removed the star insignia and all lettering from the HQ roof.
+- Removed the plaza-mounted command text panel and added a separate ground-mounted SEAF Forward Command sign in front of the entrance.
+- Updated the Command Post's logical placement footprint to match its expanded size; other buildings, plot coordinates, campaign data and construction costs remain unchanged.
+
+### Verification
+- Embedded JavaScript syntax check passed after the update.
+- Static checks confirmed the HQ artwork fits within the central compound pad, the roof contains no lettering or star emblem, and the ground sign is drawn separately after buildings.
+- Construction collision checks were recalculated against the expanded 276 × 160 HQ footprint.
+- No visual browser/mobile test performed.
+
 ## v0.8.18 — Forward Command HQ Redesign
 *Released November 26, 2026*
 
