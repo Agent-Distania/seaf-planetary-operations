@@ -1,3 +1,17 @@
+## v0.8.15 — Base Service Yard Details
+*Released November 26, 2026*
+
+### Changed
+- Added a clearly marked service-access walkway along the north edge of the motor-pool apron.
+- Added small drainage grates in the aisle between the two existing service bays.
+- Added subtle apron edge seams, safety bollards and compact service lights around the yard perimeter.
+- Kept both parked silhouettes, their dimensions, positions and the vehicle implementation scope unchanged.
+
+### Verification
+- Embedded JavaScript syntax check passed after the update.
+- Static checks confirmed the service-yard details are drawn without changing the parked-model drawing functions.
+- No visual browser/mobile test performed.
+
 ## v0.8.14 — Expanded Vehicle Parking Area
 *Released November 26, 2026*
 
