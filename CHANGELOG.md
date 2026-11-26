@@ -1,3 +1,17 @@
+## v0.8.13 — Bastion Hull Proportion Refinement
+*Released November 26, 2026*
+
+### Changed
+- Lengthened the Bastion's top-down chassis and track run to better match the original long, narrow reference.
+- Added distinct nested hull tiers and rear stepped shoulders to visually represent the raised hull section in the reference.
+- Kept the fixed casemate and gun mount compact; no turret redesign or new equipment.
+
+### Verification
+- Embedded JavaScript syntax check passed.
+- Refetched the published index and confirmed the updated Bastion drawing function is present.
+- No full browser/mobile visual test performed.
+
+
 ## v0.8.12 — Battlefield Variety & Road Checkpoints
 *Released November 25, 2026*
 
