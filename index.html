@@ -1446,34 +1446,43 @@ function drawBattleObstacles(c){
 }
 // Shared Automaton sprite painter. Both live combat and Codex field previews use this exact model.
 function drawAutomatonSprite(c,x,y,type,angle=0,scale=1){
- const palettes={scout:{dark:"#1b2328",mid:"#4b555a",light:"#87463f",edge:"#11191e",optic:"#ff4b3d"},trooper:{dark:"#1c252a",mid:"#59646a",light:"#9a5149",edge:"#11181d",optic:"#ff5546"},devastator:{dark:"#151e23",mid:"#3e4a50",light:"#a3443d",edge:"#0f171b",optic:"#ff4439"}};
- const col=palettes[type]||palettes.trooper;c.save();c.translate(x,y);c.scale(scale,scale);c.rotate(angle||0);
+ const palette={scout:{dark:"#1b2328",mid:"#46545b",light:"#8b5548",edge:"#10171b",optic:"#ff493d"},trooper:{dark:"#192329",mid:"#58666c",light:"#a3564b",edge:"#11181c",optic:"#ff5144"},devastator:{dark:"#141d22",mid:"#3d4a51",light:"#a64a40",edge:"#0e161a",optic:"#ff4138"}};
+ const col=palette[type]||palette.trooper;c.save();c.translate(x,y);c.scale(scale,scale);c.rotate(angle||0);
  const plate=(px,py,w,h,color,r=2)=>{c.fillStyle=color;c.beginPath();c.roundRect(px,py,w,h,r);c.fill();c.strokeStyle=col.edge;c.lineWidth=1;c.stroke();};
- c.fillStyle="rgba(5,9,12,.48)";c.beginPath();c.ellipse(-1,4,type==="devastator"?28:type==="trooper"?19:15,type==="devastator"?18:type==="trooper"?12:9,0,0,Math.PI*2);c.fill();
+ const metal=(px,py,w,h,color)=>{plate(px,py,w,h,color,1);c.fillStyle="rgba(210,220,225,.22)";c.fillRect(px+2,py+2,Math.max(1,w-4),1);};
+ c.fillStyle="rgba(5,9,12,.48)";c.beginPath();c.ellipse(-2,5,type==="devastator"?30:type==="trooper"?21:16,type==="devastator"?19:type==="trooper"?13:10,0,0,Math.PI*2);c.fill();
  if(type==="scout"){
-  // Brawler: forward-leaning chassis, narrow waist and broad close-assault forearms.
-  plate(-14,-8,11,16,col.dark);plate(-9,-9,15,18,col.mid);plate(-5,-7,12,14,col.light);plate(-2,-4,8,8,col.dark);
-  plate(-15,-13,7,9,col.mid);plate(-15,5,7,9,col.mid);plate(4,-9,9,18,col.dark);plate(10,-6,8,12,col.light);plate(-19,-14,7,10,col.dark);plate(-19,4,7,10,col.dark);plate(15,-5,5,10,col.dark);
-  c.fillStyle=col.optic;c.fillRect(8,-2,8,4);c.fillStyle="#f28a6f";c.globalAlpha=.8;c.fillRect(12,-7,3,2);c.fillRect(12,5,3,2);c.globalAlpha=1;
+  // Compact, forward-leaning Brawler silhouette with oversized forearm mass.
+  plate(-16,-10,13,22,col.dark,3);plate(-12,-12,18,24,col.mid,3);plate(-7,-9,14,17,col.light,2);plate(-3,-4,9,9,col.dark,2);
+  plate(-17,-16,9,9,col.mid,2);plate(-17,7,9,9,col.mid,2);plate(5,-12,10,21,col.dark,3);plate(10,-8,9,15,col.light,2);plate(13,-4,8,12,col.mid,2);
+  plate(-21,-16,8,13,col.dark,2);plate(-21,3,8,13,col.dark,2);plate(17,-7,6,13,col.dark,2);
+  metal(-4,-1,8,7,col.dark);c.fillStyle=col.optic;c.fillRect(10,-3,7,5);c.fillStyle="#ff9b80";c.fillRect(12,-8,3,2);c.fillRect(12,6,3,2);
  }else if(type==="devastator"){
-  // Devastator: wide shoulder silhouette, reinforced chest and heavy rear armour.
-  plate(-24,-18,17,36,col.dark,4);plate(-20,-21,18,15,col.light,3);plate(-20,6,18,15,col.light,3);plate(-13,-17,28,34,col.mid,4);plate(-8,-12,18,24,col.light,3);plate(-4,-8,13,16,col.dark,3);plate(7,-7,9,14,col.mid,3);
-  plate(-14,-25,17,7,col.dark,2);plate(-14,18,17,7,col.dark,2);plate(13,-12,10,24,col.dark,3);plate(17,-8,7,16,col.light,2);
-  c.fillStyle=col.optic;c.fillRect(10,-4,8,8);c.fillStyle="#f28a6f";c.globalAlpha=.7;c.fillRect(-18,-22,9,2);c.fillRect(-18,20,9,2);c.globalAlpha=1;
+  // Broad, heavily plated upper-body footprint and large rear chassis.
+  plate(-27,-21,20,42,col.dark,4);plate(-24,-24,21,16,col.light,3);plate(-24,8,21,16,col.light,3);
+  plate(-16,-20,32,40,col.mid,4);plate(-12,-16,24,32,col.light,4);plate(-7,-11,16,22,col.dark,3);plate(-3,-8,12,16,col.mid,3);
+  plate(-17,-29,22,9,col.dark,2);plate(-17,20,22,9,col.dark,2);plate(12,-15,13,30,col.dark,3);plate(17,-10,9,20,col.light,2);
+  metal(-15,-19,12,8,col.dark);metal(-15,11,12,8,col.dark);c.fillStyle=col.optic;c.fillRect(12,-4,8,8);c.fillStyle="#ff8b78";c.fillRect(-20,-23,10,2);c.fillRect(-20,21,10,2);
  }else{
-  // Trooper: standard humanoid frame, distinct helmet, shoulder shells and rear equipment pack.
-  plate(-17,-10,9,9,col.dark);plate(-17,1,9,9,col.dark);plate(-11,-8,20,17,col.mid,3);plate(-8,-10,16,21,col.light,3);plate(-5,-6,12,13,col.dark,2);
-  plate(-14,-15,8,8,col.mid);plate(-14,7,8,8,col.mid);plate(-18,-6,7,12,col.dark);plate(5,-7,10,14,col.dark,3);plate(8,-5,8,10,col.light,3);
-  plate(-19,-4,5,8,col.light);plate(-13,-15,6,6,col.dark);plate(-21,-8,5,16,col.dark,2);c.fillStyle=col.optic;c.fillRect(14,-2,4,4);c.fillStyle="#a94c44";c.fillRect(-19,-5,3,10);
+  // Trooper: helmet, compact chest, shoulder shells, legs and rear backpack read separately.
+  plate(-17,-11,10,11,col.dark,3);plate(-17,1,10,11,col.dark,3);plate(-13,-10,24,22,col.mid,3);plate(-10,-12,18,25,col.light,3);plate(-7,-8,14,17,col.dark,2);
+  plate(-15,-17,9,9,col.mid,2);plate(-15,8,9,9,col.mid,2);plate(-20,-7,8,14,col.dark,3);plate(-20,-6,6,12,col.light,2);
+  plate(6,-8,11,16,col.dark,3);plate(9,-6,9,12,col.light,3);plate(7,-14,11,7,col.mid,2);plate(7,8,11,7,col.mid,2);
+  metal(-12,-5,9,10,col.dark);plate(12,-7,8,14,col.dark,2);plate(14,-3,5,6,col.light,1);c.fillStyle=col.optic;c.fillRect(14,-3,4,6);c.fillStyle="#ff987e";c.fillRect(-18,-5,3,10);
  }
- c.fillStyle=col.optic;c.beginPath();c.arc(type==="devastator"?15:17,0,type==="devastator"?3.2:2.4,0,Math.PI*2);c.fill();c.restore();
+ c.fillStyle=col.optic;c.beginPath();c.arc(type==="devastator"?17:16,0,type==="devastator"?3.5:2.7,0,Math.PI*2);c.fill();c.restore();
+}
+function drawSeafPreviewSprite(c,x,y,scale=2.15){
+ c.save();c.translate(x,y);c.scale(scale,scale);c.fillStyle="rgba(9,17,22,.42)";c.beginPath();c.ellipse(-2,5,15,10,0,0,Math.PI*2);c.fill();
+ fillRound(c,-8,6,6,9,2,"#263a45","#9baeb7",.8);fillRound(c,2,6,6,9,2,"#263a45","#9baeb7",.8);fillRound(c,-12,-8,6,13,2,"#314a59","#a9bac1",1);fillRound(c,6,-8,6,13,2,"#314a59","#a9bac1",1);
+ fillRound(c,-9,-9,18,19,4,"#344a3b","#152a37",1.2);fillRound(c,-7,-10,14,17,4,"#82917a","#d3dde1",1);fillRound(c,-5,-8,10,12,3,"#637b67","#263d4b",.8);fillRound(c,-6,-18,12,10,4,"#263f50","#aebfc6",1);fillRound(c,-4,-16,8,5,2,"#1d303d","#9bb0ba",.8);fillRound(c,-11,-17,5,8,2,"#637985","#b9c7cd",.8);fillRound(c,6,-17,5,8,2,"#637985","#b9c7cd",.8);fillRound(c,8,-9,8,15,3,"#334d5b","#b5c4ca",1);fillRound(c,10,-7,5,9,2,"#263e4b","#809aa8",.8);c.fillStyle="#d8b65b";c.fillRect(-2,1,4,3);fillRound(c,11,-3,9,4,1,"#263b49","#9eafb7",.7);c.restore();
 }
 function drawCodexPreview(){
  const preview=$("codexPreviewCanvas");if(!preview)return;const c=preview.getContext("2d");if(!c)return;
  const previousCamera=battle.camera;try{battle.camera={x:450,y:720};drawBattleTerrain(c);}finally{battle.camera=previousCamera;}
  const w=preview.width,h=preview.height;c.fillStyle="rgba(14,22,27,.82)";c.fillRect(10,10,142,20);c.strokeStyle="rgba(195,209,214,.55)";c.lineWidth=1;c.strokeRect(10.5,10.5,141,19);c.fillStyle="#e2e9eb";c.font="bold 9px system-ui,sans-serif";c.textAlign="left";c.textBaseline="middle";c.fillText("FIELD REFERENCE",18,20);
  if(selectedCodexFaction==="automaton"){drawAutomatonSprite(c,w/2,h/2+5,selectedCodexId,0,selectedCodexId==="devastator"?1.65:2.05);}
- else{c.save();c.translate(w/2,h/2+5);const z=2.15;c.fillStyle="rgba(9,17,22,.42)";c.beginPath();c.ellipse(-1,4,14*z,9*z,0,0,Math.PI*2);c.fill();fillRound(c,-8*z,4*z,6*z,8*z,2*z,"#253944","#9aabb3",.8);fillRound(c,2*z,4*z,6*z,8*z,2*z,"#253944","#9aabb3",.8);fillRound(c,-7*z,-7*z,14*z,17*z,4*z,"#263f50","#172b38",1.2);fillRound(c,-7*z,-8*z,14*z,15*z,4*z,"#82917a","#d3dde1",1);fillRound(c,-5*z,-6*z,10*z,10*z,3*z,"#637b67","#263d4b",.8);fillRound(c,-11*z,-7*z,5*z,8*z,2*z,"#647985","#c4d0d5",.8);fillRound(c,6*z,-7*z,5*z,8*z,2*z,"#647985","#c4d0d5",.8);fillRound(c,5*z,-5*z,8*z,10*z,4*z,"#a7b4ba","#dce3e5",.9);fillRound(c,8*z,-3*z,4*z,6*z,2*z,"#233f53","#86a8ba",.6);c.fillStyle="#d8b65b";c.fillRect(-2*z,1*z,4*z,3*z);fillRound(c,11*z,-2*z,10*z,4*z,1*z,"#263b49","#9eafb7",.7);c.fillStyle="#d8b65b";c.fillRect(16*z,-1*z,3*z,2*z);c.restore();}
+ else{drawSeafPreviewSprite(c,w/2,h/2+5,2.15);}
  c.fillStyle="rgba(14,22,27,.64)";c.fillRect(w-92,h-25,82,15);c.fillStyle="#d2dce0";c.font="bold 8px system-ui,sans-serif";c.textAlign="center";c.textBaseline="middle";c.fillText("OVERHEAD VIEW",w-51,h-17.5);
 }
 
@@ -1516,16 +1525,19 @@ function drawBattle(){
  // SEAF personnel use compact human silhouettes with layered field armour and team markings.
  function drawUnit(u,color,outline,angle,role="squad",index=0){
   const p=worldToScreen(u);c.save();c.translate(p.x,p.y);c.rotate(angle||0);const playerUnit=role==="player";
-  c.fillStyle="rgba(9,17,22,.42)";c.beginPath();c.ellipse(-1,4,14,9,0,0,Math.PI*2);c.fill();
-  fillRound(c,-8,4,6,8,2,"#253944","#9aabb3",.8);fillRound(c,2,4,6,8,2,"#253944","#9aabb3",.8);
-  fillRound(c,-7,-7,14,17,4,outline,"#172b38",1.2);fillRound(c,-12,-5,6,12,2,"#314b5a","#9eafb7",.9);
-  fillRound(c,-7,-8,14,15,4,color,"#d3dde1",1);fillRound(c,-5,-6,10,10,3,playerUnit?"#637b67":"#58798d","#263d4b",.8);
-  fillRound(c,-11,-7,5,8,2,"#647985","#c4d0d5",.8);fillRound(c,6,-7,5,8,2,"#647985","#c4d0d5",.8);
-  fillRound(c,5,-5,8,10,4,"#a7b4ba","#dce3e5",.9);fillRound(c,8,-3,4,6,2,"#233f53","#86a8ba",.6);
-  c.fillStyle=playerUnit?"#d8b65b":"#d7e1e5";c.fillRect(-2,1,4,3);
-  // Existing minimal equipment marker is retained; combat and aim logic are unchanged.
-  fillRound(c,11,-2,10,4,1,"#263b49","#9eafb7",.7);if(playerUnit){c.fillStyle="#d8b65b";c.fillRect(16,-1,3,2);}
-  if(role==="squad"){c.rotate(-(angle||0));c.fillStyle="#f1f4f4";c.font="bold 9px system-ui";c.textAlign="center";c.fillText(String(index+1),0,22);}
+  // Overhead SEAF silhouette: helmet, pack, shoulder plates, separated limbs and torso markings.
+  c.fillStyle="rgba(9,17,22,.44)";c.beginPath();c.ellipse(-2,5,15,10,0,0,Math.PI*2);c.fill();
+  fillRound(c,-8,6,6,9,2,"#263a45","#9baeb7",.8);fillRound(c,2,6,6,9,2,"#263a45","#9baeb7",.8);
+  fillRound(c,-12,-8,6,13,2,"#314a59","#a9bac1",1);fillRound(c,6,-8,6,13,2,"#314a59","#a9bac1",1);
+  fillRound(c,-9,-9,18,19,4,outline,"#152a37",1.2);fillRound(c,-7,-10,14,17,4,color,"#d3dde1",1);
+  fillRound(c,-5,-8,10,12,3,playerUnit?"#637b67":"#58798d","#263d4b",.8);
+  // Helmet is intentionally separate from the torso; pack sits at the rear.
+  fillRound(c,-6,-18,12,10,4,"#263f50","#aebfc6",1);fillRound(c,-4,-16,8,5,2,"#1d303d","#9bb0ba",.8);
+  fillRound(c,-11,-17,5,8,2,"#637985","#b9c7cd",.8);fillRound(c,6,-17,5,8,2,"#637985","#b9c7cd",.8);
+  fillRound(c,8,-9,8,15,3,"#334d5b","#b5c4ca",1);fillRound(c,10,-7,5,9,2,"#263e4b","#809aa8",.8);
+  c.fillStyle=playerUnit?"#d8b65b":"#d7e1e5";c.fillRect(-2,1,4,3);c.fillRect(-5,-2,3,2);
+  fillRound(c,11,-3,9,4,1,"#263b49","#9eafb7",.7);if(playerUnit){c.fillStyle="#d8b65b";c.fillRect(16,-2,3,3);}
+  if(role==="squad"){c.rotate(-(angle||0));c.fillStyle="#f1f4f4";c.font="bold 9px system-ui";c.textAlign="center";c.fillText(String(index+1),0,24);}
   c.restore();if(playerUnit){c.strokeStyle="#e6d18c";c.lineWidth=1.5;c.beginPath();c.arc(p.x,p.y,18,0,Math.PI*2);c.stroke();}
  }
  // Automaton silhouettes use distinct body massing and optical signatures for quick recognition.
