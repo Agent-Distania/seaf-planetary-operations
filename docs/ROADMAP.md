@@ -110,3 +110,7 @@
 - Added faction tabs for Automaton and SEAF records.
 - Added SEAF Soldier and Squadmate entries with overhead visual previews.
 - Codex entries are separated by faction for future roster expansion.
+
+## v0.8.8 — Infantry Visual Refinement (implemented)
+- Refined overhead Automaton and SEAF infantry silhouettes for greater in-game recognition.
+- Codex previews use the refreshed visual models.
