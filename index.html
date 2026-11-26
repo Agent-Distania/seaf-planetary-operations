@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>SEAF: Planetary Operations — v0.8.16</title>
+<title>SEAF: Planetary Operations — v0.8.17</title>
 <style>
 :root{--bg:#111a22;--panel:#1d2a35;--panel2:#273846;--line:#455c6b;--text:#e6edf0;--muted:#a9bbc5;--accent:#83b0ce;--danger:#e26b5e;--gold:#d8b64f}
 *{box-sizing:border-box}
@@ -118,7 +118,7 @@ footer{margin-top:10px;color:#8fa5b2;font-size:11px;text-align:center}
 <body>
 <div id="app">
 <header>
-  <div class="brand">SEAF <span>PLANETARY OPERATIONS · PROTOTYPE 0.8.16</span></div>
+  <div class="brand">SEAF <span>PLANETARY OPERATIONS · PROTOTYPE 0.8.17</span></div>
   <div class="resourcebar" id="resources"></div>
 </header>
 <div class="tabs menu-hidden">
@@ -340,6 +340,8 @@ function getBasePlots(){
  for(let y=110;y<=710;y+=100)for(let x=120;x<=1080;x+=120){
   // Keep the main north-south and east-west access lanes clear.
   if((x>=535&&x<=665)||(y>=350&&y<=450))continue;
+  // Clear the four diagonal plots that crowd the central Command Post forecourt.
+  if((x===480||x===720)&&(y===310||y===510))continue;
   // Reserve the southeast service yard for heavy vehicles and exosuit maintenance.
   if(x>=760&&y>=480)continue;
   // Keep the southern central approach and landing apron clear of new structures.
