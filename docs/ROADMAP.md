@@ -1,5 +1,11 @@
 # Development Roadmap
 
+## v0.8.20 — SEAF Facility Visual Overhaul (implemented)
+- Redesigned the Barracks, Supply Depot, Medical Station, Radar Station and Engineering Depot as distinct modular SEAF facilities.
+- Expanded support-building footprints and construction pads to improve top-down readability.
+- Preserved the base world dimensions, construction grid, costs, save format, HQ and defensive emplacement artwork.
+
+
 ## v0.8.19 — Expanded Forward Command HQ (implemented)
 - Expanded the central SEAF Forward Command HQ across nearly the full compound pad.
 - Removed the roof star and lettering; moved the HQ name to a separate ground-mounted sign in front of the entrance.
