@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>SEAF: Planetary Operations — v0.8.20</title>
+<title>SEAF: Planetary Operations — v0.8.21</title>
 <style>
 :root{--bg:#111a22;--panel:#1d2a35;--panel2:#273846;--line:#455c6b;--text:#e6edf0;--muted:#a9bbc5;--accent:#83b0ce;--danger:#e26b5e;--gold:#d8b64f}
 *{box-sizing:border-box}
@@ -118,7 +118,7 @@ footer{margin-top:10px;color:#8fa5b2;font-size:11px;text-align:center}
 <body>
 <div id="app">
 <header>
-  <div class="brand">SEAF <span>PLANETARY OPERATIONS · PROTOTYPE 0.8.20</span></div>
+  <div class="brand">SEAF <span>PLANETARY OPERATIONS · PROTOTYPE 0.8.21</span></div>
   <div class="resourcebar" id="resources"></div>
 </header>
 <div class="tabs menu-hidden">
@@ -1087,11 +1087,66 @@ function drawUtilityProps(c){
  fillRound(c,783,453,29,22,3,"#8b9ba2","#d6dfe1",1.5);c.fillStyle="#3b6079";c.fillRect(788,458,19,11);c.fillStyle="#d8b64f";c.fillRect(786,453,23,3);
  for(let i=0;i<5;i++){fillRound(c,548+i*26,718,8,18,2,"#405969","#c3cfd3",1);}
 }
+function drawBaseFootpath(c,points,width=7){
+ c.save();c.lineCap="round";c.lineJoin="round";c.beginPath();
+ points.forEach((p,i)=>i?c.lineTo(p.x,p.y):c.moveTo(p.x,p.y));
+ c.strokeStyle="#354956";c.lineWidth=width+5;c.stroke();
+ c.strokeStyle="#aab7be";c.lineWidth=width+2;c.stroke();
+ c.strokeStyle="#7d929e";c.lineWidth=width;c.stroke();
+ c.strokeStyle="#c5d0d5";c.lineWidth=1;c.setLineDash([3,10]);c.stroke();c.setLineDash([]);
+ c.restore();
+}
+function drawBaseServiceLamp(c,x,y){
+ c.save();
+ c.globalAlpha=.15;c.fillStyle="#8fc2df";c.beginPath();c.arc(x,y,10,0,Math.PI*2);c.fill();
+ c.globalAlpha=1;
+ fillRound(c,x-4,y-4,8,8,2,"#263d4b","#c5d0d5",1);
+ fillRound(c,x-2,y-7,4,3,1,"#7896a6","#dce5e8",.6);
+ c.fillStyle="#9bcce4";c.beginPath();c.arc(x,y-2,1.5,0,Math.PI*2);c.fill();
+ c.restore();
+}
+function drawBasePedestrianNetwork(c){
+ // Narrow footpaths sit just outside the road shoulders and building pads.
+ const routes=[
+  [{x:62,y:364},{x:442,y:364}],
+  [{x:62,y:436},{x:442,y:436}],
+  [{x:758,y:364},{x:1138,y:364}],
+  [{x:758,y:436},{x:1138,y:436}],
+  [{x:560,y:58},{x:560,y:300}],
+  [{x:640,y:58},{x:640,y:300}],
+  [{x:560,y:498},{x:560,y:580}],
+  [{x:640,y:498},{x:640,y:580}]
+ ];
+ routes.forEach(route=>drawBaseFootpath(c,route,7));
+ // Short access links meet the nearest construction-pad edges without crossing the pads.
+ for(const x of [120,240,360,840,960,1080])drawBaseFootpath(c,[{x,y:364},{x,y:356}],5);
+ for(const x of [120,240,360])drawBaseFootpath(c,[{x,y:436},{x,y:464}],5);
+ // Low-profile lamps are mirrored along the service paths.
+ const lamps=[
+  [82,364],[422,364],[82,436],[422,436],
+  [778,364],[1118,364],[778,436],[1118,436],
+  [560,88],[640,88],[560,270],[640,270],[560,520],[640,520]
+ ];
+ for(const [x,y] of lamps)drawBaseServiceLamp(c,x,y);
+ // Recessed drainage grates keep the footpath edges visually grounded.
+ for(const [x,y] of [[184,364],[304,364],[864,364],[984,364],[184,436],[304,436],[864,436],[984,436]]){
+  fillRound(c,x-6,y-2,12,4,1,"#2b414f","#b7c4ca",.7);
+  c.strokeStyle="#8397a2";c.lineWidth=.6;
+  for(let k=0;k<3;k++){c.beginPath();c.moveTo(x-3+k*3,y-1);c.lineTo(x-3+k*3,y+1);c.stroke();}
+ }
+}
+function drawBaseCrosswalk(c,x,y){
+ c.save();
+ fillRound(c,x-25,y-17,50,34,2,"rgba(38,57,69,.35)",null);
+ for(let i=-3;i<=3;i++)fillRound(c,x-21,y+i*4-1,42,2,1,"#dce4e7",null);
+ c.restore();
+}
 function drawBase(){
  const w=baseCanvas.width,h=baseCanvas.height,c=baseCtx;
  c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,w,h);c.fillStyle="#1b2a36";c.fillRect(0,0,w,h);
  c.setTransform(baseCamera.zoom,0,0,baseCamera.zoom,-baseCamera.x*baseCamera.zoom,-baseCamera.y*baseCamera.zoom);
  drawGround(c);
+ drawBasePedestrianNetwork(c);
  // Main road network connects the command compound, transport apron and secured entrance.
  drawRoad(c,[{x:600,y:58},{x:600,y:302}],48);
  drawRoad(c,[{x:600,y:498},{x:600,y:612}],48);
@@ -1099,6 +1154,7 @@ function drawBase(){
  drawRoad(c,[{x:58,y:400},{x:442,y:400}],44);
  drawRoad(c,[{x:758,y:400},{x:1142,y:400}],44);
  drawRoad(c,[{x:950,y:422},{x:950,y:500}],34);
+ drawBaseCrosswalk(c,600,286);drawBaseCrosswalk(c,600,520);
  drawCentralPlaza(c);drawLandingZone(c);
  drawPerimeter(c);drawMotorPool(c);
  for(const plot of getBasePlots())drawConstructionPad(c,plot);
