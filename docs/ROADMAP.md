@@ -1,3 +1,10 @@
+## v0.8.22 — Living Base Personnel (implemented)
+- Added eight ambient SEAF base staff who walk four looping routes along the existing service paths.
+- Added simple directional and walking animation with corner pauses and placed-building clearance checks.
+- Personnel animate only while the Forward Base screen is open and remain separate from recruitable deployment squadmates.
+- Preserved base layout, building construction, save data and mission systems.
+
+
 ## v0.8.21 — Base Access & Site Infrastructure Polish (implemented)
 - Added narrow pedestrian footpaths alongside the main service roads and central access lanes.
 - Added short footpath links, low-profile lights, drainage grates and marked pedestrian crossings.
