@@ -1,5 +1,11 @@
 # Development Roadmap
 
+## v0.8.11 — Infantry Facing Alignment (implemented)
+- Corrected SEAF infantry sprite rotation so their visual forward direction matches movement/aim vectors rather than the gun-side axis.
+- Kept squad number labels upright.
+- Gameplay movement and combat behavior unchanged.
+
+
 ## v0.3 — Base Technical Update (implemented)
 - Main menu and three local campaign save slots
 - Zoom in/out, reset camera, touch pinch-to-zoom and drag-to-pan
