@@ -13,7 +13,11 @@
 - Enemy identifiers, health, movement, combat behaviour, spawn counts, mission systems, campaign saves, SEAF visuals and mobile controls.
 
 ### Verification
-- Source structure and version labels checked before publication. JavaScript syntax and canvas-render smoke tests are recorded after the final source verification.
+- Embedded game JavaScript syntax compilation passed.
+- Canvas-mock drawing smoke tests passed for Trooper, Brawler and Devastator at both live-combat scale and Codex preview scale; every model produced drawing calls with balanced canvas save/restore operations.
+- Confirmed the battlefield and Codex preview both call the same shared Automaton painter, and the existing enemy facing-angle calculation remains connected to the model rotation.
+- Re-fetched all four changed repository files and verified their contents match the published updates exactly.
+- A live visual playtest in iPhone Safari was not performed; the user should still review the revised silhouettes in-game.
 
 ## v0.8.8 — Infantry Visual Refinement
 *Released November 25, 2026*
