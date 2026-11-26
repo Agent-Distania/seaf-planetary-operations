@@ -1,3 +1,18 @@
+## v0.8.8 — Infantry Visual Refinement
+*Released November 25, 2026*
+
+### Changed
+- Refined overhead Automaton silhouettes to better distinguish Trooper, Brawler and Devastator through helmet/head, torso, rear chassis, limbs and armor massing.
+- Refined SEAF infantry silhouettes with separated helmets, packs, arms, legs, shoulder armor and visible team identifiers.
+- Updated Codex SEAF preview to use the refined shared visual style.
+
+### Preserved
+- Unit gameplay stats, movement, combat, Codex faction tabs, saves and campaign systems.
+
+### Verification
+- JavaScript syntax checked. Render tests pending.
+
+
 ## v0.8.7 — Personnel Codex
 *Released November 25, 2026*
 
