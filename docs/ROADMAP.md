@@ -1,5 +1,11 @@
 # Development Roadmap
 
+## v0.8.19 — Expanded Forward Command HQ (implemented)
+- Expanded the central SEAF Forward Command HQ across nearly the full compound pad.
+- Removed the roof star and lettering; moved the HQ name to a separate ground-mounted sign in front of the entrance.
+- Updated the logical building footprint to match the enlarged structure.
+
+
 ## v0.8.18 — Forward Command HQ Redesign (implemented)
 - Rebuilt the central Command Post as a modular SEAF Forward Command facility with a raised operations core, paired support wings, communications mast, identity plate and formal forecourt entrance.
 - Preserved its original 108 × 82 logical footprint and all campaign/building systems.
