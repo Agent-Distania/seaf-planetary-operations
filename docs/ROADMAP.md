@@ -105,3 +105,8 @@
 
 ## v1.0 — Planetary Campaign (planned)
 - Coherent campaign loop with expanded progression and stable systems
+
+## v0.8.7 — Personnel Codex (implemented)
+- Added faction tabs for Automaton and SEAF records.
+- Added SEAF Soldier and Squadmate entries with overhead visual previews.
+- Codex entries are separated by faction for future roster expansion.
