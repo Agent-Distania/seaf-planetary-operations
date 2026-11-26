@@ -1,3 +1,10 @@
+## v0.8.23 — Base Personnel Orientation & Silhouette Fix (implemented)
+- Rebuilt ambient base-staff sprites with centered rounded heads at the leading end of the body, compact torsos, attached arms and separated walking legs.
+- Removed the side-mounted shape that made the figures resemble backpacks.
+- Matched each sprite's facing direction to its route movement vector and turned staff toward the next segment during corner pauses.
+- Preserved the four routes, eight staff positions, base layout, campaign saves and deployment systems.
+
+
 ## v0.8.22 — Living Base Personnel (implemented)
 - Added eight ambient SEAF base staff who walk four looping routes along the existing service paths.
 - Added simple directional and walking animation with corner pauses and placed-building clearance checks.
