@@ -1,3 +1,27 @@
+## v0.8.4 — Operations Expanded, Part I: Threat Database & Faction Visual Pass
+*Released November 25, 2026*
+
+### Added
+- Added an Automaton Threat Database screen with editable, centralized records for Troopers, Brawlers and Devastators.
+- Added field descriptions, combat roles, observed behaviour, visual identification notes and SEAF threat assessments. All initial entries are readable without spending Intel.
+
+### Changed
+- Reworked the top-down Automaton silhouettes to create clearer differences between standard, close-assault and heavy infantry.
+- Reworked SEAF personnel silhouettes with more readable helmets, torso armour, packs, limbs, unit markings and squad identifiers.
+- Refined the shared SEAF building foundation language and added consistent identity/safety details across player-built facilities.
+- Rebuilt battlefield Automaton installation silhouettes so communications, generator, command, defence and supply sites are easier to distinguish.
+- Changed the visible fast close-assault enemy name from Scout to Brawler while retaining the stable internal `scout` key used by existing combat code.
+- Corrected the relay's overhead label from "SEAF OBJECTIVE" to "AUTOMATON RELAY".
+
+### Preserved
+- Campaign save format, three save slots, legacy-save migration, construction costs and limits, resource rules, recruitment, mission rewards, enemy counts, combat stats, squad orders, controls and current battlefield dimensions.
+- Existing internal enemy identifiers and combat behaviour; this is a visual and reference-data update, not a balance pass.
+
+### Verification
+- JavaScript syntax compilation and source-integrity checks passed before publication.
+- Static checks confirm all three Codex records, all seven SEAF building renderers, all five hostile installation types, and the existing save/mission hooks remain present.
+- A live mobile Safari visual playtest was not performed; on-device review is still needed for scale, detail and touch navigation.
+
 ## v0.8.3 — Operations Expanded, Part I: Enemy Silhouette Refinement
 *Released November 25, 2026*
 
