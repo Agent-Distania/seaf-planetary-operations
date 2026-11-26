@@ -1,3 +1,17 @@
+## v0.8.17 — Command Forecourt Cleanup
+*Released November 26, 2026*
+
+### Changed
+- Removed the four diagonal construction plots surrounding the central Command Post forecourt.
+- Kept all other construction plots, building footprints, costs, placement validation and existing building locations unchanged.
+- Removed the plots from both the rendered base map and the placement-selection list through the shared plot generator.
+
+### Verification
+- Embedded JavaScript syntax check passed after the update.
+- Targeted plot-generation check confirmed exactly four plots were removed: (480, 310), (720, 310), (480, 510), and (720, 510).
+- Existing motor-pool, parked-model, building and campaign-save code remains unchanged.
+- No visual browser/mobile test performed.
+
 ## v0.8.16 — Symmetrical Motor Pool Layout
 *Released November 26, 2026*
 
