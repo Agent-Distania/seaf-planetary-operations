@@ -43,3 +43,5 @@ The v0.8.6 Codex recognition pass adds overhead field-reference previews that us
 The v0.7 release expands combat and squad AI while preserving campaign saves, logistics, base construction and resource rules. Test squad spacing, cover, HOLD/FOLLOW controls and combat readability on desktop and mobile.
 
 See [CHANGELOG.md](CHANGELOG.md) for version history and [docs/ROADMAP.md](docs/ROADMAP.md) for planned milestones.
+
+- Separate Automaton and SEAF Codex tabs, with initial friendly personnel entries and overhead field previews.
