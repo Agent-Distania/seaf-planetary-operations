@@ -45,3 +45,5 @@ The v0.7 release expands combat and squad AI while preserving campaign saves, lo
 See [CHANGELOG.md](CHANGELOG.md) for version history and [docs/ROADMAP.md](docs/ROADMAP.md) for planned milestones.
 
 - Separate Automaton and SEAF Codex tabs, with initial friendly personnel entries and overhead field previews.
+
+- Refined overhead silhouettes for Automaton and SEAF personnel, with Codex field previews matching the in-game visual style.
