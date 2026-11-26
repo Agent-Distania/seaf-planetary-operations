@@ -3,7 +3,7 @@
 A single-player, top-down 2D sci-fi military game about ordinary SEAF soldiers fighting to reclaim hostile worlds. Built as a browser game with PC and mobile controls.
 
 ## Current status
-- **Latest build:** v0.8.11 — Infantry Facing Alignment
+- **Latest build:** v0.8.12 — Battlefield Variety & Road Checkpoints
 - **Development status:** Early prototype; browser gameplay testing remains incomplete
 - **Platform:** Browser (HTML/CSS/JavaScript)
 - **Perspective:** Top-down, fully 2D
@@ -33,7 +33,7 @@ Manage a forward base, select an operation, deploy with squadmates, complete obj
 - Main menu with three local campaign save slots
 - Legacy single-save migration into Campaign Slot 1
 
-The v0.8.10 cleanup removes the rear leg/foot plates from the Automaton silhouettes for a cleaner overhead read. The v0.8.9 Automaton model pass rebuilds the shared Trooper, Brawler and Devastator sprite painter around recognizable bipedal humanoid proportions; the live battlefield and Codex use the same revised models. The v0.8.6 Codex recognition pass adds overhead field-reference previews that use the exact in-game Automaton sprite painter over the battlefield terrain. The v0.8.5 Operations Expanded visual pass established the editable Automaton Threat Database, identifies the three prototype enemy roles as Trooper, Brawler and Devastator, refines Automaton and SEAF top-down silhouettes, and improves the shared presentation of SEAF facilities and hostile installations. Combat roles and stable runtime identifiers are preserved. It does not expand the battlefield or add patrols; those remain part of Operations Expanded, Part II: Battlefield Overhaul and later encounter work. The v0.8.1 patch fixes the startup error that prevented the campaign save-slot menu from appearing. The v0.6 transport artwork is an original top-down Pelican-inspired fan-game silhouette; vehicle artwork is stylized canvas illustration, not imported game models.
+The v0.8.12 battlefield pass reduces clutter, adds randomized obstacle placement and road checkpoints. The v0.8.10 cleanup removes the rear leg/foot plates from the Automaton silhouettes for a cleaner overhead read. The v0.8.9 Automaton model pass rebuilds the shared Trooper, Brawler and Devastator sprite painter around recognizable bipedal humanoid proportions; the live battlefield and Codex use the same revised models. The v0.8.6 Codex recognition pass adds overhead field-reference previews that use the exact in-game Automaton sprite painter over the battlefield terrain. The v0.8.5 Operations Expanded visual pass established the editable Automaton Threat Database, identifies the three prototype enemy roles as Trooper, Brawler and Devastator, refines Automaton and SEAF top-down silhouettes, and improves the shared presentation of SEAF facilities and hostile installations. Combat roles and stable runtime identifiers are preserved. It does not expand the battlefield or add patrols; those remain part of Operations Expanded, Part II: Battlefield Overhaul and later encounter work. The v0.8.1 patch fixes the startup error that prevented the campaign save-slot menu from appearing. The v0.6 transport artwork is an original top-down Pelican-inspired fan-game silhouette; vehicle artwork is stylized canvas illustration, not imported game models.
 
 ## Controls
 **Desktop:** WASD/arrows move, mouse aim, left click fire, R reload, E interact, Q toggle squad HOLD/FOLLOW.
