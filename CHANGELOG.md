@@ -1,3 +1,13 @@
+## v0.8.6 — Main Menu Branding Correction
+*Released November 25, 2026*
+
+### Fixed
+- Removed the incorrect “United Earth Federation” label from the main menu. The SEAF game remains separate from the user's other universe.
+
+### Verification
+- Confirmed the incorrect label was present in the main-menu kicker and removed it.
+
+
 ## v0.8.6 — Codex Field Recognition Previews
 *Released November 25, 2026*
 
