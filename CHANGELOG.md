@@ -1,3 +1,18 @@
+## v0.8.16 — Symmetrical Motor Pool Layout
+*Released November 26, 2026*
+
+### Changed
+- Recentered the motor-pool apron and inner boundary around the shared centerline of the two existing parking bays.
+- Aligned the approach road with the central service aisle.
+- Balanced the lower service equipment into matching left/right cabinet banks and evenly spaced inspection markers.
+- Mirrored the outer edge seams, safety bollards and service lights.
+- Preserved the parked model artwork, size and positions; no vehicle gameplay or implementation added.
+
+### Verification
+- Embedded JavaScript syntax check passed after the update.
+- Static checks confirmed the mirrored layout coordinates, centered approach road and unchanged parked-model drawing calls.
+- No visual browser/mobile test performed.
+
 ## v0.8.15 — Base Service Yard Details
 *Released November 26, 2026*
 
