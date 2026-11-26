@@ -58,21 +58,22 @@
 
 ## Operations Expanded — development series
 
-### Part I — Enemy Overhaul (implemented in v0.8.2)
+### Part I — Enemy Overhaul (implemented in v0.8.2–v0.8.4)
 - Replace the generic shared enemy token with clearly differentiated top-down silhouettes for Scout, standard Trooper and Devastator
 - Give enemy roles distinct armor mass, equipment, hostile red/oxide identity and readable optics
 - Establish separate durability, movement and engagement profiles so each visual type communicates its combat role
 - Make ranged enemies prioritize SEAF targets they can see, with a fallback target for movement when cover blocks every friendly
 - Preserve the existing arena, missions, campaign saves, base systems and controls
 
-### Part II — Battlefield Overhaul (planned)
-- Expand the battlefield substantially; do not simply squeeze more objects into the existing 1,000 × 1,000 arena
-- Rebuild terrain composition, road networks, routes, cover placement and objective spacing for larger engagements
-- Improve how buildings and installations are selected, placed and spawned; keep their silhouettes and details purpose-readable without hiding units or objectives
-- Add infantry barbed wire that damages units crossing it
-- Defer dragon's teeth and Czech hedgehogs until vehicle movement exists; then make them block vehicles
-- Rework navigation, obstacle handling, line of sight and combat positioning to work across the larger battlefield
-- Preserve mobile readability and performance while giving squads and enemies more room to maneuver
+### Part II — Battlefield Overhaul (implemented in v0.8.5)
+- Expanded the battlefield to 1,600 × 1,400 with bounds-aware camera and movement handling
+- Added Foundry District, Automaton Supply Yard and Signal Station mission sectors with tailored cover and structure placement
+- Added Automaton Fabricator and Detector Tower silhouettes, plus communications, power, command, defence and supply installations
+- Rebuilt terrain with branching roads, varied ground regions, service pads, gravel/scorched patches and dispersed cover
+- Added passable infantry barbed wire that damages units crossing it without blocking movement or sight
+- Added forward obstacle probing to help squad and enemy movement steer around solid cover
+- Preserved mobile controls, mission objectives, existing campaign saves and base systems
+- Dragon's teeth and Czech hedgehogs remain deferred until vehicle movement exists; patrols and roaming encounter systems remain follow-on work
 
 ### Follow-on — Patrols & Encounter Systems (planned after Part II)
 - Add patrol routes, stationary guards, installation defenders, reinforcements and investigation behavior
