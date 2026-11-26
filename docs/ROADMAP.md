@@ -1,5 +1,12 @@
 # Development Roadmap
 
+## v0.8.15 — Base Service Yard Details (implemented)
+- Added a marked service-access walkway to the motor-pool apron.
+- Added drainage grates in the aisle between the existing bays.
+- Added subtle edge seams, safety bollards and service lights around the yard perimeter.
+- Kept parked model artwork, dimensions and positions unchanged.
+
+
 ## v0.8.12 — Battlefield Variety & Road Checkpoints (implemented)
 - Rotated SEAF infantry another 180 degrees.
 - Reduced ground debris marks and obstacle clutter.
