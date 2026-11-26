@@ -1,3 +1,18 @@
+## v0.8.18 — Forward Command HQ Redesign
+*Released November 26, 2026*
+
+### Changed
+- Rebuilt the central Command Post as a larger-looking, modular SEAF Forward Command facility while preserving its original logical footprint.
+- Added paired command-support wings, a raised central operations block, overhead command-room glazing, and a visible operations-table motif.
+- Added a compact communications mast, roof service housings, mirrored service lights, a SEAF Forward Command identity plate and a star-in-ring insignia.
+- Added a defined southern entrance with steps and recessed double doors facing the command forecourt.
+- Preserved building identifiers, save data, construction costs, plot placement rules, and all other facility artwork.
+
+### Verification
+- Embedded JavaScript syntax check passed after the update.
+- Static checks confirmed the command drawing remains a single function, the original 108 × 82 footprint is retained, and other building painters and placement logic are unchanged.
+- No visual browser/mobile test performed.
+
 ## v0.8.17 — Command Forecourt Cleanup
 *Released November 26, 2026*
 
