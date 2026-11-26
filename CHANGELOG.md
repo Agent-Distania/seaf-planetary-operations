@@ -1,3 +1,24 @@
+## v0.8.21 — Base Access & Site Infrastructure Polish
+*Released November 26, 2026*
+
+### Added
+- Added narrow pedestrian footpaths alongside the west and east service roads and the north/south access lanes.
+- Added short access links from nearby paths to the adjacent construction-pad edges.
+- Added low-profile path lights and recessed drainage grates, arranged consistently across the service corridors.
+- Added two marked pedestrian crossings on the north and south central access road sections.
+
+### Preserved
+- Kept the 1,200 × 800 base map and all construction-pad coordinates and footprints unchanged.
+- Left all facility artwork, the HQ, the parked Bastion and exosuit artwork, and the motor-pool layout unchanged.
+- Preserved campaign saves, resource rules, construction behavior, missions and controls.
+
+### Verification
+- Embedded JavaScript syntax compiled successfully.
+- Static checks confirmed the new footpath and crossing painters are each defined once and are called by the base renderer.
+- Confirmed the parked Bastion and exosuit drawing functions are byte-for-byte unchanged.
+- No visual browser or mobile test performed.
+
+
 ## v0.8.20 — SEAF Facility Visual Overhaul
 *Released November 26, 2026*
 
