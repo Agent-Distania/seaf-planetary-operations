@@ -785,22 +785,30 @@ function drawCentralPlaza(c){
  for(let x of [476,724]){fillRound(c,x-9,387,18,34,3,"#596d79","#c2ccd0",1);c.fillStyle="#d8b64f";c.fillRect(x-2,390,4,4);}
 }
 function drawHeavyVehicleSilhouette(c,x,y){
- // Bastion tank destroyer: fixed casemate with chassis-integrated rear gun mount.
+ // Bastion tank destroyer — elongated overhead silhouette with a stepped raised hull.
  c.save();c.translate(x,y);
  for(const side of [-1,1]){
-  fillRound(c,side*30-8,-48,16,96,4,"#263b4a","#bac6cc",1.5);
-  for(let j=0;j<10;j++)fillRound(c,side*30-7,-43+j*9,14,5,1,"#718999","#233644",.7);
-  for(let j=0;j<5;j++){c.fillStyle="#c0ccd1";c.beginPath();c.arc(side*30,-34+j*17,4.3,0,Math.PI*2);c.fill();c.fillStyle="#3b5362";c.beginPath();c.arc(side*30,-34+j*17,2,0,Math.PI*2);c.fill();}
+  fillRound(c,side*30-8,-58,16,116,4,"#263b4a","#bac6cc",1.5);
+  for(let j=0;j<12;j++)fillRound(c,side*30-7,-53+j*9.3,14,5,1,"#718999","#233644",.7);
+  for(let j=0;j<6;j++){c.fillStyle="#c0ccd1";c.beginPath();c.arc(side*30,-47+j*18.5,4.3,0,Math.PI*2);c.fill();c.fillStyle="#3b5362";c.beginPath();c.arc(side*30,-47+j*18.5,2,0,Math.PI*2);c.fill();}
  }
- fillRound(c,-24,-47,48,94,6,"#516b7c","#d0d9dd",1.7);
- fillRound(c,-19,-43,38,82,4,"#8497a2","#dbe2e4",1.3);
- c.fillStyle="#a6b4bc";c.beginPath();c.moveTo(-18,-40);c.lineTo(18,-40);c.lineTo(16,-23);c.lineTo(0,-15);c.lineTo(-16,-23);c.closePath();c.fill();c.strokeStyle="#dce3e5";c.lineWidth=1.2;c.stroke();
- // Rear-integrated fixed mount; barrel shortened from 81 to 61 world units (~25%).
- fillRound(c,-14,22,28,23,4,"#3f5a6d","#c6d1d5",1.4);fillRound(c,-9,26,18,16,3,"#8397a3","#e0e6e7",1.3);
- fillRound(c,-5,-33,10,61,3,"#2c4252","#aebdc4",1.2);
- c.fillStyle="#263b4a";c.fillRect(-5,-36,10,4);c.fillStyle="#152a38";c.fillRect(-3,-35,6,2);
- for(const side of [-1,1]){fillRound(c,side*10-5,-16,10,20,2,"#516a79","#c2cdd1",1);for(let k=0;k<4;k++){c.strokeStyle="#353c36";c.lineWidth=1;c.beginPath();c.moveTo(side*10-3,-13+k*4);c.lineTo(side*10+3,-13+k*4);c.stroke();}}
- fillRound(c,-9,39,18,7,2,"#333a34","#b9c7cc",1);c.fillStyle="#c8b46f";c.fillRect(-3,11,6,3);c.fillRect(-16,46,32,2);c.restore();
+ // Long hull perimeter with nested tiers to show raised sections from overhead.
+ fillRound(c,-24,-57,48,114,6,"#516b7c","#d0d9dd",1.7);
+ fillRound(c,-20,-52,40,104,4,"#8497a2","#dbe2e4",1.3);
+ fillRound(c,-17,-43,34,67,4,"#6f8490","#d5dfe2",1.3);
+ fillRound(c,-14,-39,28,59,3,"#91a2ab","#dce4e6",1.1);
+ c.strokeStyle="#536976";c.lineWidth=1.2;c.beginPath();c.moveTo(-12,-34);c.lineTo(12,-34);c.lineTo(12,14);c.lineTo(8,19);c.lineTo(-8,19);c.lineTo(-12,14);c.closePath();c.stroke();
+ // Rear stepped shoulder with a recessed lower central section.
+ fillRound(c,-18,22,36,27,3,"#516b7c","#d0d9dd",1.4);
+ fillRound(c,-14,26,28,19,3,"#8397a3","#e0e6e7",1.2);
+ fillRound(c,-8,28,16,15,2,"#526b7a","#bfcbd0",1);
+ // Keep the fixed gun/casemate compact and centered.
+ fillRound(c,-14,-32,28,22,4,"#3f5a6d","#c6d1d5",1.4);
+ fillRound(c,-9,-27,18,14,3,"#8397a3","#e0e6e7",1.3);
+ fillRound(c,-5,-55,10,30,3,"#2c4252","#aebdc4",1.2);
+ c.fillStyle="#263b4a";c.fillRect(-5,-58,10,4);c.fillStyle="#152a38";c.fillRect(-3,-57,6,2);
+ for(const side of [-1,1]){fillRound(c,side*10-5,-12,10,20,2,"#516a79","#c2cdd1",1);for(let k=0;k<4;k++){c.strokeStyle="#353c36";c.lineWidth=1;c.beginPath();c.moveTo(side*10-3,-9+k*4);c.lineTo(side*10+3,-9+k*4);c.stroke();}}
+ fillRound(c,-9,48,18,7,2,"#333a34","#b9c7cc",1);c.fillStyle="#c8b46f";c.fillRect(-3,18,6,3);c.fillRect(-16,56,32,2);c.restore();
 }
 function drawExosuitSilhouette(c,x,y){
  // Overhead SEAF exosuit: no rear legs or feet and no forward helmet/head.
