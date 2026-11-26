@@ -1,3 +1,18 @@
+## v0.8.14 — Expanded Vehicle Parking Area
+*Released November 26, 2026*
+
+### Changed
+- Expanded the SEAF motor pool apron and overall parking compound footprint.
+- Increased both dedicated vehicle bays and their clearance markings to provide more room around the Bastion and exosuit.
+- Moved tool cabinets and inspection markings to the bay edge to preserve clear parking footprints.
+- Reserved the expanded service-yard area from building plot placement.
+
+### Verification
+- Embedded JavaScript syntax check passed.
+- Updated motor pool drawing and plot-reservation code confirmed in the published source.
+- No visual browser/mobile test performed.
+
+
 ## v0.8.13 — Bastion Hull Proportion Refinement
 *Released November 26, 2026*
 
