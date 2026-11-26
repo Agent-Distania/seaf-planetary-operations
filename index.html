@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>SEAF: Planetary Operations — v0.8.15</title>
+<title>SEAF: Planetary Operations — v0.8.16</title>
 <style>
 :root{--bg:#111a22;--panel:#1d2a35;--panel2:#273846;--line:#455c6b;--text:#e6edf0;--muted:#a9bbc5;--accent:#83b0ce;--danger:#e26b5e;--gold:#d8b64f}
 *{box-sizing:border-box}
@@ -118,7 +118,7 @@ footer{margin-top:10px;color:#8fa5b2;font-size:11px;text-align:center}
 <body>
 <div id="app">
 <header>
-  <div class="brand">SEAF <span>PLANETARY OPERATIONS · PROTOTYPE 0.8.15</span></div>
+  <div class="brand">SEAF <span>PLANETARY OPERATIONS · PROTOTYPE 0.8.16</span></div>
   <div class="resourcebar" id="resources"></div>
 </header>
 <div class="tabs menu-hidden">
@@ -837,29 +837,28 @@ function drawExosuitSilhouette(c,x,y){
  c.restore();
 }
 function drawMotorPoolServiceDetails(c){
- // Non-vehicle service-yard dressing: access strip, drainage, edge seams and safety bollards.
+ // Non-vehicle service-yard dressing arranged around the shared bay centerline.
  c.save();
- // Keep a clear pedestrian/service walkway above the parking bays.
+ // Centered pedestrian/service walkway above the two parking bays.
  fillRound(c,782,486,336,14,2,"#405563","#aebbc2",.9);
  c.strokeStyle="#d8b64f";c.lineWidth=1.4;
  for(let x=790;x<1110;x+=28){c.beginPath();c.moveTo(x,489);c.lineTo(x+5,497);c.stroke();}
  c.fillStyle="#e6ecee";c.font="bold 6px system-ui";c.textAlign="center";c.textBaseline="middle";
  c.fillText("SERVICE ACCESS",950,496);
- // Drain covers sit in the central aisle between the two dedicated bays.
+ // Matching drainage grates sit on the center aisle.
  for(const y of [574,658]){
   fillRound(c,941,y,18,9,1,"#283d4b","#aebbc2",.8);
   c.strokeStyle="#8498a3";c.lineWidth=.8;
   for(let k=0;k<4;k++){c.beginPath();c.moveTo(944+k*4,y+2);c.lineTo(944+k*4,y+7);c.stroke();}
  }
- // Fine edge seams and compact safety bollards stay outside both parking footprints.
+ // Mirrored edge seams, bollards and service lights.
  c.strokeStyle="#84949c";c.lineWidth=1;
- c.beginPath();c.moveTo(777,526);c.lineTo(777,698);c.moveTo(1121,526);c.lineTo(1121,698);c.stroke();
- for(const x of [774,1124])for(const y of [552,672]){
+ c.beginPath();c.moveTo(777,526);c.lineTo(777,698);c.moveTo(1123,526);c.lineTo(1123,698);c.stroke();
+ for(const x of [775,1125])for(const y of [552,672]){
   fillRound(c,x-3,y-6,6,12,2,"#263d4b","#bac6cb",.8);
   c.fillStyle="#d8b64f";c.fillRect(x-2,y-3,4,3);
  }
- // Small blue service lights mark the inner corners of the yard entrance.
- for(const x of [775,1121]){
+ for(const x of [775,1125]){
   c.fillStyle="#254052";c.beginPath();c.arc(x,512,3.2,0,Math.PI*2);c.fill();
   c.fillStyle="#86b5d1";c.beginPath();c.arc(x,512,1.5,0,Math.PI*2);c.fill();
  }
@@ -867,9 +866,9 @@ function drawMotorPoolServiceDetails(c){
 }
 function drawMotorPool(c){
  // Expanded vehicle compound: larger concrete apron and separate roomy maintenance/parking bays.
- fillRound(c,754,474,382,278,10,"#7e8d95","#d4dcdf",2.2);
- fillRound(c,764,484,362,258,7,"#5c6e79","#2f4655",1.7);
- c.strokeStyle="#d4dde0";c.lineWidth=2;c.setLineDash([12,8]);c.strokeRect(772,492,346,242);c.setLineDash([]);
+ fillRound(c,759,474,382,278,10,"#7e8d95","#d4dcdf",2.2);
+ fillRound(c,769,484,362,258,7,"#5c6e79","#2f4655",1.7);
+ c.strokeStyle="#d4dde0";c.lineWidth=2;c.setLineDash([12,8]);c.strokeRect(777,492,346,242);c.setLineDash([]);
  // Larger bays allow the tank to occupy the space without crowding or clipping.
  fillRound(c,782,504,150,206,5,"#aeb9be","#e0e6e7",1.6);
  fillRound(c,968,504,150,206,5,"#aeb9be","#e0e6e7",1.6);
@@ -884,10 +883,16 @@ function drawMotorPool(c){
  // The Bastion is centered with clear room around its silhouette; the exosuit has its own bay.
  drawHeavyVehicleSilhouette(c,857,622);
  drawExosuitSilhouette(c,1043,622);
- // Tool cabinets and inspection lights are moved to the bay edge to keep the parking footprints clear.
- for(let i=0;i<4;i++){fillRound(c,786+i*30,716,20,10,2,"#304959","#c2ced2",1);c.fillStyle="#d8b64f";c.fillRect(790+i*30,719,10,2);}
- for(let i=0;i<5;i++){c.fillStyle="#d8b64f";c.beginPath();c.arc(786+i*72,738,2.5,0,Math.PI*2);c.fill();}
- c.fillStyle="#edf1f2";c.font="bold 9px system-ui";c.fillText("EXPANDED SEAF MOTOR POOL",945,746);
+ // Matching tool-cabinet banks and evenly spaced inspection markers flank the lower apron.
+ for(const x of [786,816,846,876,1004,1034,1064,1094]){
+  fillRound(c,x,716,20,10,2,"#304959","#c2ced2",1);
+  c.fillStyle="#d8b64f";c.fillRect(x+4,719,10,2);
+ }
+ for(const x of [806,878,950,1022,1094]){
+  c.fillStyle="#d8b64f";c.beginPath();c.arc(x,738,2.5,0,Math.PI*2);c.fill();
+ }
+ c.fillStyle="#edf1f2";c.font="bold 9px system-ui";c.textAlign="center";
+ c.fillText("EXPANDED SEAF MOTOR POOL",950,746);
 }
 function drawUtilityProps(c){
  // Electrical cabinets, cable junctions and access grates in the same blue-grey material family.
@@ -907,7 +912,7 @@ function drawBase(){
  drawRoad(c,[{x:600,y:736},{x:600,y:758}],38);
  drawRoad(c,[{x:58,y:400},{x:442,y:400}],44);
  drawRoad(c,[{x:758,y:400},{x:1142,y:400}],44);
- drawRoad(c,[{x:900,y:422},{x:900,y:500}],34);
+ drawRoad(c,[{x:950,y:422},{x:950,y:500}],34);
  drawCentralPlaza(c);drawLandingZone(c);
  drawPerimeter(c);drawMotorPool(c);
  for(const plot of getBasePlots())drawConstructionPad(c,plot);
