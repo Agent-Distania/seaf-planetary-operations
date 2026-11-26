@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>SEAF: Planetary Operations — v0.8.5</title>
+<title>SEAF: Planetary Operations — v0.8.6</title>
 <style>
 :root{--bg:#111a22;--panel:#1d2a35;--panel2:#273846;--line:#455c6b;--text:#e6edf0;--muted:#a9bbc5;--accent:#83b0ce;--danger:#e26b5e;--gold:#d8b64f}
 *{box-sizing:border-box}
@@ -106,6 +106,11 @@ footer{margin-top:10px;color:#8fa5b2;font-size:11px;text-align:center}
 .codexField.wide{grid-column:1/-1}
 .codexIntro{margin-bottom:12px}
 .codexIntro p{max-width:850px}
+.codexPreviewWrap{margin:0 0 12px;border:1px solid #4b606b;border-radius:9px;overflow:hidden;background:#303b38;position:relative}
+.codexPreviewCanvas{width:100%;height:auto;display:block;aspect-ratio:640/260;background:#56615b}
+.codexPreviewTag{position:absolute;top:9px;left:9px;padding:4px 7px;border:1px solid #81939a;border-radius:4px;background:#17242ddd;color:#e2e9eb;font-size:9px;font-weight:800;letter-spacing:.11em;pointer-events:none}
+.codexPreviewFooter{display:flex;justify-content:space-between;gap:8px;padding:6px 9px;background:#1b2931;border-top:1px solid #4b606b;color:#b9c7cd;font-size:9px;letter-spacing:.1em}
+
 @media(max-width:760px){.codexLayout{grid-template-columns:1fr}.codexList{grid-template-columns:repeat(3,minmax(0,1fr))}.codexPick{padding:9px 7px;min-height:60px;align-items:flex-start;flex-direction:column}.codexPick .codexIndex{display:none}}
 @media(max-width:430px){.codexList{grid-template-columns:1fr}.codexPick{min-height:0;flex-direction:row;align-items:center;padding:10px}.codexDetailGrid{grid-template-columns:1fr}.codexField.wide{grid-column:auto}}
 </style>
@@ -893,6 +898,11 @@ function renderCodex(){
  list.querySelectorAll("[data-codex]").forEach(button=>button.addEventListener("click",()=>{selectedCodexId=button.dataset.codex;renderCodex();}));
  const entry=threatDatabase[selectedCodexId];
  detail.innerHTML=`<div class="codexDetailHead"><div><div class="codexClassification">AUTOMATON · FIELD RECORD</div><h2>${escapeHTML(entry.name)}</h2><div>${escapeHTML(entry.classification)}</div></div><span class="codexStatus">IDENTIFIED</span></div>
+ <div class="codexPreviewWrap">
+ <canvas class="codexPreviewCanvas" id="codexPreviewCanvas" width="640" height="260" role="img" aria-label="${escapeHTML(entry.name)} shown from directly overhead on a battlefield"></canvas>
+ <span class="codexPreviewTag">FIELD REFERENCE</span>
+ <div class="codexPreviewFooter"><span>TOP-DOWN FIELD VIEW</span><span>SEAF VISUAL ID · ${escapeHTML(entry.name.toUpperCase())}</span></div>
+ </div>
  <div class="codexDetailGrid">
  <div class="codexField"><h3>Combat Role</h3><p>${escapeHTML(entry.role)}</p></div>
  <div class="codexField"><h3>Field Identification</h3><p>${escapeHTML(entry.identification)}</p></div>
@@ -900,6 +910,7 @@ function renderCodex(){
  <div class="codexField wide"><h3>Observed Behaviour</h3><p>${escapeHTML(entry.behavior)}</p></div>
  <div class="codexField wide"><h3>SEAF Threat Assessment</h3><p>${escapeHTML(entry.assessment)}</p></div>
  <div class="codexField wide"><h3>Intelligence Note</h3><p>${escapeHTML(entry.fieldNote)}</p></div></div>`;
+ drawCodexPreview();
 }
 function refresh(){
  renderResources();renderBuildings();drawBase();renderMissions();
@@ -1433,6 +1444,47 @@ function drawBattleObstacles(c){
   }
  }
 }
+// Shared Automaton sprite painter. Both live combat and Codex field previews use this exact model.
+function drawAutomatonSprite(c,x,y,type,angle=0,scale=1){
+ const palettes={scout:{dark:"#1b2328",mid:"#4b555a",light:"#87463f",edge:"#11191e",optic:"#ff4b3d"},trooper:{dark:"#1c252a",mid:"#59646a",light:"#9a5149",edge:"#11181d",optic:"#ff5546"},devastator:{dark:"#151e23",mid:"#3e4a50",light:"#a3443d",edge:"#0f171b",optic:"#ff4439"}};
+ const col=palettes[type]||palettes.trooper;c.save();c.translate(x,y);c.scale(scale,scale);c.rotate(angle||0);
+ const plate=(px,py,w,h,color,r=2)=>{c.fillStyle=color;c.beginPath();c.roundRect(px,py,w,h,r);c.fill();c.strokeStyle=col.edge;c.lineWidth=1;c.stroke();};
+ c.fillStyle="rgba(5,9,12,.48)";c.beginPath();c.ellipse(-1,4,type==="devastator"?28:type==="trooper"?19:15,type==="devastator"?18:type==="trooper"?12:9,0,0,Math.PI*2);c.fill();
+ if(type==="scout"){
+  // Brawler: forward-leaning chassis, narrow waist and broad close-assault forearms.
+  plate(-14,-8,11,16,col.dark);plate(-9,-9,15,18,col.mid);plate(-5,-7,12,14,col.light);plate(-2,-4,8,8,col.dark);
+  plate(-15,-13,7,9,col.mid);plate(-15,5,7,9,col.mid);plate(4,-9,9,18,col.dark);plate(10,-6,8,12,col.light);plate(-19,-14,7,10,col.dark);plate(-19,4,7,10,col.dark);plate(15,-5,5,10,col.dark);
+  c.fillStyle=col.optic;c.fillRect(8,-2,8,4);c.fillStyle="#f28a6f";c.globalAlpha=.8;c.fillRect(12,-7,3,2);c.fillRect(12,5,3,2);c.globalAlpha=1;
+ }else if(type==="devastator"){
+  // Devastator: wide shoulder silhouette, reinforced chest and heavy rear armour.
+  plate(-24,-18,17,36,col.dark,4);plate(-20,-21,18,15,col.light,3);plate(-20,6,18,15,col.light,3);plate(-13,-17,28,34,col.mid,4);plate(-8,-12,18,24,col.light,3);plate(-4,-8,13,16,col.dark,3);plate(7,-7,9,14,col.mid,3);
+  plate(-14,-25,17,7,col.dark,2);plate(-14,18,17,7,col.dark,2);plate(13,-12,10,24,col.dark,3);plate(17,-8,7,16,col.light,2);
+  c.fillStyle=col.optic;c.fillRect(10,-4,8,8);c.fillStyle="#f28a6f";c.globalAlpha=.7;c.fillRect(-18,-22,9,2);c.fillRect(-18,20,9,2);c.globalAlpha=1;
+ }else{
+  // Trooper: standard humanoid frame, distinct helmet, shoulder shells and rear equipment pack.
+  plate(-17,-10,9,9,col.dark);plate(-17,1,9,9,col.dark);plate(-11,-8,20,17,col.mid,3);plate(-8,-10,16,21,col.light,3);plate(-5,-6,12,13,col.dark,2);
+  plate(-14,-15,8,8,col.mid);plate(-14,7,8,8,col.mid);plate(-18,-6,7,12,col.dark);plate(5,-7,10,14,col.dark,3);plate(8,-5,8,10,col.light,3);
+  plate(-19,-4,5,8,col.light);plate(-13,-15,6,6,col.dark);plate(-21,-8,5,16,col.dark,2);c.fillStyle=col.optic;c.fillRect(14,-2,4,4);c.fillStyle="#a94c44";c.fillRect(-19,-5,3,10);
+ }
+ c.fillStyle=col.optic;c.beginPath();c.arc(type==="devastator"?15:17,0,type==="devastator"?3.2:2.4,0,Math.PI*2);c.fill();c.restore();
+}
+function drawCodexPreview(){
+ const preview=$("codexPreviewCanvas");if(!preview)return;
+ const c=preview.getContext("2d");if(!c)return;
+ const previousCamera=battle.camera;
+ try{
+  // Use the actual battlefield terrain painter, framed around an open field sector.
+  battle.camera={x:450,y:720};drawBattleTerrain(c);
+ }finally{battle.camera=previousCamera;}
+ const w=preview.width,h=preview.height;
+ c.fillStyle="rgba(14,22,27,.82)";c.fillRect(10,10,142,20);
+ c.strokeStyle="rgba(195,209,214,.55)";c.lineWidth=1;c.strokeRect(10.5,10.5,141,19);
+ c.fillStyle="#e2e9eb";c.font="bold 9px system-ui,sans-serif";c.textAlign="left";c.textBaseline="middle";c.fillText("FIELD REFERENCE",18,20);
+ const scale=selectedCodexId==="devastator"?1.65:2.05;
+ drawAutomatonSprite(c,w/2,h/2+5,selectedCodexId,0,scale);
+ c.fillStyle="rgba(14,22,27,.64)";c.fillRect(w-92,h-25,82,15);
+ c.fillStyle="#d2dce0";c.font="bold 8px system-ui,sans-serif";c.textAlign="center";c.textBaseline="middle";c.fillText("OVERHEAD VIEW",w-51,h-17.5);
+}
 function drawBattle(){
  if(!battle.active)return;
  const w=canvas.width,h=canvas.height,c=ctx;
@@ -1487,33 +1539,14 @@ function drawBattle(){
  // Automaton silhouettes use distinct body massing and optical signatures for quick recognition.
  function drawEnemy(enemy){
   const p=worldToScreen(enemy),type=enemy.type;
-  const palettes={scout:{dark:"#1b2328",mid:"#4b555a",light:"#87463f",edge:"#11191e",optic:"#ff4b3d"},trooper:{dark:"#1c252a",mid:"#59646a",light:"#9a5149",edge:"#11181d",optic:"#ff5546"},devastator:{dark:"#151e23",mid:"#3e4a50",light:"#a3443d",edge:"#0f171b",optic:"#ff4439"}};
-  const col=palettes[type]||palettes.trooper;c.save();c.translate(p.x,p.y);c.rotate(enemy.angle||0);
-  const plate=(x,y,w,h,color,r=2)=>{c.fillStyle=color;c.beginPath();c.roundRect(x,y,w,h,r);c.fill();c.strokeStyle=col.edge;c.lineWidth=1;c.stroke();};
-  c.fillStyle="rgba(5,9,12,.48)";c.beginPath();c.ellipse(-1,4,type==="devastator"?28:type==="trooper"?19:15,type==="devastator"?18:type==="trooper"?12:9,0,0,Math.PI*2);c.fill();
-  if(type==="scout"){
-   // Brawler: forward-leaning chassis, narrow waist and broad close-assault forearms.
-   plate(-14,-8,11,16,col.dark);plate(-9,-9,15,18,col.mid);plate(-5,-7,12,14,col.light);plate(-2,-4,8,8,col.dark);
-   plate(-15,-13,7,9,col.mid);plate(-15,5,7,9,col.mid);plate(4,-9,9,18,col.dark);plate(10,-6,8,12,col.light);plate(-19,-14,7,10,col.dark);plate(-19,4,7,10,col.dark);plate(15,-5,5,10,col.dark);
-   c.fillStyle=col.optic;c.fillRect(8,-2,8,4);c.fillStyle="#f28a6f";c.globalAlpha=.8;c.fillRect(12,-7,3,2);c.fillRect(12,5,3,2);c.globalAlpha=1;
-  }else if(type==="devastator"){
-   // Devastator: wide shoulder silhouette, reinforced chest and heavy rear armour.
-   plate(-24,-18,17,36,col.dark,4);plate(-20,-21,18,15,col.light,3);plate(-20,6,18,15,col.light,3);plate(-13,-17,28,34,col.mid,4);plate(-8,-12,18,24,col.light,3);plate(-4,-8,13,16,col.dark,3);plate(7,-7,9,14,col.mid,3);
-   plate(-14,-25,17,7,col.dark,2);plate(-14,18,17,7,col.dark,2);plate(13,-12,10,24,col.dark,3);plate(17,-8,7,16,col.light,2);
-   c.fillStyle=col.optic;c.fillRect(10,-4,8,8);c.fillStyle="#f28a6f";c.globalAlpha=.7;c.fillRect(-18,-22,9,2);c.fillRect(-18,20,9,2);c.globalAlpha=1;
-  }else{
-   // Trooper: standard humanoid frame, distinct helmet, shoulder shells and rear equipment pack.
-   plate(-17,-10,9,9,col.dark);plate(-17,1,9,9,col.dark);plate(-11,-8,20,17,col.mid,3);plate(-8,-10,16,21,col.light,3);plate(-5,-6,12,13,col.dark,2);
-   plate(-14,-15,8,8,col.mid);plate(-14,7,8,8,col.mid);plate(-18,-6,7,12,col.dark);plate(5,-7,10,14,col.dark,3);plate(8,-5,8,10,col.light,3);
-   plate(-19,-4,5,8,col.light);plate(-13,-15,6,6,col.dark);plate(-21,-8,5,16,col.dark,2);c.fillStyle=col.optic;c.fillRect(14,-2,4,4);c.fillStyle="#a94c44";c.fillRect(-19,-5,3,10);
-  }
-  c.fillStyle=col.optic;c.beginPath();c.arc(type==="devastator"?15:17,0,type==="devastator"?3.2:2.4,0,Math.PI*2);c.fill();c.restore();
+  drawAutomatonSprite(c,p.x,p.y,type,enemy.angle||0,1);
   const labels={devastator:"DEVASTATOR",scout:"BRAWLER",trooper:"TROOPER"},widths={devastator:56,scout:42,trooper:42};
   const label=labels[type]||"AUTOMATON",barW=widths[type]||42,barY=p.y-(enemy.radius+16);
   c.font="bold 8px system-ui,sans-serif";c.textAlign="center";c.textBaseline="bottom";c.fillStyle="rgba(9,14,18,.84)";c.fillRect(p.x-barW/2-3,barY-10,barW+6,13);
   c.fillStyle="#f0e4df";c.fillText(label,p.x,barY-1);c.fillStyle="#171d21";c.fillRect(p.x-barW/2,barY,barW,4);
   c.fillStyle=type==="devastator"?"#e58b70":type==="scout"?"#d79b71":"#d76b5e";c.fillRect(p.x-barW/2,barY,barW*clamp(enemy.hp/enemy.maxHp,0,1),4);
  }
+
  squad.forEach((member,i)=>{if(!member.dead)drawUnit(member,"#71899a","#263f50",member.angle,"squad",i);});
  enemies.forEach(enemy=>{if(enemy.alive)drawEnemy(enemy);});
  drawUnit(player,"#82917a","#344a3b",player.angle,"player");
