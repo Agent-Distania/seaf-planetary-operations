@@ -1,3 +1,20 @@
+## v0.8.9 — Automaton Model Rework
+*Released November 25, 2026*
+
+### Changed
+- Rebuilt the shared Automaton sprite painter around recognizable bipedal humanoid proportions.
+- Shortened and compacted the Trooper silhouette, with a distinct head, torso, paired arms and separated legs.
+- Rebuilt the Brawler as a readable close-assault humanoid with a compact torso, forward-set shoulders, two clear arms and separated legs.
+- Reworked the Devastator as a broader but unmistakably bipedal heavy infantry frame.
+- Updated Automaton Codex identification text and preview scale to match the revised models; live combat and Codex previews continue to use the same shared painter.
+- Kept the model orientation aligned with each enemy's existing facing angle.
+
+### Preserved
+- Enemy identifiers, health, movement, combat behaviour, spawn counts, mission systems, campaign saves, SEAF visuals and mobile controls.
+
+### Verification
+- Source structure and version labels checked before publication. JavaScript syntax and canvas-render smoke tests are recorded after the final source verification.
+
 ## v0.8.8 — Infantry Visual Refinement
 *Released November 25, 2026*
 
