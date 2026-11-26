@@ -1,5 +1,13 @@
 # Development Roadmap
 
+## v0.8.16 — Symmetrical Motor Pool Layout (implemented)
+- Recentered the apron and inner border around the existing two-bay centerline.
+- Aligned the access road to the central service aisle.
+- Balanced service cabinets and inspection markers across both sides.
+- Mirrored the yard edge seams, bollards and service lights.
+- Left parked model art and positions unchanged; no vehicle implementation added.
+
+
 ## v0.8.15 — Base Service Yard Details (implemented)
 - Added a marked service-access walkway to the motor-pool apron.
 - Added drainage grates in the aisle between the existing bays.
