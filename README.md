@@ -3,7 +3,7 @@
 A single-player, top-down 2D sci-fi military game about ordinary SEAF soldiers fighting to reclaim hostile worlds. Built as a browser game with PC and mobile controls.
 
 ## Current status
-- **Latest build:** v0.8.4 — Operations Expanded, Part I: Threat Database & Faction Visual Pass
+- **Latest build:** v0.8.5 — Operations Expanded, Part I: Battlefield Expansion & Infrastructure Pass
 - **Development status:** Early prototype; browser gameplay testing remains incomplete
 - **Platform:** Browser (HTML/CSS/JavaScript)
 - **Perspective:** Top-down, fully 2D
@@ -14,7 +14,9 @@ Manage a forward base, select an operation, deploy with squadmates, complete obj
 ## Current prototype systems
 - SEAF blue-grey forward base with pale concrete structures, blue identification panels, yellow safety markings, detailed perimeter and gate, engineered roads, transport apron, motor pool, reserved service zones, full-base camera framing and footprint-aware construction
 - Overhead Pelican transport with wingtip VTOL engines and expanded apron
-- Five recognizable enemy-colored facility footprints: communications array/dish, generator, command post, defense post and supply compound
+- Expanded 1,600 × 1,400 battlefields with branching industrial roads, varied ground zones, separated Automaton facilities and mission-specific combat sectors
+- Automaton Fabricators, Detector Towers, communications arrays, power sites, command bunkers, defence positions and supply compounds with dedicated top-down silhouettes
+- Infantry barbed wire that can be crossed but damages units on entry; anti-vehicle obstacles remain deferred until vehicle movement is implemented
 - Zoomable/pannable base camera and plot-based construction
 - Resources: supplies, components, requisition, intel
 - Recruitment and squadmates; each Barracks increases squad capacity by two, from the existing eight-person baseline up to twelve
@@ -30,7 +32,7 @@ Manage a forward base, select an operation, deploy with squadmates, complete obj
 - Main menu with three local campaign save slots
 - Legacy single-save migration into Campaign Slot 1
 
-The v0.8.4 Operations Expanded visual pass adds an editable Automaton Threat Database, identifies the three prototype enemy roles as Trooper, Brawler and Devastator, refines Automaton and SEAF top-down silhouettes, and improves the shared presentation of SEAF facilities and hostile installations. Combat roles and stable runtime identifiers are preserved. It does not expand the battlefield or add patrols; those remain part of Operations Expanded, Part II: Battlefield Overhaul and later encounter work. The v0.8.1 patch fixes the startup error that prevented the campaign save-slot menu from appearing. The v0.6 transport artwork is an original top-down Pelican-inspired fan-game silhouette; vehicle artwork is stylized canvas illustration, not imported game models.
+The v0.8.5 Operations Expanded visual pass adds an editable Automaton Threat Database, identifies the three prototype enemy roles as Trooper, Brawler and Devastator, refines Automaton and SEAF top-down silhouettes, and improves the shared presentation of SEAF facilities and hostile installations. Combat roles and stable runtime identifiers are preserved. It does not expand the battlefield or add patrols; those remain part of Operations Expanded, Part II: Battlefield Overhaul and later encounter work. The v0.8.1 patch fixes the startup error that prevented the campaign save-slot menu from appearing. The v0.6 transport artwork is an original top-down Pelican-inspired fan-game silhouette; vehicle artwork is stylized canvas illustration, not imported game models.
 
 ## Controls
 **Desktop:** WASD/arrows move, mouse aim, left click fire, R reload, E interact, Q toggle squad HOLD/FOLLOW.
