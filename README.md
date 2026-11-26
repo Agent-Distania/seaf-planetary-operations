@@ -3,7 +3,7 @@
 A single-player, top-down 2D sci-fi military game about ordinary SEAF soldiers fighting to reclaim hostile worlds. Built as a browser game with PC and mobile controls.
 
 ## Current status
-- **Latest build:** v0.8.3 — Operations Expanded, Part I: Enemy Silhouette Refinement
+- **Latest build:** v0.8.4 — Operations Expanded, Part I: Threat Database & Faction Visual Pass
 - **Development status:** Early prototype; browser gameplay testing remains incomplete
 - **Platform:** Browser (HTML/CSS/JavaScript)
 - **Perspective:** Top-down, fully 2D
@@ -21,13 +21,16 @@ Manage a forward base, select an operation, deploy with squadmates, complete obj
 - Logistics and storage: Supply Depots increase supply/component capacity; mission rewards are capped by available storage with overflow reported
 - Three missions: Clear the Area, Supply Recovery, Relay Sabotage
 - Combat foundation with distinct squad formation spacing, HOLD/FOLLOW orders, cover collision and destructible barricades
-- Three distinct enemy archetypes — fast Scout, standard armored Trooper and heavily armored Devastator — with dedicated overhead silhouettes, red hostile optics, role-specific durability, movement and engagement distances
+- Three Automaton archetypes — Trooper, Brawler and Devastator — with distinct overhead silhouettes, faction-consistent armour profiles and role-specific movement/engagement behaviour
+- SEAF personnel silhouettes with more readable helmets, torso armour, packs, limbs and unit identifiers
+- Editable Automaton Threat Database with field descriptions, observed behaviour, identification notes and SEAF assessments
+- Refined SEAF building foundations and shared visual identity details; more legible, type-specific Automaton installations
 - Visible enemy health bars, ammunition HUD, 30-round service rifle and interaction-based objectives
 - Desktop keyboard/mouse and mobile touch controls
 - Main menu with three local campaign save slots
 - Legacy single-save migration into Campaign Slot 1
 
-The v0.8.2 Operations Expanded, Part I: Enemy Overhaul update replaces the shared enemy token art with separate top-down Scout, Trooper and Devastator silhouettes, updates their combat roles and prioritizes visible SEAF targets for ranged enemies. It does not expand the arena or add patrols; those belong to Operations Expanded, Part II: Battlefield Overhaul and its follow-on encounter systems. The v0.8.1 patch fixes the startup error that prevented the campaign save-slot menu from appearing. The v0.6 transport artwork is an original top-down Pelican-inspired fan-game silhouette; vehicle artwork is stylized canvas illustration, not imported game models.
+The v0.8.4 Operations Expanded visual pass adds an editable Automaton Threat Database, identifies the three prototype enemy roles as Trooper, Brawler and Devastator, refines Automaton and SEAF top-down silhouettes, and improves the shared presentation of SEAF facilities and hostile installations. Combat roles and stable runtime identifiers are preserved. It does not expand the battlefield or add patrols; those remain part of Operations Expanded, Part II: Battlefield Overhaul and later encounter work. The v0.8.1 patch fixes the startup error that prevented the campaign save-slot menu from appearing. The v0.6 transport artwork is an original top-down Pelican-inspired fan-game silhouette; vehicle artwork is stylized canvas illustration, not imported game models.
 
 ## Controls
 **Desktop:** WASD/arrows move, mouse aim, left click fire, R reload, E interact, Q toggle squad HOLD/FOLLOW.
