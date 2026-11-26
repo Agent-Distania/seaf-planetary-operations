@@ -1,5 +1,10 @@
 # Development Roadmap
 
+## v0.8.18 — Forward Command HQ Redesign (implemented)
+- Rebuilt the central Command Post as a modular SEAF Forward Command facility with a raised operations core, paired support wings, communications mast, identity plate and formal forecourt entrance.
+- Preserved its original 108 × 82 logical footprint and all campaign/building systems.
+
+
 ## v0.8.17 — Command Forecourt Cleanup (implemented)
 - Removed the four diagonal construction plots surrounding the central Command Post forecourt.
 - Preserved all other construction plots and existing building placement behavior.
