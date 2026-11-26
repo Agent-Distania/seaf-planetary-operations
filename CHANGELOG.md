@@ -171,6 +171,14 @@
 
 # Changelog
 
+## v0.8.10 — Rear Leg Silhouette Cleanup
+### Changed
+- Removed the rear leg/foot plates from Trooper, Brawler and Devastator overhead models for a cleaner silhouette.
+- Preserved torso, arms, head, rear pack, optics, rotations and gameplay behavior.
+### Testing
+- JavaScript syntax and sprite-drawing smoke tests planned before publication.
+
+
 ## v0.8.1 — Save Menu Startup Fix
 
 ### Fixed
