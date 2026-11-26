@@ -1,4 +1,11 @@
-# Development Roadmap\n\n## v0.8.12 — Battlefield Variety & Road Checkpoints (implemented)\n- Rotated SEAF infantry another 180 degrees.\n- Reduced ground debris marks and obstacle clutter.\n- Added randomized checkpoint road-control barriers while preserving passable lanes.\n- Randomized light clutter sites between deployments; objectives and key facilities remain fixed.\n
+# Development Roadmap
+
+## v0.8.12 — Battlefield Variety & Road Checkpoints (implemented)
+- Rotated SEAF infantry another 180 degrees.
+- Reduced ground debris marks and obstacle clutter.
+- Added randomized checkpoint road-control barriers while preserving passable lanes.
+- Randomized light clutter sites between deployments; objectives and key facilities remain fixed.
+
 
 ## v0.8.11 — Infantry Facing Alignment (implemented)
 - Corrected SEAF infantry sprite rotation so their visual forward direction matches movement/aim vectors rather than the gun-side axis.
