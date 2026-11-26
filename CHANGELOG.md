@@ -1,3 +1,18 @@
+## v0.8.7 — Personnel Codex
+*Released November 25, 2026*
+
+### Added
+- Added Codex tabs for Automatons and SEAF.
+- Added initial SEAF Soldier and Squadmate personnel entries with overhead field previews.
+- Split Codex data by faction so future SEAF personnel can be added without mixing them into hostile records.
+
+### Preserved
+- Existing Automaton records and previews, combat systems, missions, base systems and saves.
+
+### Verification
+- JavaScript syntax compilation passed. Faction-tab and Codex rendering paths were checked structurally; full live-browser visual testing was not performed.
+
+
 ## v0.8.6 — Main Menu Branding Correction
 *Released November 25, 2026*
 
