@@ -1,3 +1,19 @@
+## v0.8.11 — Infantry Facing Alignment
+*Released November 25, 2026*
+
+### Fixed
+- Corrected SEAF infantry sprite rotation so the helmet/front-facing direction aligns with movement and aim vectors instead of the weapon-side axis.
+- Updated squad number labels to remain upright after the rotation correction.
+- Applied the correction to the shared SEAF draw function used by battlefield units and Codex previews.
+
+### Preserved
+- Movement inputs, formation pathing, squad orders, combat, saves, and unit stats.
+
+### Verification
+- JavaScript syntax check and targeted rotation-vector checks passed before publication.
+- Actual mobile visual playtesting remains unperformed.
+
+
 ## v0.8.9 — Automaton Model Rework
 *Released November 25, 2026*
 
