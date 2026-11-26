@@ -1,3 +1,9 @@
+## v0.8.21 — Base Access & Site Infrastructure Polish (implemented)
+- Added narrow pedestrian footpaths alongside the main service roads and central access lanes.
+- Added short footpath links, low-profile lights, drainage grates and marked pedestrian crossings.
+- Preserved the map dimensions, building plots, all facility artwork, parked model artwork, campaign saves and gameplay systems.
+
+
 # Development Roadmap
 
 ## v0.8.20 — SEAF Facility Visual Overhaul (implemented)
