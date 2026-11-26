@@ -341,7 +341,7 @@ function getBasePlots(){
   // Keep the main north-south and east-west access lanes clear.
   if((x>=535&&x<=665)||(y>=350&&y<=450))continue;
   // Reserve the southeast service yard for heavy vehicles and exosuit maintenance.
-  if(x>=840&&x<=960&&y>=510)continue;
+  if(x>=760&&y>=480)continue;
   // Keep the southern central approach and landing apron clear of new structures.
   if(x>=480&&x<=720&&y>=610)continue;
   plots.push({x,y});
@@ -837,25 +837,26 @@ function drawExosuitSilhouette(c,x,y){
  c.restore();
 }
 function drawMotorPool(c){
- // Dedicated vehicle service compound: concrete apron, painted bays and a blue service spine.
- fillRound(c,786,496,228,232,9,"#7e8d95","#d4dcdf",2);
- fillRound(c,794,504,212,216,6,"#5c6e79","#2f4655",1.5);
- c.strokeStyle="#d4dde0";c.lineWidth=2;c.setLineDash([10,7]);c.strokeRect(800,510,200,206);c.setLineDash([]);
- fillRound(c,806,522,88,178,5,"#aeb9be","#e0e6e7",1.5);
- fillRound(c,906,522,88,178,5,"#aeb9be","#e0e6e7",1.5);
- // Each bay has a navy-blue header, blue ID stripe and yellow safety boundaries.
- for(const x of [806,906]){
-  fillRound(c,x+5,528,78,20,3,"#315f82","#d4dde0",1);
-  c.fillStyle="#eef2f3";c.font="bold 7px system-ui";c.textAlign="center";c.fillText(x===806?"BASTION BAY":"EXOSUIT BAY",x+44,541);
-  c.strokeStyle="#d8b64f";c.lineWidth=2;c.setLineDash([7,6]);c.strokeRect(x+8,552,72,137);c.setLineDash([]);
-  c.fillStyle="#527f9e";c.fillRect(x+8,554,3,132);c.fillRect(x+77,554,3,132);
+ // Expanded vehicle compound: larger concrete apron and separate roomy maintenance/parking bays.
+ fillRound(c,754,474,382,278,10,"#7e8d95","#d4dcdf",2.2);
+ fillRound(c,764,484,362,258,7,"#5c6e79","#2f4655",1.7);
+ c.strokeStyle="#d4dde0";c.lineWidth=2;c.setLineDash([12,8]);c.strokeRect(772,492,346,242);c.setLineDash([]);
+ // Larger bays allow the tank to occupy the space without crowding or clipping.
+ fillRound(c,782,504,150,206,5,"#aeb9be","#e0e6e7",1.6);
+ fillRound(c,968,504,150,206,5,"#aeb9be","#e0e6e7",1.6);
+ for(const x of [782,968]){
+  fillRound(c,x+8,510,134,22,3,"#315f82","#d4dde0",1);
+  c.fillStyle="#eef2f3";c.font="bold 8px system-ui";c.textAlign="center";c.fillText(x===782?"BASTION PARKING / SERVICE":"EXOSUIT SERVICE BAY",x+75,524);
+  c.strokeStyle="#d8b64f";c.lineWidth=2;c.setLineDash([8,7]);c.strokeRect(x+10,540,130,160);c.setLineDash([]);
+  c.fillStyle="#527f9e";c.fillRect(x+10,542,3,156);c.fillRect(x+137,542,3,156);
  }
- drawHeavyVehicleSilhouette(c,850,615);
- drawExosuitSilhouette(c,950,614);
- // Tool cabinets, inspection lights and a central service lane.
- for(let i=0;i<3;i++){fillRound(c,810+i*28,690,18,10,2,"#304959","#c2ced2",1);c.fillStyle="#d8b64f";c.fillRect(814+i*28,693,9,2);}
- for(let i=0;i<4;i++){c.fillStyle="#d8b64f";c.beginPath();c.arc(812+i*58,708,2.5,0,Math.PI*2);c.fill();}
- c.fillStyle="#edf1f2";c.font="bold 8px system-ui";c.fillText("SEAF MOTOR POOL",900,716);
+ // The Bastion is centered with clear room around its silhouette; the exosuit has its own bay.
+ drawHeavyVehicleSilhouette(c,857,622);
+ drawExosuitSilhouette(c,1043,622);
+ // Tool cabinets and inspection lights are moved to the bay edge to keep the parking footprints clear.
+ for(let i=0;i<4;i++){fillRound(c,786+i*30,716,20,10,2,"#304959","#c2ced2",1);c.fillStyle="#d8b64f";c.fillRect(790+i*30,719,10,2);}
+ for(let i=0;i<5;i++){c.fillStyle="#d8b64f";c.beginPath();c.arc(786+i*72,738,2.5,0,Math.PI*2);c.fill();}
+ c.fillStyle="#edf1f2";c.font="bold 9px system-ui";c.fillText("EXPANDED SEAF MOTOR POOL",945,746);
 }
 function drawUtilityProps(c){
  // Electrical cabinets, cable junctions and access grates in the same blue-grey material family.
