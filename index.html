@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>SEAF: Planetary Operations — v0.8.19</title>
+<title>SEAF: Planetary Operations — v0.8.20</title>
 <style>
 :root{--bg:#111a22;--panel:#1d2a35;--panel2:#273846;--line:#455c6b;--text:#e6edf0;--muted:#a9bbc5;--accent:#83b0ce;--danger:#e26b5e;--gold:#d8b64f}
 *{box-sizing:border-box}
@@ -118,7 +118,7 @@ footer{margin-top:10px;color:#8fa5b2;font-size:11px;text-align:center}
 <body>
 <div id="app">
 <header>
-  <div class="brand">SEAF <span>PLANETARY OPERATIONS · PROTOTYPE 0.8.19</span></div>
+  <div class="brand">SEAF <span>PLANETARY OPERATIONS · PROTOTYPE 0.8.20</span></div>
   <div class="resourcebar" id="resources"></div>
 </header>
 <div class="tabs menu-hidden">
@@ -352,9 +352,9 @@ function getBasePlots(){
 }
 function baseFootprint(type){
  return ({
-  command:{w:276,h:160},barracks:{w:94,h:66},depot:{w:104,h:76},
-  medical:{w:88,h:68},radar:{w:82,h:82},turret:{w:66,h:66},
-  engineering:{w:104,h:76}
+  command:{w:276,h:160},barracks:{w:110,h:84},depot:{w:112,h:86},
+  medical:{w:106,h:84},radar:{w:110,h:88},turret:{w:66,h:66},
+  engineering:{w:112,h:84}
  })[type]||{w:86,h:64};
 }
 function basePlotOpen(plot,type=pendingBuilding||"barracks"){
@@ -606,11 +606,12 @@ function drawPerimeter(c){
  c.restore();
 }
 function drawConstructionPad(c,plot){
- fillRound(c,plot.x-53,plot.y-41,106,82,5,"#778791","#c4cfd4",1.3);
- fillRound(c,plot.x-48,plot.y-36,96,72,3,"#8797a0","#536b7b",1);
- c.strokeStyle="#b9c6cc";c.lineWidth=1;c.setLineDash([5,5]);c.strokeRect(plot.x-43,plot.y-31,86,62);c.setLineDash([]);
- c.fillStyle="#416f91";c.fillRect(plot.x-44,plot.y-34,12,3);c.fillRect(plot.x+32,plot.y+31,12,3);
- c.fillStyle="#d8b64f";c.fillRect(plot.x-50,plot.y-38,6,2);c.fillRect(plot.x+44,plot.y+36,6,2);
+ // Slightly larger modular concrete pad, sized for the redesigned support facilities.
+ fillRound(c,plot.x-57,plot.y-46,114,92,5,"#778791","#c4cfd4",1.3);
+ fillRound(c,plot.x-52,plot.y-41,104,82,3,"#8797a0","#536b7b",1);
+ c.strokeStyle="#b9c6cc";c.lineWidth=1;c.setLineDash([5,5]);c.strokeRect(plot.x-47,plot.y-36,94,72);c.setLineDash([]);
+ c.fillStyle="#416f91";c.fillRect(plot.x-48,plot.y-39,12,3);c.fillRect(plot.x+36,plot.y+36,12,3);
+ c.fillStyle="#d8b64f";c.fillRect(plot.x-54,plot.y-43,6,2);c.fillRect(plot.x+48,plot.y+41,6,2);
 }
 function drawRoofVent(c,x,y,w=12,h=8){
  fillRound(c,x-w/2,y-h/2,w,h,2,"#314553","#bdc9ce",1);
@@ -736,54 +737,134 @@ function drawCommandGroundSign(c,x,y){
  c.restore();
 }
 function drawBarracks(c,x,y){
- drawBuildingBase(c,x,y,94,66);
- fillRound(c,x-39,y-24,78,48,4,"#82939c","#3d5666",2);
- for(let i=0;i<3;i++){
-  const bx=x-32+i*25;
-  fillRound(c,bx,y-18,20,36,2,i===1?"#d0d8db":"#aab8bf","#e0e6e7",1);
-  c.fillStyle="#31536b";c.fillRect(bx+3,y-12,14,5);
-  c.fillStyle="#4a6678";c.fillRect(bx+3,y-3,14,13);
-  drawRoofVent(c,bx+10,y+13,10,6);
-  c.fillStyle="#d8b64f";c.fillRect(bx+2,y-17,4,2);
+ // Modular SEAF personnel quarters: paired accommodation wings joined by a central corridor.
+ drawBuildingBase(c,x,y,110,84);
+ fillRound(c,x-52,y-39,104,78,6,"#344b5a","#263b49",2);
+ fillRound(c,x-48,y-35,96,70,4,"#aab8bf","#e0e6e8",1.2);
+ // Two matching accommodation blocks with repeated room modules.
+ for(const side of [-1,1]){
+  const wx=x+side*29;
+  fillRound(c,wx-19,y-30,38,60,3,"#526e7d","#314958",1.4);
+  fillRound(c,wx-15,y-26,30,52,2,"#8197a2","#d6e0e3",1);
+  for(let k=0;k<3;k++){
+   const yy=y-20+k*19;
+   fillRound(c,wx-11,yy-5,22,10,2,"#2a4355","#c0cdd3",.8);
+   c.fillStyle="#79a2bb";c.fillRect(wx-8,yy-2,16,2);
+   drawRoofVent(c,wx,yy+7,18,5);
+  }
+  c.fillStyle="#315f82";c.fillRect(wx-14,y+22,28,3);
+  c.fillStyle="#d8b64f";c.fillRect(wx-17,y-29,5,2);c.fillRect(wx+12,y-29,5,2);
  }
- fillRound(c,x-11,y+24,22,7,2,"#315f82","#dbe2e4",1);c.fillStyle="#d8b64f";c.fillRect(x-5,y+26,10,2);
- drawBuildingLabel(c,"BARRACKS",x,y+29);
+ // Covered cross-corridor and central entrance vestibule.
+ fillRound(c,x-13,y-32,26,64,3,"#344c5b","#d5dfe2",1.1);
+ fillRound(c,x-9,y-26,18,52,2,"#91a3ac","#dce4e6",.9);
+ c.strokeStyle="#536e7f";c.lineWidth=1.2;
+ for(let yy=y-20;yy<=y+14;yy+=9){c.beginPath();c.moveTo(x-6,yy);c.lineTo(x+6,yy);c.stroke();}
+ fillRound(c,x-18,y+27,36,9,2,"#263f50","#c4d0d5",1);
+ fillRound(c,x-11,y+28,22,7,1,"#315f82","#9cb8c8",.8);
+ c.fillStyle="#d8b64f";c.fillRect(x-4,y+30,8,2);
+ // Small covered entry steps.
+ c.strokeStyle="#d3dde0";c.lineWidth=1;
+ for(let yy=y+35;yy<=y+41;yy+=3){c.beginPath();c.moveTo(x-17,yy);c.lineTo(x+17,yy);c.stroke();}
 }
+
 function drawSupplyDepot(c,x,y){
- drawBuildingBase(c,x,y,104,76);
- fillRound(c,x-43,y-28,86,56,4,"#657c8a","#344a58",3);
- fillRound(c,x-36,y-22,72,44,2,"#a9b7be","#dce3e5",1.2);
- c.fillStyle="#426a86";c.fillRect(x-35,y-20,70,8);
- c.strokeStyle="#667d89";c.lineWidth=2;for(let i=-28;i<=28;i+=12){c.beginPath();c.moveTo(x+i,y-8);c.lineTo(x+i,y+17);c.stroke();}
- c.fillStyle="#30495a";c.fillRect(x-31,y-5,62,17);c.strokeStyle="#d3dde0";c.lineWidth=1;c.strokeRect(x-31,y-5,62,17);
- for(let i=0;i<3;i++){fillRound(c,x-33+i*23,y+19,18,8,1,"#435b6c","#d0dadd",1);c.fillStyle="#d8b64f";c.fillRect(x-29+i*23,y+21,10,2);}
- fillRound(c,x-48,y-22,9,15,1,"#527b96","#d5dfe1",1);fillRound(c,x+39,y-21,9,14,1,"#527b96","#d5dfe1",1);
- drawBuildingLabel(c,"SUPPLY DEPOT",x,y+32);
+ // Heavy modular stores building with a broad roof, visible loading doors and staged containers.
+ drawBuildingBase(c,x,y,112,86);
+ fillRound(c,x-53,y-40,106,80,6,"#344b5a","#243a48",2.2);
+ fillRound(c,x-48,y-35,96,70,4,"#718794","#d8e1e4",1.2);
+ // Main warehouse roof and structural ribs.
+ fillRound(c,x-39,y-30,78,56,3,"#aab8bf","#e1e7e8",1.2);
+ fillRound(c,x-34,y-25,68,46,2,"#536d7c","#314a59",1);
+ c.fillStyle="#315f82";c.fillRect(x-31,y-21,62,5);
+ c.strokeStyle="#9cabb3";c.lineWidth=1;
+ for(let xx=x-27;xx<=x+27;xx+=18){c.beginPath();c.moveTo(xx,y-13);c.lineTo(xx,y+17);c.stroke();}
+ // Raised roof equipment and vents.
+ drawRoofVent(c,x-22,y-4,13,8);drawRoofVent(c,x+22,y-4,13,8);
+ fillRound(c,x-12,y-19,24,8,2,"#314a5a","#c4d0d5",.8);
+ // Paired loading bays face the lower service apron.
+ for(const side of [-1,1]){
+  const dx=x+side*24;
+  fillRound(c,dx-13,y+18,26,15,2,"#263c4b","#d2dce0",1);
+  fillRound(c,dx-10,y+20,20,10,1,"#9eafb7","#354f5f",.8);
+  c.strokeStyle="#536b79";c.lineWidth=.8;
+  for(let k=0;k<4;k++){c.beginPath();c.moveTo(dx-8+k*5,y+21);c.lineTo(dx-8+k*5,y+29);c.stroke();}
+  fillRound(c,dx-15,y+32,30,5,1,"#315f82","#c8d4da",.8);
+  c.fillStyle="#d8b64f";c.fillRect(dx-13,y+35,26,2);
+ }
+ // Container racks on both outer shoulders.
+ for(const side of [-1,1]){
+  const sx=x+side*43;
+  fillRound(c,sx-7,y-25,14,20,2,"#405a69","#c7d3d8",1);
+  c.fillStyle="#9eafb7";c.fillRect(sx-4,y-21,8,3);
+  c.strokeStyle="#263d4b";c.lineWidth=1;c.strokeRect(sx-4,y-15,8,7);
+  fillRound(c,sx-7,y+1,14,12,2,"#536f80","#d0dade",.8);
+  c.fillStyle="#d8b64f";c.fillRect(sx-5,y+4,10,2);
+ }
 }
+
 function drawMedicalStation(c,x,y){
- drawBuildingBase(c,x,y,88,68);
- fillRound(c,x-35,y-25,70,50,4,"#b9c5ca","#445b6a",2.5);
- fillRound(c,x-28,y-18,56,36,2,"#e4e9e9","#f4f6f5",1);
- fillRound(c,x-43,y-7,12,25,2,"#6e8fa5","#d7e0e3",1);
- c.fillStyle="#436d89";c.fillRect(x-22,y-13,44,5);c.fillStyle="#6c8da1";c.fillRect(x-20,y-3,40,13);
- fillRound(c,x-9,y-28,18,13,2,"#315f82","#e3e9e9",1);
- c.fillStyle="#edf2f2";c.fillRect(x-2,y-25,4,8);c.fillRect(x-6,y-22,12,3);
- fillRound(c,x-12,y+23,24,8,2,"#30495a","#d1dade",1);c.fillStyle="#d8b64f";c.fillRect(x-4,y+25,8,3);
- drawBuildingLabel(c,"MEDICAL",x,y+31);
+ // Compact triage building: clean treatment wings around a bright central intake hall.
+ drawBuildingBase(c,x,y,106,84);
+ fillRound(c,x-50,y-39,100,78,6,"#394f5b","#243b49",2.2);
+ fillRound(c,x-46,y-35,92,70,4,"#e0e6e7","#f0f3f3",1.2);
+ // Left and right treatment rooms.
+ for(const side of [-1,1]){
+  const wx=x+side*31;
+  fillRound(c,wx-14,y-27,28,54,3,"#8d9fa8","#405b6b",1.2);
+  fillRound(c,wx-10,y-22,20,44,2,"#d4dddf","#f0f3f3",.9);
+  fillRound(c,wx-7,y-15,14,11,2,"#7893a3","#d2dce0",.8);
+  c.fillStyle="#eff3f3";c.fillRect(wx-4,y-12,8,4);
+  fillRound(c,wx-7,y+1,14,15,2,"#f2f4f3","#879ca7",.8);
+  c.fillStyle="#557b91";c.fillRect(wx-4,y+5,8,2);
+  c.fillStyle="#d8b64f";c.fillRect(wx-7,y-25,4,2);c.fillRect(wx+3,y-25,4,2);
+ }
+ // Central intake corridor and reception/triage desk.
+ fillRound(c,x-16,y-30,32,60,3,"#516d7c","#2f4a59",1.3);
+ fillRound(c,x-12,y-25,24,48,2,"#d9e1e3","#f2f4f4",.8);
+ fillRound(c,x-10,y-16,20,12,2,"#31566e","#a9c1cc",.8);
+ c.fillStyle="#e8eeee";c.fillRect(x-6,y-12,12,2);
+ fillRound(c,x-11,y+1,22,13,2,"#eff3f3","#7893a3",.8);
+ // Medical cross on a dedicated wall panel, not a large rooftop wordmark.
+ fillRound(c,x-9,y-28,18,10,2,"#3e687e","#d9e3e6",.8);
+ c.fillStyle="#edf3f2";c.fillRect(x-2,y-26,4,6);c.fillRect(x-5,y-24,10,2);
+ // Southern patient entrance and short covered steps.
+ fillRound(c,x-18,y+27,36,8,2,"#3b596b","#d9e1e3",1);
+ fillRound(c,x-10,y+28,20,6,1,"#243d4d","#9eb5c1",.8);
+ c.strokeStyle="#b8c8cf";c.lineWidth=1;
+ for(let yy=y+35;yy<=y+41;yy+=3){c.beginPath();c.moveTo(x-16,yy);c.lineTo(x+16,yy);c.stroke();}
 }
+
 function drawRadarStation(c,x,y){
- drawBuildingBase(c,x,y,82,82);
- fillRound(c,x-35,y+7,40,23,3,"#7c909b","#344d5d",2);
- fillRound(c,x-28,y+12,26,12,2,"#263f51","#aebfc7",1);
- c.fillStyle="#8fb1c5";c.fillRect(x-24,y+15,5,4);c.fillRect(x-15,y+15,5,4);
- c.fillStyle="#31495a";c.beginPath();c.arc(x+12,y-10,29,0,Math.PI*2);c.fill();
- c.strokeStyle="#c4d0d5";c.lineWidth=2;c.beginPath();c.arc(x+12,y-10,25,0,Math.PI*2);c.stroke();
- c.strokeStyle="#5e91b2";c.lineWidth=2;
- c.beginPath();c.moveTo(x-10,y-10);c.lineTo(x+34,y-10);c.moveTo(x+12,y-32);c.lineTo(x+12,y+12);c.stroke();
- c.beginPath();c.moveTo(x-7,y-29);c.lineTo(x+31,y+9);c.moveTo(x+31,y-29);c.lineTo(x-7,y+9);c.stroke();
- c.fillStyle="#d8b64f";c.beginPath();c.arc(x+12,y-10,5,0,Math.PI*2);c.fill();
- c.strokeStyle="#d0dadd";c.lineWidth=2;c.beginPath();c.moveTo(x-4,y+16);c.lineTo(x-14,y+32);c.stroke();
- drawBuildingLabel(c,"RADAR",x,y+33);
+ // Wide sensor station with a large unmistakable overhead dish and a separate control module.
+ drawBuildingBase(c,x,y,110,88);
+ fillRound(c,x-52,y-41,104,82,6,"#344b5a","#263c49",2.2);
+ fillRound(c,x-48,y-37,96,74,4,"#7d909a","#dbe3e5",1.2);
+ // Reinforced control building on the west side.
+ fillRound(c,x-43,y-29,36,58,3,"#344d5d","#d1dce0",1.2);
+ fillRound(c,x-39,y-25,28,50,2,"#9babb3","#e0e7e8",.9);
+ fillRound(c,x-35,y-19,20,13,2,"#263f52","#a9c1cc",.8);
+ c.fillStyle="#75a1b9";c.fillRect(x-32,y-15,14,2);
+ drawRoofVent(c,x-25,y+2,22,8);
+ fillRound(c,x-35,y+12,20,8,1,"#344c5c","#c3cfd4",.8);
+ c.fillStyle="#d8b64f";c.fillRect(x-31,y+15,12,2);
+ // Large circular radar dish on the east side with concentric housing rings.
+ c.fillStyle="#263e4d";c.beginPath();c.arc(x+18,y-2,31,0,Math.PI*2);c.fill();
+ c.strokeStyle="#d2dce0";c.lineWidth=2.2;c.stroke();
+ c.fillStyle="#647f90";c.beginPath();c.arc(x+18,y-2,26,0,Math.PI*2);c.fill();
+ c.strokeStyle="#a9bbc4";c.lineWidth=1.2;c.beginPath();c.arc(x+18,y-2,21,0,Math.PI*2);c.stroke();
+ c.fillStyle="#294459";c.beginPath();c.arc(x+18,y-2,15,0,Math.PI*2);c.fill();
+ c.strokeStyle="#83b0ce";c.lineWidth=1.4;
+ c.beginPath();
+ c.moveTo(x-7,y-2);c.lineTo(x+43,y-2);
+ c.moveTo(x+18,y-27);c.lineTo(x+18,y+23);
+ c.moveTo(x,y-20);c.lineTo(x+36,y+16);
+ c.moveTo(x+36,y-20);c.lineTo(x,y+16);
+ c.stroke();
+ c.fillStyle="#d8b64f";c.beginPath();c.arc(x+18,y-2,4,0,Math.PI*2);c.fill();
+ // Feed support and small access platform.
+ fillRound(c,x+4,y+28,28,7,2,"#344d5d","#d1dce0",.8);
+ c.fillStyle="#315f82";c.fillRect(x+8,y+30,20,2);
 }
 function drawDefenseTurret(c,x,y){
  drawBuildingBase(c,x,y,66,66);
@@ -798,16 +879,39 @@ function drawDefenseTurret(c,x,y){
  drawBuildingLabel(c,"DEFENSE",x,y+28);
 }
 function drawEngineeringDepot(c,x,y){
- drawBuildingBase(c,x,y,104,76);
- fillRound(c,x-43,y-27,86,54,4,"#6d8290","#334c5c",2.5);
- for(let i=0;i<2;i++){
-  const bx=x-34+i*37;fillRound(c,bx,y-15,31,31,2,"#304a5b","#d1dade",1.3);
-  c.fillStyle="#87a0ad";c.fillRect(bx+3,y-11,25,4);
-  for(let k=0;k<4;k++){c.strokeStyle="#aebdc4";c.lineWidth=1;c.beginPath();c.moveTo(bx+4,y-5+k*5);c.lineTo(bx+27,y-5+k*5);c.stroke();}
+ // SEAF engineering workshop: twin service bays, a central machine shop and utility equipment.
+ drawBuildingBase(c,x,y,112,84);
+ fillRound(c,x-53,y-39,106,78,6,"#344b5a","#263b49",2.2);
+ fillRound(c,x-49,y-35,98,70,4,"#81949e","#dce4e6",1.2);
+ // Two enclosed work bays with broad inspection windows.
+ for(const side of [-1,1]){
+  const wx=x+side*27;
+  fillRound(c,wx-21,y-27,42,54,3,"#536e7d","#2d4857",1.3);
+  fillRound(c,wx-17,y-23,34,46,2,"#a2b1b8","#e0e7e8",.9);
+  fillRound(c,wx-13,y-18,26,11,2,"#263f52","#c1cdd2",.8);
+  c.fillStyle="#78a3bb";c.fillRect(wx-9,y-14,18,2);
+  fillRound(c,wx-13,y-2,26,18,2,"#405a6b","#c9d4d8",.8);
+  c.strokeStyle="#aab9c0";c.lineWidth=.8;
+  for(let k=0;k<3;k++){c.beginPath();c.moveTo(wx-9,y+2+k*4);c.lineTo(wx+9,y+2+k*4);c.stroke();}
+  fillRound(c,wx-15,y+21,30,6,1,"#315f82","#d2dce0",.8);
+  c.fillStyle="#d8b64f";c.fillRect(wx-11,y+23,22,2);
  }
- fillRound(c,x-12,y-25,24,8,2,"#30495a","#c5d0d4",1);drawRoofVent(c,x-31,y+21,10,8);drawRoofVent(c,x+31,y+21,10,8);
- c.fillStyle="#d8b64f";c.fillRect(x+32,y-26,11,4);c.fillRect(x+40,y-26,3,10);
- drawBuildingLabel(c,"ENGINEERING",x,y+32);
+ // Central technical corridor with a crosswise service gantry.
+ fillRound(c,x-12,y-30,24,60,3,"#2d4656","#d2dce0",1.1);
+ fillRound(c,x-8,y-25,16,50,2,"#6b8290","#314958",.8);
+ fillRound(c,x-9,y-10,18,18,2,"#263f51","#b9c8ce",.8);
+ c.strokeStyle="#a9bac2";c.lineWidth=1;
+ c.beginPath();c.moveTo(x-6,y-6);c.lineTo(x+6,y-6);c.moveTo(x-6,y);c.lineTo(x+6,y);c.moveTo(x-6,y+6);c.lineTo(x+6,y+6);c.stroke();
+ // Roof conduits, paired ventilation units and an external utility manifold.
+ c.strokeStyle="#c4d0d5";c.lineWidth=2;
+ c.beginPath();c.moveTo(x-44,y-31);c.lineTo(x+44,y-31);c.moveTo(x-44,y+31);c.lineTo(x+44,y+31);c.stroke();
+ drawRoofVent(c,x-40,y-18,10,14);drawRoofVent(c,x+40,y-18,10,14);
+ fillRound(c,x-8,y-35,16,8,2,"#314a59","#c5d1d6",.8);
+ fillRound(c,x-9,y+31,18,7,1,"#304a58","#c4d0d5",.8);
+ // Southern loading/repair apron with simple bay guide stripes.
+ fillRound(c,x-33,y+35,66,6,1,"#5d7584","#d5dfe2",.7);
+ c.strokeStyle="#d8b64f";c.lineWidth=1.5;
+ for(let k=-2;k<=2;k++){c.beginPath();c.moveTo(x+k*12,y+36);c.lineTo(x+k*12,y+40);c.stroke();}
 }
 function drawBaseBuilding(c,b){
  c.save();switch(b.type){
