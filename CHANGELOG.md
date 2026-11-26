@@ -1,3 +1,24 @@
+## v0.8.22 — Living Base Personnel
+*Released November 26, 2026*
+
+### Added
+- Added eight ambient SEAF base personnel using a compact blue-grey overhead infantry silhouette.
+- Added four looping walkway routes across the north, west, east and south service paths.
+- Added walking animation, directional facing, brief pauses at route corners and simple obstacle checks against placed building footprints.
+- Base personnel animate only while the Forward Base screen is active; they pause on menus and during deployments.
+- Added a separate base-staff count so ambient staff are distinct from recruitable squadmates.
+
+### Preserved
+- Kept base dimensions, building plots, facility artwork, parked vehicle artwork and construction rules unchanged.
+- Preserved campaign saves and mission/combat systems; ambient base personnel do not join deployments or alter squad strength.
+
+### Verification
+- Embedded JavaScript syntax compiled successfully.
+- Static route sampling confirmed all four initial walkway loops remain outside all available buildable facility footprints.
+- Confirmed the existing Bastion, exosuit, motor-pool and HQ drawing functions are unchanged.
+- No visual browser or mobile test performed.
+
+
 ## v0.8.21 — Base Access & Site Infrastructure Polish
 *Released November 26, 2026*
 
