@@ -902,7 +902,7 @@ function renderCodex(){
  const entries=Object.entries(database);if(!database[selectedCodexId])selectedCodexId=entries[0][0];
  if(indexTitle)indexTitle.textContent=selectedCodexFaction==="seaf"?"SEAF Personnel Index":"Automaton Index";
  if(tabs)tabs.querySelectorAll("[data-codex-faction]").forEach(button=>{const active=button.dataset.codexFaction===selectedCodexFaction;button.classList.toggle("active",active);button.setAttribute("aria-selected",String(active));});
- list.innerHTML=entries.map(([id,entry,index])=>`<button class="codexPick ${id===selectedCodexId?"active":""}" data-codex="${id}" aria-pressed="${id===selectedCodexId}"><span><strong>${escapeHTML(entry.name)}</strong><small>${escapeHTML(entry.classification)}</small></span><span class="codexIndex">0${index+1}</span></button>`).join("");
+ list.innerHTML=entries.map(([id,entry],index)=>`<button class="codexPick ${id===selectedCodexId?"active":""}" data-codex="${id}" aria-pressed="${id===selectedCodexId}"><span><strong>${escapeHTML(entry.name)}</strong><small>${escapeHTML(entry.classification)}</small></span><span class="codexIndex">0${index+1}</span></button>`).join("");
  list.querySelectorAll("[data-codex]").forEach(button=>button.addEventListener("click",()=>{selectedCodexId=button.dataset.codex;renderCodex();}));
  const entry=database[selectedCodexId],isSeaf=selectedCodexFaction==="seaf";
  detail.innerHTML=`<div class="codexDetailHead"><div><div class="codexClassification">${isSeaf?"SEAF · PERSONNEL RECORD":"AUTOMATON · FIELD RECORD"}</div><h2>${escapeHTML(entry.name)}</h2><div>${escapeHTML(entry.classification)}</div></div><span class="codexStatus">IDENTIFIED</span></div>
