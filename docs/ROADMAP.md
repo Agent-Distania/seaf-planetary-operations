@@ -58,9 +58,10 @@
 
 ## Operations Expanded — development series
 
-### Part I — Enemy Overhaul (implemented in v0.8.2–v0.8.4)
+### Part I — Enemy Overhaul (implemented in v0.8.2–v0.8.6)
 - Replace the generic shared enemy token with clearly differentiated top-down silhouettes for Scout, standard Trooper and Devastator
 - Give enemy roles distinct armor mass, equipment, hostile red/oxide identity and readable optics
+- Add overhead Codex field-reference previews using the same enemy sprite painter and battlefield terrain as live combat
 - Establish separate durability, movement and engagement profiles so each visual type communicates its combat role
 - Make ranged enemies prioritize SEAF targets they can see, with a fallback target for movement when cover blocks every friendly
 - Preserve the existing arena, missions, campaign saves, base systems and controls
