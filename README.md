@@ -3,7 +3,7 @@
 A single-player, top-down 2D sci-fi military game about ordinary SEAF soldiers fighting to reclaim hostile worlds. Built as a browser game with PC and mobile controls.
 
 ## Current status
-- **Latest build:** v0.8.20 — SEAF Facility Visual Overhaul
+- **Latest build:** v0.8.21 — Base Access & Site Infrastructure Polish
 - **Development status:** Early prototype; browser gameplay testing remains incomplete
 - **Platform:** Browser (HTML/CSS/JavaScript)
 - **Perspective:** Top-down, fully 2D
@@ -12,7 +12,7 @@ A single-player, top-down 2D sci-fi military game about ordinary SEAF soldiers f
 Manage a forward base, select an operation, deploy with squadmates, complete objectives, return to extraction, and use rewards to expand your base.
 
 ## Current prototype systems
-- SEAF blue-grey forward base with pale concrete structures, blue identification panels, yellow safety markings, detailed perimeter and gate, engineered roads, transport apron, motor pool, reserved service zones, full-base camera framing and footprint-aware construction; redesigned Barracks, Supply Depot, Medical Station, Radar Station and Engineering Depot
+- SEAF blue-grey forward base with pale concrete structures, blue identification panels, yellow safety markings, detailed perimeter and gate, engineered roads, transport apron, motor pool, reserved service zones, full-base camera framing, pedestrian service paths, low-profile path lighting, drainage grates and marked road crossings, and footprint-aware construction; redesigned Barracks, Supply Depot, Medical Station, Radar Station and Engineering Depot
 - Overhead Pelican transport with wingtip VTOL engines and expanded apron
 - Expanded 1,600 × 1,400 battlefields with branching industrial roads, varied ground zones, separated Automaton facilities and mission-specific combat sectors
 - Automaton Fabricators, Detector Towers, communications arrays, power sites, command bunkers, defence positions and supply compounds with dedicated top-down silhouettes
