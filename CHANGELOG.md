@@ -1,4 +1,4 @@
-## v0.8.11 — Infantry Facing Alignment
+## v0.8.12 — Battlefield Variety & Road Checkpoints\n*Released November 25, 2026*\n\n### Changed\n- Rotated SEAF infantry another 180 degrees to correct their forward-facing visual alignment.\n- Reduced battlefield decorative ground debris and ground marks.\n- Reduced the number of random rocks, wire segments and barricades.\n- Added randomized road checkpoints with paired road-control barriers and a passable lane.\n- Randomized light obstacle placements per deployment while keeping mission facilities and objectives anchored.\n\n### Verification\n- Embedded JavaScript syntax and targeted generation checks passed.\n- Confirmed each deployment selects randomized clutter/checkpoint sites; live browser visual testing not performed.\n\n\n## v0.8.11 — Infantry Facing Alignment
 *Released November 25, 2026*
 
 ### Fixed
