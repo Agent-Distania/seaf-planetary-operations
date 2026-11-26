@@ -1,3 +1,22 @@
+## v0.8.20 — SEAF Facility Visual Overhaul
+*Released November 26, 2026*
+
+### Changed
+- Redesigned the Barracks as two modular accommodation wings joined by a central covered corridor.
+- Rebuilt the Supply Depot with a broad warehouse roof, twin loading bays and visible storage modules.
+- Rebuilt the Medical Station as a bright triage facility with two treatment wings and a central intake hall.
+- Rebuilt the Radar Station with a larger overhead dish and a separate reinforced control module.
+- Rebuilt the Engineering Depot as a twin-bay workshop with a central technical corridor, utility runs and a marked service apron.
+- Expanded construction pads to 114 × 92 logical units and increased the support-building placement footprints to match the larger artwork.
+- Preserved the existing base map dimensions, building identifiers, costs, limits, campaign save format and placement grid.
+- Left the Command HQ and defensive emplacement artwork unchanged.
+
+### Verification
+- Embedded JavaScript syntax check passed after the update.
+- Static checks confirmed all five redesigned facility painters exist once, their dimensions fit the expanded pads, and updated footprints feed the existing placement collision system.
+- Existing mission, save/load, camera and construction functions remain present.
+- No visual browser/mobile test performed.
+
 ## v0.8.19 — Expanded Forward Command HQ
 *Released November 26, 2026*
 
