@@ -1,3 +1,9 @@
+## v0.8.26 — Upright Patrol Head Placement (implemented)
+- Kept ambient SEAF patrol figures upright on screen so helmets remain above torsos on both vertical and horizontal routes.
+- Turned the visor indicator toward the current direction of travel instead of rotating the whole sprite.
+- Limited the change to non-combat base staff; deployed squad sprites and battlefield artwork remain unchanged.
+
+
 ## v0.8.25 — Patrol Head-to-Torso Alignment (implemented)
 - Moved ambient SEAF patrol helmets back so they visibly overlap the upper torso instead of projecting ahead of the body.
 - Kept the head centered on the route-facing axis and retained direction-matched walking.
