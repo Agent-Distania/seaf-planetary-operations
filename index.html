@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>SEAF: Planetary Operations — v0.8.27</title>
+<title>SEAF: Planetary Operations — v0.8.28</title>
 <style>
 :root{--bg:#111a22;--panel:#1d2a35;--panel2:#273846;--line:#455c6b;--text:#e6edf0;--muted:#a9bbc5;--accent:#83b0ce;--danger:#e26b5e;--gold:#d8b64f}
 *{box-sizing:border-box}
@@ -118,7 +118,7 @@ footer{margin-top:10px;color:#8fa5b2;font-size:11px;text-align:center}
 <body>
 <div id="app">
 <header>
-  <div class="brand">SEAF <span>PLANETARY OPERATIONS · PROTOTYPE 0.8.27</span></div>
+  <div class="brand">SEAF <span>PLANETARY OPERATIONS · PROTOTYPE 0.8.28</span></div>
   <div class="resourcebar" id="resources"></div>
 </header>
 <div class="tabs menu-hidden">
@@ -1225,48 +1225,67 @@ function updateBasePersonnel(dt){
   }
  }
 }
-function drawBasePersonnelSprite(c,person){
+function drawSeafOverheadSprite(c,x,y,angle=0,options={}){
+ const scale=options.scale??1,phase=options.phase??0;
+ const body=options.body??"#71899a",outline=options.outline??"#263f50";
+ const plate=options.plate??"#aab9c1",accent=options.accent??"#527f9e";
+ const player=options.player===true;
  c.save();
- c.translate(person.x,person.y);
- // The full body turns with its route. Local -Y is the forward direction, so
- // the head stays centered on the shoulder line rather than offset to a side.
- const facingAngle=person.angle+Math.PI/2;
- c.rotate(facingAngle);
- const stride=Math.sin(person.walkPhase)*1.6;
- const armSwing=Math.sin(person.walkPhase)*.9;
+ c.translate(x,y);
+ // Local -Y is the head/forward end. Whole-body rotation follows movement or
+ // aim direction, keeping helmet, shoulders, torso and legs on one centerline.
+ c.rotate(angle+Math.PI/2);
+ c.scale(scale,scale);
 
  // Soft ground shadow.
- c.fillStyle="rgba(9,17,22,.34)";
- c.beginPath();c.ellipse(0,1,7.5,11,0,0,Math.PI*2);c.fill();
+ c.fillStyle="rgba(9,17,22,.38)";
+ c.beginPath();c.ellipse(0,2,7.8,12,0,0,Math.PI*2);c.fill();
 
- // Legs trail from the lower torso and alternate during the walking cycle.
- fillRound(c,-4,5+stride,3.5,7,1.4,"#263b49","#9eafb7",.55);
- fillRound(c,.5,5-stride,3.5,7,1.4,"#263b49","#9eafb7",.55);
+ // Legs extend from the lower torso and trail behind the head.
+ const stride=Math.sin(phase)*1.5;
+ fillRound(c,-4.1,7+stride,3.6,7.4,1.5,"#263b49","#9eafb7",.65);
+ fillRound(c,.5,7-stride,3.6,7.4,1.5,"#263b49","#9eafb7",.65);
+ fillRound(c,-3.4,12+stride,3,2.2,1,"#1e303a",null);
+ fillRound(c,1,12-stride,3,2.2,1,"#1e303a",null);
 
- // Arms attach at the shoulders and remain on either side of the torso.
- fillRound(c,-8,-5-armSwing,4,9,1.8,"#405968","#aebdc4",.65);
- fillRound(c,4,-5+armSwing,4,9,1.8,"#405968","#aebdc4",.65);
+ // Arms attach directly beneath the head at the shoulder line.
+ const armSwing=Math.sin(phase)*.7;
+ fillRound(c,-8.2,-4-armSwing,3.7,9.5,1.7,"#344e5d",outline,.7);
+ fillRound(c,4.5,-4+armSwing,3.7,9.5,1.7,"#344e5d",outline,.7);
+ fillRound(c,-8,-4.5-armSwing,3,4,1.3,plate,null);
+ fillRound(c,5,-4.5+armSwing,3,4,1.3,plate,null);
 
- // Compact torso and visible shoulder line.
- fillRound(c,-5.5,-7,11,15,3.2,"#344b5a","#172d3a",1);
- fillRound(c,-4,-5.8,8,11.4,2.2,"#8297a2","#d4dde1",.75);
- fillRound(c,-2.8,-4.9,5.6,2.1,1,"#315f82","#283f4c",.45);
- fillRound(c,-2.2,-1.8,4.4,5.2,1.5,"#526d7d","#283f4c",.5);
- // Small shoulder plates make the head's attachment point easy to read.
- fillRound(c,-6.1,-6.6,3.7,3.4,1.3,"#3f5b6b","#b5c3ca",.6);
- fillRound(c,2.4,-6.6,3.7,3.4,1.3,"#3f5b6b","#b5c3ca",.6);
+ // Compact central torso and chest armour.
+ fillRound(c,-6.2,-6.5,12.4,17,3.8,outline,"#172d3a",1);
+ fillRound(c,-4.9,-5.2,9.8,13.8,3,body,plate,.8);
+ fillRound(c,-3.5,-3.8,7,4.4,1.8,player?"#697b60":"#48677a",outline,.6);
+ fillRound(c,-2.6,1.4,5.2,4.8,1.6,"#526d7d",outline,.55);
 
- // Neck joins directly into the shoulder line. The helmet is smaller than the
- // torso and centered on the same longitudinal axis, with a slight overlap.
+ // A small rear service pack is centered on the lower back, opposite the head.
+ fillRound(c,-2.9,5.7,5.8,4.1,1.4,"#314b59",outline,.65);
+ c.fillStyle=accent;c.fillRect(-1.6,6.9,3.2,1.2);
+
+ // The compact helmet is centered and overlaps the shoulder edge.
  c.fillStyle="#263b49";
- c.beginPath();c.ellipse(0,-7.3,1.7,1.7,0,0,Math.PI*2);c.fill();
- const headX=0,headY=-9.8;
- c.fillStyle="#263e4e";
- c.beginPath();c.ellipse(headX,headY,3.5,3.8,0,0,Math.PI*2);c.fill();
- c.strokeStyle="#bfccd2";c.lineWidth=.9;c.stroke();
- // Visor sits on the leading edge of the helmet, in line with the body's axis.
- fillRound(c,-2.2,-13,4.4,1.8,.8,"#8db6ce","#d4e0e6",.5);
+ c.beginPath();c.ellipse(0,-6.7,2.05,2.1,0,0,Math.PI*2);c.fill();
+ c.fillStyle=player?"#394a40":"#263f50";
+ c.beginPath();c.ellipse(0,-9.4,3.9,4.15,0,0,Math.PI*2);c.fill();
+ c.strokeStyle=plate;c.lineWidth=.85;c.stroke();
+ // Small visor marks the forward edge of the helmet.
+ c.fillStyle=player?"#d8b65b":"#8db6ce";
+ c.beginPath();c.ellipse(0,-12.1,2.15,1.25,0,0,Math.PI*2);c.fill();
+ c.strokeStyle="#d4e0e6";c.lineWidth=.45;c.stroke();
+
+ // Identification marking stays on the chest, not beside the body.
+ c.fillStyle=player?"#d8b65b":"#d7e1e5";
+ c.fillRect(-1.4,-.8,2.8,2.1);
  c.restore();
+}
+function drawBasePersonnelSprite(c,person){
+ drawSeafOverheadSprite(c,person.x,person.y,person.angle,{
+  scale:.78,phase:person.walkPhase,body:"#8297a2",outline:"#344b5a",
+  plate:"#c3cfd4",accent:"#527f9e"
+ });
 }
 function drawBasePersonnel(c){
  for(const person of basePersonnel)drawBasePersonnelSprite(c,person);
@@ -1938,9 +1957,10 @@ function drawAutomatonSprite(c,x,y,type,angle=0,scale=1){
  c.restore();
 }
 function drawSeafPreviewSprite(c,x,y,scale=2.15){
- c.save();c.translate(x,y);c.scale(scale,scale);c.fillStyle="rgba(9,17,22,.42)";c.beginPath();c.ellipse(-2,5,15,10,0,0,Math.PI*2);c.fill();
- fillRound(c,-8,6,6,9,2,"#263a45","#9baeb7",.8);fillRound(c,2,6,6,9,2,"#263a45","#9baeb7",.8);fillRound(c,-12,-8,6,13,2,"#314a59","#a9bac1",1);fillRound(c,6,-8,6,13,2,"#314a59","#a9bac1",1);
- fillRound(c,-9,-9,18,19,4,"#344a3b","#152a37",1.2);fillRound(c,-7,-10,14,17,4,"#82917a","#d3dde1",1);fillRound(c,-5,-8,10,12,3,"#637b67","#263d4b",.8);fillRound(c,-6,-18,12,10,4,"#263f50","#aebfc6",1);fillRound(c,-4,-16,8,5,2,"#1d303d","#9bb0ba",.8);fillRound(c,-11,-17,5,8,2,"#637985","#b9c7cd",.8);fillRound(c,6,-17,5,8,2,"#637985","#b9c7cd",.8);fillRound(c,8,-9,8,15,3,"#334d5b","#b5c4ca",1);fillRound(c,10,-7,5,9,2,"#263e4b","#809aa8",.8);c.fillStyle="#d8b65b";c.fillRect(-2,1,4,3);fillRound(c,11,-3,9,4,1,"#263b49","#9eafb7",.7);c.restore();
+ drawSeafOverheadSprite(c,x,y,-Math.PI/2,{
+  scale,phase:.3,body:"#82917a",outline:"#344a3b",
+  plate:"#d3dde1",accent:"#d8b65b",player:true
+ });
 }
 function drawCodexPreview(){
  const preview=$("codexPreviewCanvas");if(!preview)return;const c=preview.getContext("2d");if(!c)return;
@@ -1989,23 +2009,19 @@ function drawBattle(){
  }
  // SEAF personnel use compact human silhouettes with layered field armour and team markings.
  function drawUnit(u,color,outline,angle,role="squad",index=0){
-  const p=worldToScreen(u);c.save();c.translate(p.x,p.y);c.rotate((angle||0)+Math.PI*1.5);const playerUnit=role==="player";
-  // Overhead SEAF silhouette: helmet, pack, shoulder plates, separated limbs and torso markings.
-  c.fillStyle="rgba(9,17,22,.44)";c.beginPath();c.ellipse(-2,5,15,10,0,0,Math.PI*2);c.fill();
-  fillRound(c,-8,6,6,9,2,"#263a45","#9baeb7",.8);fillRound(c,2,6,6,9,2,"#263a45","#9baeb7",.8);
-  fillRound(c,-12,-8,6,13,2,"#314a59","#a9bac1",1);fillRound(c,6,-8,6,13,2,"#314a59","#a9bac1",1);
-  fillRound(c,-9,-9,18,19,4,outline,"#152a37",1.2);fillRound(c,-7,-10,14,17,4,color,"#d3dde1",1);
-  fillRound(c,-5,-8,10,12,3,playerUnit?"#637b67":"#58798d","#263d4b",.8);
-  // Helmet is intentionally separate from the torso; pack sits at the rear.
-  fillRound(c,-6,-18,12,10,4,"#263f50","#aebfc6",1);fillRound(c,-4,-16,8,5,2,"#1d303d","#9bb0ba",.8);
-  fillRound(c,-11,-17,5,8,2,"#637985","#b9c7cd",.8);fillRound(c,6,-17,5,8,2,"#637985","#b9c7cd",.8);
-  fillRound(c,8,-9,8,15,3,"#334d5b","#b5c4ca",1);fillRound(c,10,-7,5,9,2,"#263e4b","#809aa8",.8);
-  c.fillStyle=playerUnit?"#d8b65b":"#d7e1e5";c.fillRect(-2,1,4,3);c.fillRect(-5,-2,3,2);
-  fillRound(c,11,-3,9,4,1,"#263b49","#9eafb7",.7);if(playerUnit){c.fillStyle="#d8b65b";c.fillRect(16,-2,3,3);}
-  if(role==="squad"){c.rotate(-((angle||0)+Math.PI*1.5));c.fillStyle="#f1f4f4";c.font="bold 9px system-ui";c.textAlign="center";c.fillText(String(index+1),0,24);}
-  c.restore();if(playerUnit){c.strokeStyle="#e6d18c";c.lineWidth=1.5;c.beginPath();c.arc(p.x,p.y,18,0,Math.PI*2);c.stroke();}
- }
- // Automaton silhouettes use distinct body massing and optical signatures for quick recognition.
+   const p=worldToScreen(u),playerUnit=role==="player";
+   drawSeafOverheadSprite(c,p.x,p.y,angle||0,{
+    scale:1.12,phase:0,body:color,outline,
+    plate:playerUnit?"#c3cbb7":"#aab9c1",
+    accent:playerUnit?"#d8b65b":"#527f9e",player:playerUnit
+   });
+   if(role==="squad"){
+    c.fillStyle="#f1f4f4";c.font="bold 9px system-ui";c.textAlign="center";
+    c.textBaseline="middle";c.fillText(String(index+1),p.x,p.y+22);
+   }
+   if(playerUnit){c.strokeStyle="#e6d18c";c.lineWidth=1.5;c.beginPath();c.arc(p.x,p.y,18,0,Math.PI*2);c.stroke();}
+  }
+  // Automaton silhouettes use distinct body massing and optical signatures for quick recognition.
  function drawEnemy(enemy){
   const p=worldToScreen(enemy),type=enemy.type;
   drawAutomatonSprite(c,p.x,p.y,type,enemy.angle||0,1);
