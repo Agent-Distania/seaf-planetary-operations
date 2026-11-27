@@ -1,3 +1,22 @@
+## v0.8.25 — Patrol Head-to-Torso Alignment
+*Released November 27, 2026*
+
+### Changed
+- Repositioned the eight ambient base-staff helmets so each head overlaps the upper torso instead of sitting almost entirely ahead of the body.
+- Kept the helmet centered on the body's forward axis, with the visor facing the direction of travel.
+- Retained the existing torso, arms, walking legs, route geometry, walking speeds and corner-turn behavior.
+
+### Preserved
+- Kept this change limited to non-combat base personnel; deployed squad and battlefield character artwork are unchanged.
+- Preserved the base layout, building footprints, patrol routes, campaign saves and gameplay systems.
+
+### Verification
+- Embedded JavaScript syntax compiled successfully.
+- Static geometry checks confirmed the helmet now overlaps the torso and remains centered on the sprite's forward axis.
+- Direction-vector checks confirmed the sprite's forward axis still matches each route heading.
+- No visual browser or mobile test performed.
+
+
 ## v0.8.24 — Integrated Forecourt & Pedestrian Circulation
 *Released November 27, 2026*
 
