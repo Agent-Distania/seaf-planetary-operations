@@ -1,3 +1,27 @@
+## v0.8.24 — Integrated Forecourt & Pedestrian Circulation
+*Released November 27, 2026*
+
+### Added
+- Added a marked pedestrian crossing where the east-side service walkway meets the motor-pool access road.
+- Added curb-ramp and tactile edge details to the base's marked pedestrian crossings.
+- Added modular paving seams and restrained corner inlays around the exposed perimeter of the enlarged HQ forecourt.
+
+### Changed
+- Improved the visual continuity between the east-side pedestrian route and the motor-pool service-access walkway.
+- Refined the HQ forecourt surface so the paved compound reads as a finished, maintained campus rather than a single flat concrete pad.
+
+### Preserved
+- Kept the 1,200 × 800 base map, all construction plots, facility footprints and existing building artwork unchanged.
+- Preserved staff routes and animation, campaign saves, construction behavior, resources, missions and deployment systems.
+- Left the parked model artwork and motor-pool bay layout unchanged.
+
+### Verification
+- Embedded JavaScript syntax compiled successfully.
+- Static checks confirmed the new motor-pool crossing is aligned with the existing east pedestrian path and vertical service road.
+- Confirmed the forecourt paving details remain outside the Command HQ's logical footprint.
+- No visual browser or mobile test performed.
+
+
 ## v0.8.23 — Base Personnel Orientation & Silhouette Fix
 *Released November 26, 2026*
 
