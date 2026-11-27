@@ -1,3 +1,23 @@
+## v0.8.26 — Upright Patrol Head Placement
+*Released November 27, 2026*
+
+### Changed
+- Kept ambient base-staff sprites upright on screen so each helmet stays above the torso, including while walking along horizontal routes.
+- Replaced whole-body rotation with a small visor indicator that turns toward the current route direction.
+- Retained the centered torso, attached arms, legs-below-body arrangement and alternating walking animation.
+
+### Preserved
+- Limited the correction to the eight non-combat base patrol figures.
+- Preserved patrol routes, route timing, base layout, buildings, campaign saves and all deployment systems.
+- Left deployed squad sprites and battlefield character artwork unchanged.
+
+### Verification
+- Embedded JavaScript syntax compiled successfully.
+- Static geometry checks confirmed the helmet remains centered above and overlaps the torso from every route direction.
+- Visor-direction checks passed for all four cardinal headings.
+- No visual browser or mobile test performed.
+
+
 ## v0.8.25 — Patrol Head-to-Torso Alignment
 *Released November 27, 2026*
 
