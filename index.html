@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>SEAF: Planetary Operations — v0.8.25</title>
+<title>SEAF: Planetary Operations — v0.8.26</title>
 <style>
 :root{--bg:#111a22;--panel:#1d2a35;--panel2:#273846;--line:#455c6b;--text:#e6edf0;--muted:#a9bbc5;--accent:#83b0ce;--danger:#e26b5e;--gold:#d8b64f}
 *{box-sizing:border-box}
@@ -118,7 +118,7 @@ footer{margin-top:10px;color:#8fa5b2;font-size:11px;text-align:center}
 <body>
 <div id="app">
 <header>
-  <div class="brand">SEAF <span>PLANETARY OPERATIONS · PROTOTYPE 0.8.25</span></div>
+  <div class="brand">SEAF <span>PLANETARY OPERATIONS · PROTOTYPE 0.8.26</span></div>
   <div class="resourcebar" id="resources"></div>
 </header>
 <div class="tabs menu-hidden">
@@ -1228,42 +1228,46 @@ function updateBasePersonnel(dt){
 function drawBasePersonnelSprite(c,person){
  c.save();
  c.translate(person.x,person.y);
- // The local sprite faces screen-up (negative Y). Rotate that forward axis onto the
- // same heading used by the route movement vector, so the head always leads the body.
- const facingAngle=person.angle+Math.PI/2;
- c.rotate(facingAngle);
- const stride=Math.sin(person.walkPhase)*1.8;
+ // Keep each tiny top-down figure upright on screen: the helmet is always above
+ // the torso, even when the route runs horizontally. The visor alone turns to
+ // indicate the direction the person is travelling.
+ const stride=Math.sin(person.walkPhase)*1.6;
  const armSwing=Math.sin(person.walkPhase)*.9;
 
  // Soft ground shadow.
  c.fillStyle="rgba(9,17,22,.34)";
  c.beginPath();c.ellipse(0,1,7.5,11,0,0,Math.PI*2);c.fill();
 
- // Legs trail behind the torso; opposite stride keeps the walking cycle readable.
- const leftStride=Math.sin(person.walkPhase)*1.6;
- const rightStride=-leftStride;
- fillRound(c,-4,5+leftStride,3.5,7,1.4,"#263b49","#9eafb7",.55);
- fillRound(c,.5,5+rightStride,3.5,7,1.4,"#263b49","#9eafb7",.55);
+ // Legs remain beneath the torso; alternating steps provide the walking cycle.
+ fillRound(c,-4,5+stride,3.5,7,1.4,"#263b49","#9eafb7",.55);
+ fillRound(c,.5,5-stride,3.5,7,1.4,"#263b49","#9eafb7",.55);
 
- // Arms attach at the shoulders and swing beside the torso.
+ // Arms sit beside the torso and move slightly with each step.
  fillRound(c,-8,-5-armSwing,4,9,1.8,"#405968","#aebdc4",.65);
  fillRound(c,4,-5+armSwing,4,9,1.8,"#405968","#aebdc4",.65);
 
- // Compact, centered torso. No side-mounted pack or block that can be mistaken for a head.
+ // Centered body, with the head visibly stacked above its shoulder line.
  fillRound(c,-5.5,-8,11,16,3.5,"#344b5a","#172d3a",1);
  fillRound(c,-4,-6.5,8,11.5,2.5,"#8297a2","#d4dde1",.75);
  fillRound(c,-2.8,-5.2,5.6,2.1,1,"#315f82","#283f4c",.45);
  fillRound(c,-2.2,-1.8,4.4,5.2,1.5,"#526d7d","#283f4c",.5);
 
- // Neck and helmet overlap the upper torso so the head reads as mounted on the body,
- // not as a separate shape floating ahead of it. Local -Y remains the forward direction.
+ // Small neck and centered helmet; this position never rotates around to a side.
  c.fillStyle="#263b49";
  c.beginPath();c.ellipse(0,-7.8,2.6,2.2,0,0,Math.PI*2);c.fill();
+ const headX=0,headY=-10.5;
  c.fillStyle="#263e4e";
- c.beginPath();c.ellipse(0,-10.5,5.1,5.2,0,0,Math.PI*2);c.fill();
+ c.beginPath();c.ellipse(headX,headY,5.1,5.2,0,0,Math.PI*2);c.fill();
  c.strokeStyle="#bfccd2";c.lineWidth=.9;c.stroke();
- // Visor stays on the forward edge while the helmet overlaps the torso's shoulder line.
- fillRound(c,-3.2,-14.2,6.4,2.2,1.1,"#8db6ce","#d4e0e6",.5); c.restore();
+
+ // A short visor sits on the helmet edge facing the current route direction.
+ const forwardX=Math.cos(person.angle),forwardY=Math.sin(person.angle);
+ c.save();
+ c.translate(headX+forwardX*2.6,headY+forwardY*2.6);
+ c.rotate(person.angle+Math.PI/2);
+ fillRound(c,-2.8,-1.1,5.6,2.2,1.1,"#8db6ce","#d4e0e6",.5);
+ c.restore();
+ c.restore();
 }
 function drawBasePersonnel(c){
  for(const person of basePersonnel)drawBasePersonnelSprite(c,person);
