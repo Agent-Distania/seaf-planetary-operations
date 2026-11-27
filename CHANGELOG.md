@@ -1,3 +1,24 @@
+## v0.8.28 — Unified Top-Down SEAF Personnel
+*Released November 27, 2026*
+
+### Changed
+- Rebuilt the SEAF human silhouette as a compact overhead figure with a centered helmet at the leading end of the body, a connected shoulder line, central torso, paired arms and trailing legs.
+- Moved rear service equipment to the body's centerline rather than leaving a pack-like shape at one side.
+- Used one shared sprite painter for ambient base staff, deployed SEAF squadmates/player and the SEAF Codex preview.
+- Aligned deployed SEAF figures so the head end faces the unit's movement or aim direction.
+
+### Preserved
+- Kept the existing eight base staff, four walking routes, patrol timing, walking animation, deployment roster and gameplay logic.
+- Left Automaton artwork, vehicle artwork, base buildings, maps, campaign saves and controls unchanged.
+
+### Verification
+- Embedded JavaScript syntax compiled successfully.
+- Static checks confirmed the base, deployed and Codex SEAF renderers all call the shared top-down painter.
+- Geometry checks confirmed the helmet is narrower than the torso, overlaps the shoulder line and stays centered on the body's forward axis.
+- Direction checks confirmed the head end points along all four cardinal movement/aim vectors.
+- No live browser or mobile visual test performed.
+
+
 ## v0.8.27 — Shoulder-Seated Patrol Heads
 *Released November 27, 2026*
 
