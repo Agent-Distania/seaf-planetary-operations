@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>SEAF: Planetary Operations — v0.8.23</title>
+<title>SEAF: Planetary Operations — v0.8.24</title>
 <style>
 :root{--bg:#111a22;--panel:#1d2a35;--panel2:#273846;--line:#455c6b;--text:#e6edf0;--muted:#a9bbc5;--accent:#83b0ce;--danger:#e26b5e;--gold:#d8b64f}
 *{box-sizing:border-box}
@@ -118,7 +118,7 @@ footer{margin-top:10px;color:#8fa5b2;font-size:11px;text-align:center}
 <body>
 <div id="app">
 <header>
-  <div class="brand">SEAF <span>PLANETARY OPERATIONS · PROTOTYPE 0.8.23</span></div>
+  <div class="brand">SEAF <span>PLANETARY OPERATIONS · PROTOTYPE 0.8.24</span></div>
   <div class="resourcebar" id="resources"></div>
 </header>
 <div class="tabs menu-hidden">
@@ -966,6 +966,23 @@ function drawCentralPlaza(c){
  fillRound(c,458,316,284,168,10,"#7f909a","#e0e5e6",1.2);
  c.strokeStyle="#527f9e";c.lineWidth=3;c.setLineDash([12,8]);c.strokeRect(468,326,264,148);c.setLineDash([]);
  c.fillStyle="#d8b64f";for(let i=0;i<5;i++){c.fillRect(474+i*18,313,9,3);c.fillRect(474+i*18,484,9,3);}
+ // Fine modular paving remains visible in the narrow margins around the enlarged HQ.
+ // The seams stop at the building footprint so they do not cross the structure.
+ c.save();c.strokeStyle="#c6d1d6";c.lineWidth=.8;c.globalAlpha=.72;
+ for(let x=474;x<=726;x+=24){
+  c.beginPath();c.moveTo(x,309);c.lineTo(x,318);c.moveTo(x,482);c.lineTo(x,491);c.stroke();
+ }
+ for(let y=334;y<=466;y+=22){
+  c.beginPath();c.moveTo(450,y);c.lineTo(460,y);c.moveTo(740,y);c.lineTo(750,y);c.stroke();
+ }
+ c.globalAlpha=1;c.strokeStyle="#416f91";c.lineWidth=1;
+ c.strokeRect(453,311,294,178);
+ // Restrained corner inlays give the forecourt a clear, finished boundary.
+ for(const [x,y] of [[452,310],[740,310],[452,482],[740,482]]){
+  fillRound(c,x,y,8,5,1,"#315f82","#cbd6db",.7);
+  c.fillStyle="#d8b64f";c.fillRect(x+2,y+1,4,2);
+ }
+ c.restore();
  // The HQ itself now fills this compound; no text panel is painted behind or on its roof.
  // Recessed service covers and bollards.
  for(let x of [476,724]){fillRound(c,x-9,387,18,34,3,"#596d79","#c2ccd0",1);c.fillStyle="#d8b64f";c.fillRect(x-2,390,4,4);}
@@ -1137,8 +1154,15 @@ function drawBasePedestrianNetwork(c){
 }
 function drawBaseCrosswalk(c,x,y){
  c.save();
- fillRound(c,x-25,y-17,50,34,2,"rgba(38,57,69,.35)",null);
+ // Zebra stripes sit over the roadway and visibly continue onto the pedestrian path.
+ fillRound(c,x-25,y-17,50,34,2,"rgba(38,57,69,.48)","#536b78",.7);
  for(let i=-3;i<=3;i++)fillRound(c,x-21,y+i*4-1,42,2,1,"#dce4e7",null);
+ // Low curb ramps and tactile edge dots make each crossing read as a real path connection.
+ for(const side of [-1,1]){
+  fillRound(c,x+side*29-3,y-7,6,14,1.5,"#b8c5cb","#596f7c",.7);
+  c.fillStyle="#d8b64f";
+  for(let k=-1;k<=1;k++)c.fillRect(x+side*26-1,y+k*3,2,1.5);
+ }
  c.restore();
 }
 const BASE_PATROL_ROUTES=[
@@ -1257,7 +1281,7 @@ function drawBase(){
  drawRoad(c,[{x:58,y:400},{x:442,y:400}],44);
  drawRoad(c,[{x:758,y:400},{x:1142,y:400}],44);
  drawRoad(c,[{x:950,y:422},{x:950,y:500}],34);
- drawBaseCrosswalk(c,600,286);drawBaseCrosswalk(c,600,520);
+ drawBaseCrosswalk(c,600,286);drawBaseCrosswalk(c,600,520);drawBaseCrosswalk(c,950,436);
  drawCentralPlaza(c);drawLandingZone(c);
  drawPerimeter(c);drawMotorPool(c);
  for(const plot of getBasePlots())drawConstructionPad(c,plot);
