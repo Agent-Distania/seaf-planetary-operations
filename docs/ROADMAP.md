@@ -1,3 +1,9 @@
+## v0.8.27 — Shoulder-Seated Patrol Heads (implemented)
+- Reduced and centered ambient patrol helmets so they sit into the shoulders rather than reading as separate capsule shapes.
+- Turned the full body silhouette to match the current route direction, keeping the head centered on the body's forward axis.
+- Preserved the eight staff, four routes, walking animation and all other base/gameplay systems.
+
+
 ## v0.8.26 — Upright Patrol Head Placement (implemented)
 - Kept ambient SEAF patrol figures upright on screen so helmets remain above torsos on both vertical and horizontal routes.
 - Turned the visor indicator toward the current direction of travel instead of rotating the whole sprite.
