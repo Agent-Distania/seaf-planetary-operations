@@ -1,3 +1,10 @@
+## v0.8.28 — Unified Top-Down SEAF Personnel (implemented)
+- Unified ambient base staff, deployed SEAF squad/player and the Codex personnel preview around one shared top-down silhouette.
+- Centered the compact helmet at the leading end of the torso and joined it into the shoulders; arms sit to either side and legs trail behind.
+- Moved rear equipment onto the body's centerline and aligned whole-body rotation with movement/aim direction.
+- Preserved patrol routes, deployment logic, Automaton artwork, vehicle artwork, maps and campaign data.
+
+
 ## v0.8.27 — Shoulder-Seated Patrol Heads (implemented)
 - Reduced and centered ambient patrol helmets so they sit into the shoulders rather than reading as separate capsule shapes.
 - Turned the full body silhouette to match the current route direction, keeping the head centered on the body's forward axis.
