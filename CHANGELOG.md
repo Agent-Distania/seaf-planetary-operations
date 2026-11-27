@@ -1,3 +1,23 @@
+## v0.8.27 — Shoulder-Seated Patrol Heads
+*Released November 27, 2026*
+
+### Changed
+- Reduced the ambient patrol helmet so it reads as a head rather than a second torso-sized capsule.
+- Centered the helmet on the body's forward axis and seated it into the shoulder line with a visible neck and paired shoulder plates.
+- Rotated the complete non-combat staff silhouette to face its route direction, keeping the head aligned with the torso during horizontal and vertical travel.
+
+### Preserved
+- Kept the existing eight staff members, four patrol routes, walking speeds, corner pauses and walking animation.
+- Limited the change to ambient base personnel; deployed squad sprites and battlefield artwork are unchanged.
+- Preserved the base layout, building footprints, campaign saves and gameplay systems.
+
+### Verification
+- Embedded JavaScript syntax compiled successfully.
+- Static proportion checks confirmed the helmet is narrower than the torso and overlaps the shoulder/upper-torso region.
+- Direction-vector checks confirmed the head end of the sprite faces all four cardinal route headings.
+- No live mobile-browser test performed.
+
+
 ## v0.8.26 — Upright Patrol Head Placement
 *Released November 27, 2026*
 
