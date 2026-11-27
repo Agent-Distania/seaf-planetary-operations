@@ -1,3 +1,10 @@
+## v0.8.24 — Integrated Forecourt & Pedestrian Circulation (implemented)
+- Added a marked pedestrian crossing at the east-side walkway and motor-pool access-road intersection.
+- Added curb-ramp and tactile edge details to marked pedestrian crossings.
+- Added modular paver seams and corner inlays to the exposed HQ forecourt perimeter.
+- Preserved the base map, construction plots, building footprints, staff routes, parked model artwork and game systems.
+
+
 ## v0.8.23 — Base Personnel Orientation & Silhouette Fix (implemented)
 - Rebuilt ambient base-staff sprites with centered rounded heads at the leading end of the body, compact torsos, attached arms and separated walking legs.
 - Removed the side-mounted shape that made the figures resemble backpacks.
