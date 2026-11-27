@@ -1,3 +1,9 @@
+## v0.8.25 — Patrol Head-to-Torso Alignment (implemented)
+- Moved ambient SEAF patrol helmets back so they visibly overlap the upper torso instead of projecting ahead of the body.
+- Kept the head centered on the route-facing axis and retained direction-matched walking.
+- Limited the change to non-combat base staff; deployed squad sprites and battlefield artwork remain unchanged.
+
+
 ## v0.8.24 — Integrated Forecourt & Pedestrian Circulation (implemented)
 - Added a marked pedestrian crossing at the east-side walkway and motor-pool access-road intersection.
 - Added curb-ramp and tactile edge details to marked pedestrian crossings.
