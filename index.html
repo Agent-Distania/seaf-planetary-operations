@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>SEAF: Planetary Operations — v0.8.26</title>
+<title>SEAF: Planetary Operations — v0.8.27</title>
 <style>
 :root{--bg:#111a22;--panel:#1d2a35;--panel2:#273846;--line:#455c6b;--text:#e6edf0;--muted:#a9bbc5;--accent:#83b0ce;--danger:#e26b5e;--gold:#d8b64f}
 *{box-sizing:border-box}
@@ -118,7 +118,7 @@ footer{margin-top:10px;color:#8fa5b2;font-size:11px;text-align:center}
 <body>
 <div id="app">
 <header>
-  <div class="brand">SEAF <span>PLANETARY OPERATIONS · PROTOTYPE 0.8.26</span></div>
+  <div class="brand">SEAF <span>PLANETARY OPERATIONS · PROTOTYPE 0.8.27</span></div>
   <div class="resourcebar" id="resources"></div>
 </header>
 <div class="tabs menu-hidden">
@@ -1228,9 +1228,10 @@ function updateBasePersonnel(dt){
 function drawBasePersonnelSprite(c,person){
  c.save();
  c.translate(person.x,person.y);
- // Keep each tiny top-down figure upright on screen: the helmet is always above
- // the torso, even when the route runs horizontally. The visor alone turns to
- // indicate the direction the person is travelling.
+ // The full body turns with its route. Local -Y is the forward direction, so
+ // the head stays centered on the shoulder line rather than offset to a side.
+ const facingAngle=person.angle+Math.PI/2;
+ c.rotate(facingAngle);
  const stride=Math.sin(person.walkPhase)*1.6;
  const armSwing=Math.sin(person.walkPhase)*.9;
 
@@ -1238,35 +1239,33 @@ function drawBasePersonnelSprite(c,person){
  c.fillStyle="rgba(9,17,22,.34)";
  c.beginPath();c.ellipse(0,1,7.5,11,0,0,Math.PI*2);c.fill();
 
- // Legs remain beneath the torso; alternating steps provide the walking cycle.
+ // Legs trail from the lower torso and alternate during the walking cycle.
  fillRound(c,-4,5+stride,3.5,7,1.4,"#263b49","#9eafb7",.55);
  fillRound(c,.5,5-stride,3.5,7,1.4,"#263b49","#9eafb7",.55);
 
- // Arms sit beside the torso and move slightly with each step.
+ // Arms attach at the shoulders and remain on either side of the torso.
  fillRound(c,-8,-5-armSwing,4,9,1.8,"#405968","#aebdc4",.65);
  fillRound(c,4,-5+armSwing,4,9,1.8,"#405968","#aebdc4",.65);
 
- // Centered body, with the head visibly stacked above its shoulder line.
- fillRound(c,-5.5,-8,11,16,3.5,"#344b5a","#172d3a",1);
- fillRound(c,-4,-6.5,8,11.5,2.5,"#8297a2","#d4dde1",.75);
- fillRound(c,-2.8,-5.2,5.6,2.1,1,"#315f82","#283f4c",.45);
+ // Compact torso and visible shoulder line.
+ fillRound(c,-5.5,-7,11,15,3.2,"#344b5a","#172d3a",1);
+ fillRound(c,-4,-5.8,8,11.4,2.2,"#8297a2","#d4dde1",.75);
+ fillRound(c,-2.8,-4.9,5.6,2.1,1,"#315f82","#283f4c",.45);
  fillRound(c,-2.2,-1.8,4.4,5.2,1.5,"#526d7d","#283f4c",.5);
+ // Small shoulder plates make the head's attachment point easy to read.
+ fillRound(c,-6.1,-6.6,3.7,3.4,1.3,"#3f5b6b","#b5c3ca",.6);
+ fillRound(c,2.4,-6.6,3.7,3.4,1.3,"#3f5b6b","#b5c3ca",.6);
 
- // Small neck and centered helmet; this position never rotates around to a side.
+ // Neck joins directly into the shoulder line. The helmet is smaller than the
+ // torso and centered on the same longitudinal axis, with a slight overlap.
  c.fillStyle="#263b49";
- c.beginPath();c.ellipse(0,-7.8,2.6,2.2,0,0,Math.PI*2);c.fill();
- const headX=0,headY=-10.5;
+ c.beginPath();c.ellipse(0,-7.3,1.7,1.7,0,0,Math.PI*2);c.fill();
+ const headX=0,headY=-9.8;
  c.fillStyle="#263e4e";
- c.beginPath();c.ellipse(headX,headY,5.1,5.2,0,0,Math.PI*2);c.fill();
+ c.beginPath();c.ellipse(headX,headY,3.5,3.8,0,0,Math.PI*2);c.fill();
  c.strokeStyle="#bfccd2";c.lineWidth=.9;c.stroke();
-
- // A short visor sits on the helmet edge facing the current route direction.
- const forwardX=Math.cos(person.angle),forwardY=Math.sin(person.angle);
- c.save();
- c.translate(headX+forwardX*2.6,headY+forwardY*2.6);
- c.rotate(person.angle+Math.PI/2);
- fillRound(c,-2.8,-1.1,5.6,2.2,1.1,"#8db6ce","#d4e0e6",.5);
- c.restore();
+ // Visor sits on the leading edge of the helmet, in line with the body's axis.
+ fillRound(c,-2.2,-13,4.4,1.8,.8,"#8db6ce","#d4e0e6",.5);
  c.restore();
 }
 function drawBasePersonnel(c){
